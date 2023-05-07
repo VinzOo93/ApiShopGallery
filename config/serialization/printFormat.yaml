@@ -1,0 +1,10 @@
+App\Entity\PrintFormat:
+  attributes:
+    id:
+      groups: [ 'read' ]
+    name:
+      groups: [ 'read' ]
+    width:
+      groups: [ 'read' ]
+    height:
+      groups: [ 'read' ]

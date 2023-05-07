@@ -1,0 +1,30 @@
+parameters:
+  format_20x30: 20x30 cm
+  width_1: 30
+  height_1: 20
+
+  format_40x60: 40x60 cm
+  width_2: 40
+  height_2: 60
+
+  format_60x80: 60x80 cm
+  width_3: 60
+  height_3: 80
+
+App\Entity\PrintFormat:
+  print_1{1..1}:
+    name: <{format_20x30}>
+    width: <{width_1}>
+    height: <{height_1}>
+
+  print_2{2..2}:
+    name: <{format_40x60}>
+    width: <{width_2}>
+    height: <{height_2}>
+
+  print_3{3..3}:
+    name: <{format_60x80}>
+    width: <{width_3}>
+    height: <{height_3}>
+
+

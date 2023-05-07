@@ -1,0 +1,6 @@
+App\Entity\PrintFormat:
+  operations:
+    ApiPlatform\Metadata\GetCollection:
+      method: GET
+    ApiPlatform\Metadata\Get:
+      method: GET
