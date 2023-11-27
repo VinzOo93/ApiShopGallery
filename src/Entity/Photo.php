@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PhotoRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
@@ -21,9 +20,6 @@ class Photo
 
     #[ORM\Column(length: 255)]
     private ?string $urlCdn = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
-    private ?string $preTaxPrice = null;
 
     #[ORM\Column]
     private ?int $quantitySold = null;
@@ -53,18 +49,6 @@ class Photo
     public function setUrlCdn(string $urlCdn): self
     {
         $this->urlCdn = $urlCdn;
-
-        return $this;
-    }
-
-    public function getPreTaxPrice(): ?string
-    {
-        return $this->preTaxPrice;
-    }
-
-    public function setPreTaxPrice(string $preTaxPrice): self
-    {
-        $this->preTaxPrice = $preTaxPrice;
 
         return $this;
     }

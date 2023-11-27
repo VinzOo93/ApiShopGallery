@@ -1,0 +1,15 @@
+parameters:
+  qauntity_0: 0
+  whitehaven_beach: Whitehaven beach
+  url_cdn_1: a07ed184-c9aa-4729-aa25-70571f0fb11a
+  
+
+App\Entity\Photo:
+  print_1{1..1}:
+    name: <{whitehaven_beach}>
+    urlCdn: <{url_cdn_1}>
+    quantitySold: <{qauntity_0}>
+
+
+
+

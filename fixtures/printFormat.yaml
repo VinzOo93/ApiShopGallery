@@ -2,29 +2,35 @@ parameters:
   format_20x30: 30x20 cm
   width_1: 30
   height_1: 20
+  pre_tax_price_1: 5
 
   format_40x60: 60x40 cm
   width_2: 60
   height_2: 40
-
+  pre_tax_price_2: 10
+  
   format_60x80: 80x60 cm
   width_3: 80
   height_3: 60
+  pre_tax_price_3: 15
 
 App\Entity\PrintFormat:
   print_1{1..1}:
     name: <{format_20x30}>
     width: <{width_1}>
     height: <{height_1}>
+    preTaxPrice: <{pre_tax_price_1}>
 
   print_2{2..2}:
     name: <{format_40x60}>
     width: <{width_2}>
     height: <{height_2}>
+    preTaxPrice: <{pre_tax_price_2}>
 
   print_3{3..3}:
     name: <{format_60x80}>
     width: <{width_3}>
     height: <{height_3}>
+    preTaxPrice: <{pre_tax_price_3}>
 
 

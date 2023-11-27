@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PrintFormatRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: PrintFormatRepository::class)]
 class PrintFormat
@@ -21,6 +22,9 @@ class PrintFormat
 
     #[ORM\Column]
     private ?int $height = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
+    private ?string $preTaxPrice = null; 
 
     public function getId(): ?int
     {
@@ -59,6 +63,18 @@ class PrintFormat
     public function setHeight(int $height): self
     {
         $this->height = $height;
+
+        return $this;
+    }
+
+    public function getPreTaxPrice(): ?string
+    {
+        return $this->preTaxPrice;
+    }
+
+    public function setPreTaxPrice(string $preTaxPrice): self
+    {
+        $this->preTaxPrice = $preTaxPrice;
 
         return $this;
     }
