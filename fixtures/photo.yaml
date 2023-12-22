@@ -196,23 +196,20 @@ parameters:
   name_65: Back of Malu entu
   url_cdn_65: 828ec10d-eb47-4459-9b49-4b835f1b2aec
 
-  name_66: Kayak in ardeche
-  url_cdn_66: 3f9bda3d-666c-4c25-b610-172717e76352
+  name_66: Consolation maisonnette
+  url_cdn_66: 371dedfc-bf4e-4635-828e-8ee456dcfb30
 
-  name_67: Consolation maisonnette
-  url_cdn_67: 371dedfc-bf4e-4635-828e-8ee456dcfb30
+  name_67: With a new friend
+  url_cdn_67: 9a86d861-3b32-4274-ba12-86eb9e8aeb8b
 
-  name_68: With a new friend
-  url_cdn_68: 9a86d861-3b32-4274-ba12-86eb9e8aeb8b
+  name_68: The famous arc
+  url_cdn_68: 95e1dc98-b426-48d0-b10e-1e1aca28ea37
 
-  name_69: The famous arc
-  url_cdn_69: 95e1dc98-b426-48d0-b10e-1e1aca28ea37
+  name_69: Arrival in GlassHouse Mountain
+  url_cdn_69: 7d619165-a204-4ae6-8dbc-de36907dfdff
 
-  name_70: Arrival in GlassHouse Mountain
-  url_cdn_70: 7d619165-a204-4ae6-8dbc-de36907dfdff
-
-  name_71: Be happy When cooking 
-  url_cdn_71: 35d52b15-b6a7-4bd4-b1c8-c72e466d827c
+  name_70: Be happy When cooking 
+  url_cdn_70: 35d52b15-b6a7-4bd4-b1c8-c72e466d827c
 
 App\Entity\Photo:
   photo_1{1..1}:
@@ -272,7 +269,7 @@ App\Entity\Photo:
 
   photo_12{12..12}:
     name: <{name_12}>
-    urlCdn: <{url_cdn_13}>
+    urlCdn: <{url_cdn_12}>
     quantitySold: <{quantity_0}>   
 
   photo_13{13..13}:
@@ -558,11 +555,6 @@ App\Entity\Photo:
   photo_70{70..70}:
     name: <{name_70}>
     urlCdn: <{url_cdn_70}>
-    quantitySold: <{quantity_0}>
-
-  photo_71{71..71}:
-    name: <{name_71}>
-    urlCdn: <{url_cdn_71}>
     quantitySold: <{quantity_0}>
 
 
