@@ -232,7 +232,7 @@ App\Entity\Photo:
     urlCdn: <{url_cdn_4}>
     quantitySold: <{quantity_0}>  
 
-  photo_5..5}:
+  photo_5{5..5}:
     name: <{name_5}>
     urlCdn: <{url_cdn_5}>
     quantitySold: <{quantity_0}>    
@@ -276,6 +276,11 @@ App\Entity\Photo:
     name: <{name_13}>
     urlCdn: <{url_cdn_13}>
     quantitySold: <{quantity_0}>    
+
+  photo_14{14..14}:
+    name: <{name_14}>
+    urlCdn: <{url_cdn_14}>
+    quantitySold: <{quantity_0}>  
 
   photo_15{15..15}:
     name: <{name_15}>
