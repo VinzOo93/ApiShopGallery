@@ -15,7 +15,9 @@ abstract class DataTest extends KernelTestCase {
     protected ContainerInterface $container;
     protected EntityManagerInterface $entityManager;
     protected string $rootDir;
+    protected string $itemKey;
     protected array $valuesFromParameters = [];
+    protected int $index = 0;
 
     protected function initContainer(): void
     {
@@ -37,6 +39,14 @@ abstract class DataTest extends KernelTestCase {
     
     }
 
+    protected function checkItemKeyExist(array $arrayClass, string $classPath): void 
+    {
+        $this->itemKey = $this->getEndOfPath("\\", $classPath)."_".$this->index."{".$this->index."..".$this->index."}";    
+        $this->assertArrayHasKey($this->itemKey, $arrayClass,
+         "la clé dans la classe $this->itemKey n'éxiste pas"
+        );
+    }
+
     protected function checkYamlValueUnicityParameter(array $array, mixed $data): void 
     {
 
@@ -48,12 +58,25 @@ abstract class DataTest extends KernelTestCase {
 
     }
 
-    protected function checkYamlValueUnicityClass()
+    protected function checkYamlValueUnicityClass(): void
     {
-        $this->assertTrue(
+        $this->assertFalse(
             (count($this->valuesFromParameters) !== count(array_unique($this->valuesFromParameters))),
-            "il y a des doublons dans la partie classe au miveau des clé des paramètres"
+            "il y a des doublons dans la partie classe au niveau des clé des paramètres"
         );
+    }
+
+    protected function registerClassValues(array $columns, int $index ): string
+    {
+        $value ="<{".$columns[$index]."_".$this->index."}>";
+        $this->valuesFromParameters[] = $value;
+        
+        return $value;
+    }
+
+    protected function shouldProcessKey(string $key): bool
+    {
+        return $this->index != filter_var($key, FILTER_SANITIZE_NUMBER_INT);
     }
 
     protected function getYamlContent(string $yamlFileName): array
@@ -64,7 +87,7 @@ abstract class DataTest extends KernelTestCase {
         return Yaml::parse($yamlContent);
     }
 
-    protected function checkYamlKeyParamerterByClassValue(array $array, mixed $value): void
+    protected function checkYamlKeyParameterByClassValue(array $array, mixed $value): void
     {
         
         $value = str_replace(["<{", "}>"], "", $value);
@@ -82,7 +105,13 @@ abstract class DataTest extends KernelTestCase {
 
     private function countIfMore(array $objects, int $valueCounted): bool
     {
-        return (count($objects) === $valueCounted) ? true : false; 
+        return (count($objects) === $valueCounted); 
+    }
+
+    private function getEndOfPath(string $haystack, string $path): string 
+    {
+        $arrPath = explode($haystack, $path);
+        return strtolower(end($arrPath));
     }
 
 

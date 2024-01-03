@@ -12,9 +12,12 @@ class PhotoYamlTest extends DataTest
     private const QUANTITY_SOLD = 'quantitySold';
     private const QUANTITY = 0;
 
-    private PhotoRepository $photoRepository;
     protected string $classEntityPathPhoto;
-
+    
+    private PhotoRepository $photoRepository;
+    private array $photoParameters = [];
+    private array $parsedYaml = [];
+    private string $dataPhotoValue;
 
     protected function getContainerPhoto(): void
     {
@@ -23,50 +26,62 @@ class PhotoYamlTest extends DataTest
         $this->classEntityPathPhoto = $this->photoRepository->getClassName();
     }
 
-    public function testsPhotoSetUp() {
+    public function testPhotoSetUp(): void
+    {
         $this->getContainerPhoto();
         $this->testPhotoYamlFixtures();
+        $this->testPhotoParameters();
     }
 
     protected function testPhotoYamlFixtures(): void
     {
+        $this->parsedYaml = $this->getYamlContent(PhotoYamlTest::FILE_NAME);
+        $this->photoParameters = $this->parsedYaml[PhotoYamlTest::PARAMETERS_IDX];
 
-        $photoMetadata = $this->entityManager->getClassMetadata($this->classEntityPathPhoto);
-        $photoColumn = $photoMetadata->getColumnNames(); 
-        $parsedYaml = $this->getYamlContent(PhotoYamlTest::FILE_NAME);
-        $photoParameters = $parsedYaml[PhotoYamlTest::PARAMETERS_IDX];
+        $this->assertArrayHasKey(PhotoYamlTest::PARAMETERS_IDX, $this->parsedYaml, "L'index des paramètres n'éxiste pas");
+        $this->assertArrayHasKey($this->classEntityPathPhoto, $this->parsedYaml, "L'index de la classe n'éxiste pas");
+        $this->assertArrayHasKey(PhotoYamlTest::QUANTITY_IDX,$this->photoParameters, "L'index de la quantité n'éxiste pas");
+        $this->assertEquals(PhotoYamlTest::QUANTITY, $this->photoParameters[PhotoYamlTest::QUANTITY_IDX], " La quantité n'est pas égale " . PhotoYamlTest::QUANTITY);
+               
+    }  
 
-        $this->assertArrayHasKey(PhotoYamlTest::PARAMETERS_IDX, $parsedYaml, "L'index des paramètres n'éxiste pas");
-        $this->assertArrayHasKey($this->classEntityPathPhoto, $parsedYaml, "L'index de la classe n'éxiste pas");
-        $this->assertArrayHasKey(PhotoYamlTest::QUANTITY_IDX,$photoParameters, "L'index de la quantité n'éxiste pas");
-        $this->assertEquals(PhotoYamlTest::QUANTITY, $photoParameters[PhotoYamlTest::QUANTITY_IDX], " La quantité n'est pas égale " . PhotoYamlTest::QUANTITY);
-        
-        foreach ($photoParameters as $key => $data) {
-            if ($key !== PhotoYamlTest::QUANTITY_IDX ) {
-                $attribLoop = 1;
-                $i = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
-                $photoItemKey = "photo_".$i."{".$i."..".$i."}";
-                $photoClass = $parsedYaml[$this->classEntityPathPhoto];
-
-                $this->checkYamlValueUnicityParameter($photoParameters, $data);
-                $this->assertArrayHasKey($photoItemKey, $photoClass,
-                    "la clé dans la classe $photoItemKey n'éxiste pas"
-                );
-                $item = $photoClass[$photoItemKey];
-                foreach($item as $attribut) {    
-                    $dataPhotoValue = "<{" .PhotoYamlTest::QUANTITY_IDX. "}>";    
-                    if ($attribut !== $item[PhotoYamlTest::QUANTITY_SOLD]) {
-                        $dataPhotoValue ="<{".$photoColumn[$attribLoop]."_$i}>";
-                        $this->valuesFromParameters[] = $dataPhotoValue;
-                    }
-                    $this->checkYamlKeyParamerterByClassValue($photoParameters, $attribut);
-                    $this->checkYamlValueByAttributClass($dataPhotoValue, $attribut);
-                    $attribLoop++;
+    protected function testPhotoParameters(): void
+    {
+        foreach ($this->photoParameters as $key => $data) {
+            if ($key !== PhotoYamlTest::QUANTITY_IDX) {
+                    $this->checkPhotoParameterKeys($key, $data);
                 }
             }
-        }  
         $this->checkYamlValueUnicityClass();
-    }  
+    }
+
+    private function checkPhotoParameterKeys(string $key, string $data): void
+    {
+        $this->checkYamlValueUnicityParameter($this->photoParameters, $data);
+        if ($this->shouldProcessKey($key)) {
+            $photoClass = $this->parsedYaml[$this->classEntityPathPhoto];
+            $this->index = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+            $this->checkItemKeyExist($photoClass,$this->classEntityPathPhoto);
+            $this->testPhotoParametersValuesOnClass($photoClass[$this->itemKey]);
+        }        
+    }   
+
+    private function testPhotoParametersValuesOnClass(array $item): void 
+    {
+        $columns = $this->entityManager->getClassMetadata($this->classEntityPathPhoto)->getColumnNames();
+        $attribLoop = 1;
+
+        foreach($item as $attribut) { 
+            $this->dataPhotoValue = "<{".PhotoYamlTest::QUANTITY_IDX."}>";   
+            if ($attribut !== $item[PhotoYamlTest::QUANTITY_SOLD]) {
+                $this->dataPhotoValue = $this->registerClassValues($columns, $attribLoop);
+            }
+            $this->checkYamlKeyParameterByClassValue($this->photoParameters, $attribut);
+            $this->checkYamlValueByAttributClass($this->dataPhotoValue, $attribut);
+            
+            $attribLoop++;
+        }  
+    }
 }
 
 ?>

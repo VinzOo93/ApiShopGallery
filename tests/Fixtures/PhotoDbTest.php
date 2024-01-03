@@ -15,7 +15,8 @@ class PhotoDbTest extends DataTest
         $this->photoRepository = $this->container->get(PhotoRepository::class);   
     }
 
-    public function testsPhotoSetUp() {
+    public function testsPhotoSetUp(): void 
+    {
         $this->getContainerPhoto();
         $this->testPhotoData();
     }
