@@ -11,13 +11,20 @@ use Symfony\Component\Yaml\Yaml;
 abstract class DataTest extends KernelTestCase {
 
     private const LIMIT = 1;
+   
+    protected const PARAMETERS_IDX = 'parameters';
 
     protected ContainerInterface $container;
     protected EntityManagerInterface $entityManager;
     protected string $rootDir;
     protected string $itemKey;
     protected array $valuesFromParameters = [];
+    protected array $parsedYaml = [];
+
     protected int $index = 0;
+
+    private $classEntityPath;
+
 
     protected function initContainer(): void
     {
@@ -32,30 +39,12 @@ abstract class DataTest extends KernelTestCase {
     {
 
         $data = $repository->findBy([$params['key'] => $params['value']]);
-        $assertion = $this->countIfMore($data, DataTest::LIMIT); 
+        $assertion = $this->countIfMore($data, self::LIMIT); 
         
-        $this->assertTrue($assertion, 
+        $this->assertTrue(
+            $assertion, 
             "La valeur portant l'url de CDN '".$params['value']."' est dupliquée en BDD");
     
-    }
-
-    protected function checkItemKeyExist(array $arrayClass, string $classPath): void 
-    {
-        $this->itemKey = $this->getEndOfPath("\\", $classPath)."_".$this->index."{".$this->index."..".$this->index."}";    
-        $this->assertArrayHasKey($this->itemKey, $arrayClass,
-         "la clé dans la classe $this->itemKey n'éxiste pas"
-        );
-    }
-
-    protected function checkYamlValueUnicityParameter(array $array, mixed $data): void 
-    {
-
-        $keysParameters = array_keys($array, $data);
-        $assertion = $this->countIfMore($keysParameters, DataTest::LIMIT); 
-        
-        $this->assertTrue($assertion, 
-        "une valeur $data est dupliquée dans la fixture partie");
-
     }
 
     protected function checkYamlValueUnicityClass(): void
@@ -66,19 +55,6 @@ abstract class DataTest extends KernelTestCase {
         );
     }
 
-    protected function registerClassValues(array $columns, int $index ): string
-    {
-        $value ="<{".$columns[$index]."_".$this->index."}>";
-        $this->valuesFromParameters[] = $value;
-        
-        return $value;
-    }
-
-    protected function shouldProcessKey(string $key): bool
-    {
-        return $this->index != filter_var($key, FILTER_SANITIZE_NUMBER_INT);
-    }
-
     protected function getYamlContent(string $yamlFileName): array
     {
         $yamlContent = file_get_contents("$this->rootDir/fixtures/$yamlFileName");
@@ -87,20 +63,91 @@ abstract class DataTest extends KernelTestCase {
         return Yaml::parse($yamlContent);
     }
 
-    protected function checkYamlKeyParameterByClassValue(array $array, mixed $value): void
+    protected function assertYamlIsReadable($classEntityPath): void 
     {
+        $this->assertArrayHasKey(
+            self::PARAMETERS_IDX,
+            $this->parsedYaml,
+             "L'index des paramètres n'éxiste pas"
+        );
         
-        $value = str_replace(["<{", "}>"], "", $value);
-        $this->assertArrayHasKey($value, $array,
-        "la valeur de l'index : '$value' n'est pas présente dans les paramètres de la classe");
+        $this->assertArrayHasKey(
+            $classEntityPath,
+            $this->parsedYaml,
+            "L'index de la classe n'éxiste pas"
+        );
+        
+        $this->classEntityPath = $classEntityPath;
+    }
+    protected function checkParameterKeysAndValues(string $key, string $data, array $paramsClass): void
+    {
+        $this->checkYamlValueUnicityParameter($this->parsedYaml[self::PARAMETERS_IDX], $data);
+        
+        if ($this->shouldProcessKey($key)) {
+            $classItem = $this->parsedYaml[$this->classEntityPath];
+
+            $this->index = $this->getIndexFromString($key);
+            $this->checkItemKeyExist($classItem, $this->classEntityPath);
+            $this->checkParametersValuesOnClass($classItem[$this->itemKey], $paramsClass);
+        } 
+    }
+
+    private function checkYamlValueUnicityParameter(array $array, mixed $data): void 
+    {
+
+        $keysParameters = array_keys($array, $data);
+        $assertion = $this->countIfMore($keysParameters, self::LIMIT); 
+        
+        $this->assertTrue($assertion, 
+        "une valeur $data est dupliquée dans la fixture partie");
 
     }
 
-    protected function checkYamlValueByAttributClass(string $value, mixed $attribut): void 
+    private function checkParametersValuesOnClass(array $item, array $params): void
     {
-        $this->assertEquals($value, $attribut, 
-        "la valeur du champ : $attribut n'est pas identique à la valeur 
-        de la source : $value");
+        $columns = $this->entityManager->getClassMetadata($this->classEntityPath)->getColumnNames();
+        $attribLoop = 1;
+       
+
+        foreach($item as $attribut) { 
+            $dataValue = $params["dataValue"];   
+            if ($attribut !== $item[$params["avoid"]]) {
+                $dataValue = $this->registerClassValues($columns, $attribLoop);
+            }
+            $this->checkYamlKeyParameterByClassValue($params["parameters"], $attribut);
+            $this->checkYamlValueByAttributClass($dataValue, $attribut);
+            
+            $attribLoop++;
+        }  
+
+    }
+
+    private function registerClassValues(array $columns, int $index ): string
+    {
+        $value ="<{".$columns[$index]."_".$this->index."}>";
+        $this->valuesFromParameters[] = $value;
+        
+        return $value;
+    }
+
+    private function checkYamlKeyParameterByClassValue(array $array, mixed $value): void
+    {
+        $value = str_replace(["<{", "}>"], "", $value);
+        
+        $this->assertArrayHasKey(
+            $value,
+            $array,
+            "la valeur de l'index : '$value' n'est pas présente dans les paramètres de la classe"
+            );
+    }
+
+    private function checkYamlValueByAttributClass(string $value, mixed $attribut): void 
+    {
+        $this->assertEquals(
+            $value,
+            $attribut, 
+            "la valeur du champ : $attribut n'est pas identique à la valeur de la source : $value"
+        );
     }
 
     private function countIfMore(array $objects, int $valueCounted): bool
@@ -114,6 +161,26 @@ abstract class DataTest extends KernelTestCase {
         return strtolower(end($arrPath));
     }
 
+    private function getIndexFromString(string $key): string 
+    {
+       return filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+    }
+
+    private function shouldProcessKey(string $key): bool
+    {
+        return $this->index != $this->getIndexFromString($key);
+    }
+
+    private function checkItemKeyExist(array $arrayClass): void 
+    {
+        $this->itemKey = $this->getEndOfPath("\\", $this->classEntityPath)."_".$this->index."{".$this->index."..".$this->index."}";    
+        
+        $this->assertArrayHasKey(
+            $this->itemKey,
+            $arrayClass,
+            "la clé dans la classe $this->itemKey n'éxiste pas"
+        );
+    }
 
 }
 
