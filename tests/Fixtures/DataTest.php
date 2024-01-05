@@ -8,6 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * DataTest
+ */
 abstract class DataTest extends KernelTestCase
 {
     private const LIMIT = 1;
@@ -18,13 +21,29 @@ abstract class DataTest extends KernelTestCase
     protected EntityManagerInterface $entityManager;
     protected string $rootDir;
     protected string $itemKey;
-    protected array $valuesFromParameters = [];
-    protected array $parsedYaml = [];
-
     protected int $index = 0;
 
+
+
+    /**
+     * @var array<int, string> $valuesFromParameters
+     */
+    protected array $valuesFromParameters = [];
+
+    /**
+     * @var array<string, array<mixed>> $parsedYaml
+     */
+    protected array $parsedYaml = [];
+
+
+    /**
+     * @var string
+     */
     private $classEntityPath;
 
+    /**
+     *
+     */
     protected function initContainer(): void
     {
         self::bootKernel();
@@ -33,6 +52,10 @@ abstract class DataTest extends KernelTestCase
         $this->rootDir = $this->container->getParameter('kernel.project_dir');
     }
 
+    /**
+     * @param EntityRepository $repository
+     * @param array<string, string> $params
+     */
     protected function checkDbUnicity(EntityRepository $repository, array $params): void
     {
         $data = $repository->findBy([$params['key'] => $params['value']]);
@@ -44,6 +67,9 @@ abstract class DataTest extends KernelTestCase
         );
     }
 
+    /**
+     *
+     */
     protected function checkYamlValueUnicityClass(): void
     {
         $this->assertFalse(
@@ -52,7 +78,11 @@ abstract class DataTest extends KernelTestCase
         );
     }
 
-    protected function getYamlContent(string $yamlFileName): array
+    /**
+     * @param string $yamlFileName
+     * @return mixed
+     */
+    protected function getYamlContent(string $yamlFileName): mixed
     {
         $yamlContent = file_get_contents("$this->rootDir/fixtures/$yamlFileName");
         $this->assertNotFalse($yamlContent);
@@ -60,7 +90,10 @@ abstract class DataTest extends KernelTestCase
         return Yaml::parse($yamlContent);
     }
 
-    protected function assertYamlIsReadable($classEntityPath): void
+    /**
+     * @param string $classEntityPath
+     */
+    protected function assertYamlIsReadable(string $classEntityPath): void
     {
         $this->assertArrayHasKey(
             self::PARAMETERS_IDX,
@@ -77,6 +110,11 @@ abstract class DataTest extends KernelTestCase
         $this->classEntityPath = $classEntityPath;
     }
 
+    /**
+     * @param string $key
+     * @param string $data
+     * @param array<string ,mixed> $paramsClass
+     */
     protected function checkParameterKeysAndValues(string $key, string $data, array $paramsClass): void
     {
         $this->checkYamlValueUnicityParameter($this->parsedYaml[self::PARAMETERS_IDX], $data);
@@ -85,11 +123,15 @@ abstract class DataTest extends KernelTestCase
             $classItem = $this->parsedYaml[$this->classEntityPath];
 
             $this->index = $this->getIndexFromString($key);
-            $this->checkItemKeyExist($classItem, $this->classEntityPath);
+            $this->checkItemKeyExist($classItem);
             $this->checkParametersValuesOnClass($classItem[$this->itemKey], $paramsClass);
         }
     }
 
+    /**
+     * @param array<string, mixed> $array
+     * @param mixed $data
+     */
     private function checkYamlValueUnicityParameter(array $array, mixed $data): void
     {
         $keysParameters = array_keys($array, $data);
@@ -101,6 +143,10 @@ abstract class DataTest extends KernelTestCase
         );
     }
 
+    /**
+     * @param array<int, string> $item
+     * @param array<string, mixed> $params
+     */
     private function checkParametersValuesOnClass(array $item, array $params): void
     {
         $columns = $this->entityManager->getClassMetadata($this->classEntityPath)->getColumnNames();
@@ -111,13 +157,18 @@ abstract class DataTest extends KernelTestCase
             if ($attribut !== $item[$params['avoid']]) {
                 $dataValue = $this->registerClassValues($columns, $attribLoop);
             }
-            $this->checkYamlKeyParameterByClassValue($params['parameters'], $attribut);
+            $this->checkYamlKeyParameterByClassValue($this->parsedYaml[self::PARAMETERS_IDX], $attribut);
             $this->checkYamlValueByAttributClass($dataValue, $attribut);
 
             ++$attribLoop;
         }
     }
 
+    /**
+     * @param array<int, string> $columns
+     * @param int $index
+     * @return string
+     */
     private function registerClassValues(array $columns, int $index): string
     {
         $value = '<{' . $columns[$index] . '_' . $this->index . '}>';
@@ -126,6 +177,10 @@ abstract class DataTest extends KernelTestCase
         return $value;
     }
 
+    /**
+     * @param array<string, mixed> $array
+     * @param mixed $value
+     */
     private function checkYamlKeyParameterByClassValue(array $array, mixed $value): void
     {
         $value = str_replace(['<{', '}>'], '', $value);
@@ -137,6 +192,10 @@ abstract class DataTest extends KernelTestCase
         );
     }
 
+    /**
+     * @param string $value
+     * @param mixed $attribut
+     */
     private function checkYamlValueByAttributClass(string $value, mixed $attribut): void
     {
         $this->assertEquals(
@@ -146,11 +205,21 @@ abstract class DataTest extends KernelTestCase
         );
     }
 
+    /**
+     * @param array<int, mixed> $objects
+     * @param int $valueCounted
+     * @return bool
+     */
     private function countIfMore(array $objects, int $valueCounted): bool
     {
         return count($objects) === $valueCounted;
     }
 
+    /**
+     * @param string $haystack
+     * @param string $path
+     * @return string
+     */
     private function getEndOfPath(string $haystack, string $path): string
     {
         $arrPath = explode($haystack, $path);
@@ -158,16 +227,25 @@ abstract class DataTest extends KernelTestCase
         return strtolower(end($arrPath));
     }
 
-    private function getIndexFromString(string $key): string
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    private function getIndexFromString(string $key): mixed
     {
         return filter_var($key, FILTER_SANITIZE_NUMBER_INT);
     }
-
+    /**
+     * @param string $key
+     */
     private function shouldProcessKey(string $key): bool
     {
         return $this->index != $this->getIndexFromString($key);
     }
 
+    /**
+     * @param array<int, string> $arrayClass
+     */
     private function checkItemKeyExist(array $arrayClass): void
     {
         $this->itemKey = $this->getEndOfPath(

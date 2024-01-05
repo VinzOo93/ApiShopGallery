@@ -4,6 +4,9 @@ namespace App\Tests\Fixtures;
 
 use App\Repository\PhotoRepository;
 
+/**
+ * PhotoYamlTest.
+ */
 class PhotoYamlTest extends DataTest
 {
     private const FILE_NAME = 'photo.yaml';
@@ -14,8 +17,17 @@ class PhotoYamlTest extends DataTest
     protected string $classEntityPathPhoto;
 
     private PhotoRepository $photoRepository;
+
+    /**
+     * @var array<string, string>
+     */
     private array $photoParameters = [];
 
+    /**
+     * getContainerPhoto.
+     * 
+     * @return void
+     */
     protected function getContainerPhoto(): void
     {
         $this->initContainer();
@@ -23,6 +35,11 @@ class PhotoYamlTest extends DataTest
         $this->classEntityPathPhoto = $this->photoRepository->getClassName();
     }
 
+    /**
+     * testPhotoSetUp.
+     * 
+     * @return void
+     */
     public function testPhotoSetUp(): void
     {
         $this->getContainerPhoto();
@@ -30,6 +47,9 @@ class PhotoYamlTest extends DataTest
         $this->testPhotoParametersAndItems();
     }
 
+    /**
+     * testPhotoYamlIsReadable.
+     */
     protected function testPhotoYamlIsReadable(): void
     {
         $this->parsedYaml = $this->getYamlContent(self::FILE_NAME);
@@ -39,20 +59,27 @@ class PhotoYamlTest extends DataTest
         $this->assertPhotoQuantity();
     }
 
+    /**
+     * testPhotoParametersAndItems.
+     * @return void
+     */
     protected function testPhotoParametersAndItems(): void
     {
         foreach ($this->photoParameters as $key => $data) {
             if (self::QUANTITY_IDX !== $key) {
                 $this->checkParameterKeysAndValues($key, $data, [
-                    'dataValue' => '<{'.self::QUANTITY_IDX.'}>',
+                    'dataValue' => '<{' . self::QUANTITY_IDX . '}>',
                     'avoid' => self::QUANTITY_SOLD,
-                    'parameters' => $this->photoParameters,
                 ]);
             }
         }
         $this->checkYamlValueUnicityClass();
     }
 
+    /**
+     * assertPhotoQuantity.
+     * @return void
+     */
     private function assertPhotoQuantity(): void
     {
         $this->assertArrayHasKey(
@@ -64,7 +91,7 @@ class PhotoYamlTest extends DataTest
         $this->assertEquals(
             self::QUANTITY,
             $this->photoParameters[self::QUANTITY_IDX],
-            " La quantité n'est pas égale ".self::QUANTITY
+            " La quantité n'est pas égale " . self::QUANTITY
         );
     }
 }

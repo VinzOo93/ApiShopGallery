@@ -7,6 +7,9 @@ use App\Repository\PhotoRepository;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * PhotoDbTest
+ */
 class PhotoDbTest extends DataTest
 {
     private const URL_HOST_CDN = 'https://ucarecdn.com/';
@@ -14,8 +17,17 @@ class PhotoDbTest extends DataTest
 
     private PhotoRepository $photoRepository;
     private HttpClientInterface $client;
+
+    /**
+     * @var array<int, Photo> $photos
+     */
     private array $photos;
 
+    /**
+     * getContainerPhoto
+     *
+     * @return void
+     */
     protected function getContainerPhoto(): void
     {
         $this->initContainer();
@@ -23,6 +35,11 @@ class PhotoDbTest extends DataTest
         $this->client = HttpClient::create();
     }
 
+    /**
+     * testsPhotoSetUp
+     *
+     * @return void
+     */
     public function testsPhotoSetUp(): void
     {
         $this->getContainerPhoto();
@@ -31,42 +48,55 @@ class PhotoDbTest extends DataTest
         $this->testPhotoUrl();
     }
 
+    /**
+     * testPhotoData
+     *
+     * @return void
+     */
     protected function testPhotoData(): void
     {
         foreach ($this->photos as $photo) {
             $this->assertInstanceOf(Photo::class, $photo, "l'objet retourné ne provient pas de la classe Photo");
 
             $this->checkDbUnicity($this->photoRepository, [
-             'key' => 'name',
-             'value' => $photo->getName(),
-             ]);
+                'key' => 'name',
+                'value' => $photo->getName(),
+            ]);
 
             $this->checkDbUnicity($this->photoRepository, [
-              'key' => 'urlCdn',
-              'value' => $photo->getUrlCdn(),
-              ]);
+                'key' => 'urlCdn',
+                'value' => $photo->getUrlCdn(),
+            ]);
         }
     }
 
+    /**
+     * testPhotoUrl
+     *
+     * @return void
+     */
     protected function testPhotoUrl(): void
     {
         foreach ($this->photos as $photo) {
-            $urlCdnImage = self::URL_HOST_CDN.$photo->getUrlCdn().self::URL_PARAM_CDN;
+            $urlCdnImage = self::URL_HOST_CDN . $photo->getUrlCdn() . self::URL_PARAM_CDN;
             $response = $this->client->request('GET', $urlCdnImage);
 
             $this->assertEquals(
                 200,
                 $response->getStatusCode(),
-                "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'a pas été trouvée dans le cdn"
+                "L'image " . $photo->getName() . " dont l'url est  : $urlCdnImage n'a pas été trouvée dans le cdn"
             );
             $this->assertEquals(
                 'image/jpeg',
                 $response->getHeaders()['content-type'][0],
-                "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'est retournée au format image/jpeg"
+                "L'image " . $photo->getName() . " dont l'url est  : $urlCdnImage n'est retournée au format image/jpeg"
             );
         }
     }
 
+    /**
+     * @return Photo[]
+     */
     private function getAllPhotos(): array
     {
         return $this->photoRepository->findAll();
