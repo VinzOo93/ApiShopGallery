@@ -28,3 +28,7 @@
 ###< friendsofphp/php-cs-fixer ###
 
 /tools
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
