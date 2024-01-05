@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Tests\Fixtures;
 
@@ -12,14 +12,14 @@ class PhotoYamlTest extends DataTest
     private const QUANTITY = 0;
 
     protected string $classEntityPathPhoto;
-    
+
     private PhotoRepository $photoRepository;
     private array $photoParameters = [];
 
     protected function getContainerPhoto(): void
     {
         $this->initContainer();
-        $this->photoRepository = $this->container->get(PhotoRepository::class);   
+        $this->photoRepository = $this->container->get(PhotoRepository::class);
         $this->classEntityPathPhoto = $this->photoRepository->getClassName();
     }
 
@@ -37,20 +37,19 @@ class PhotoYamlTest extends DataTest
 
         $this->assertYamlIsReadable($this->classEntityPathPhoto);
         $this->assertPhotoQuantity();
-
-    }  
+    }
 
     protected function testPhotoParametersAndItems(): void
     {
         foreach ($this->photoParameters as $key => $data) {
-            if ($key !== self::QUANTITY_IDX) {
+            if (self::QUANTITY_IDX !== $key) {
                 $this->checkParameterKeysAndValues($key, $data, [
-                    "dataValue" => "<{".self::QUANTITY_IDX."}>",
-                    "avoid" => self::QUANTITY_SOLD,
-                    "parameters" => $this->photoParameters
+                    'dataValue' => '<{'.self::QUANTITY_IDX.'}>',
+                    'avoid' => self::QUANTITY_SOLD,
+                    'parameters' => $this->photoParameters,
                 ]);
             }
-            }
+        }
         $this->checkYamlValueUnicityClass();
     }
 
@@ -65,9 +64,7 @@ class PhotoYamlTest extends DataTest
         $this->assertEquals(
             self::QUANTITY,
             $this->photoParameters[self::QUANTITY_IDX],
-              " La quantité n'est pas égale " . self::QUANTITY
-        );    
+            " La quantité n'est pas égale ".self::QUANTITY
+        );
     }
 }
-
-?>

@@ -38,5 +38,4 @@ class ItemRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
 }

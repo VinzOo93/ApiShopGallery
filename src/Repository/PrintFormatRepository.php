@@ -38,5 +38,4 @@ class PrintFormatRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
 }

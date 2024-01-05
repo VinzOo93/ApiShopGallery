@@ -5,7 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PhotoRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
+
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
 #[ApiResource]
 class Photo
@@ -64,5 +64,4 @@ class Photo
 
         return $this;
     }
-    
 }

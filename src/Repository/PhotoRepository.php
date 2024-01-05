@@ -38,6 +38,4 @@ class PhotoRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-
 }
