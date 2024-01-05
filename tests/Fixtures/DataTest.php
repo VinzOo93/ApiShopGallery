@@ -40,7 +40,8 @@ abstract class DataTest extends KernelTestCase
 
         $this->assertTrue(
             $assertion,
-            "La valeur portant l'url de CDN '".$params['value']."' est dupliquée en BDD");
+            "La valeur portant l'url de CDN '" . $params['value'] . "' est dupliquée en BDD"
+        );
     }
 
     protected function checkYamlValueUnicityClass(): void
@@ -94,8 +95,10 @@ abstract class DataTest extends KernelTestCase
         $keysParameters = array_keys($array, $data);
         $assertion = $this->countIfMore($keysParameters, self::LIMIT);
 
-        $this->assertTrue($assertion,
-            "une valeur $data est dupliquée dans la fixture partie");
+        $this->assertTrue(
+            $assertion,
+            "une valeur $data est dupliquée dans la fixture partie"
+        );
     }
 
     private function checkParametersValuesOnClass(array $item, array $params): void
@@ -117,7 +120,7 @@ abstract class DataTest extends KernelTestCase
 
     private function registerClassValues(array $columns, int $index): string
     {
-        $value = '<{'.$columns[$index].'_'.$this->index.'}>';
+        $value = '<{' . $columns[$index] . '_' . $this->index . '}>';
         $this->valuesFromParameters[] = $value;
 
         return $value;
@@ -167,7 +170,10 @@ abstract class DataTest extends KernelTestCase
 
     private function checkItemKeyExist(array $arrayClass): void
     {
-        $this->itemKey = $this->getEndOfPath('\\', $this->classEntityPath).'_'.$this->index.'{'.$this->index.'..'.$this->index.'}';
+        $this->itemKey = $this->getEndOfPath(
+            '\\',
+            $this->classEntityPath
+        ) . '_' . $this->index . '{' . $this->index . '..' . $this->index . '}';
 
         $this->assertArrayHasKey(
             $this->itemKey,

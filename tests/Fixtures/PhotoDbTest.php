@@ -54,10 +54,14 @@ class PhotoDbTest extends DataTest
             $urlCdnImage = self::URL_HOST_CDN.$photo->getUrlCdn().self::URL_PARAM_CDN;
             $response = $this->client->request('GET', $urlCdnImage);
 
-            $this->assertEquals(200, $response->getStatusCode(),
+            $this->assertEquals(
+                200,
+                $response->getStatusCode(),
                 "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'a pas été trouvée dans le cdn"
             );
-            $this->assertEquals('image/jpeg', $response->getHeaders()['content-type'][0],
+            $this->assertEquals(
+                'image/jpeg',
+                $response->getHeaders()['content-type'][0],
                 "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'est retournée au format image/jpeg"
             );
         }
