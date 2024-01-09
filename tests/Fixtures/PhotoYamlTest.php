@@ -7,7 +7,7 @@ use App\Repository\PhotoRepository;
 /**
  * PhotoYamlTest.
  */
-class PhotoYamlTest extends DataTest
+class PhotoYamlTest extends DataTestBase
 {
     private const FILE_NAME = 'photo.yaml';
     private const QUANTITY_IDX = 'quantity_0';

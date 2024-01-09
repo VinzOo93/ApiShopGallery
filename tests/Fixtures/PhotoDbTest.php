@@ -10,7 +10,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * PhotoDbTest
  */
-class PhotoDbTest extends DataTest
+class PhotoDbTest extends DataTestBase
 {
     private const URL_HOST_CDN = 'https://ucarecdn.com/';
     private const URL_PARAM_CDN = '/-/preview/1880x864/-/quality/smart/-/format/auto/';

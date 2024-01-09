@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * DataTest
  */
-abstract class DataTest extends KernelTestCase
+abstract class DataTestBase extends KernelTestCase
 {
     private const LIMIT = 1;
 
