@@ -4,6 +4,7 @@ namespace App\Tests\Fixtures;
 
 use App\Entity\Photo;
 use App\Repository\PhotoRepository;
+use App\Tests\Base\DataTestBase;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -30,7 +31,7 @@ class PhotoDbTest extends DataTestBase
      */
     protected function getContainerPhoto(): void
     {
-        $this->initContainer();
+        $this->initContainerDataBase();
         $this->photoRepository = $this->container->get(PhotoRepository::class);
         $this->client = HttpClient::create();
     }

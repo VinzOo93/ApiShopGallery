@@ -3,6 +3,7 @@
 namespace App\Tests\Fixtures;
 
 use App\Repository\PhotoRepository;
+use App\Tests\Base\DataTestBase;
 
 /**
  * PhotoYamlTest.
@@ -30,7 +31,7 @@ class PhotoYamlTest extends DataTestBase
      */
     protected function getContainerPhoto(): void
     {
-        $this->initContainer();
+        $this->initContainerDataBase();
         $this->photoRepository = $this->container->get(PhotoRepository::class);
         $this->classEntityPathPhoto = $this->photoRepository->getClassName();
     }

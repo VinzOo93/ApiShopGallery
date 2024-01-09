@@ -1,24 +1,20 @@
 <?php
 
-namespace App\Tests\Fixtures;
+namespace App\Tests\Base;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
+use Doctrine\ORM\EntityRepository;
+
 
 /**
  * DataTest
  */
-abstract class DataTestBase extends KernelTestCase
+abstract class DataTestBase extends TestBase
 {
     private const LIMIT = 1;
 
     protected const PARAMETERS_IDX = 'parameters';
 
-    protected ContainerInterface $container;
-    protected EntityManagerInterface $entityManager;
     protected string $rootDir;
     protected string $itemKey;
     protected int $index = 0;
@@ -44,11 +40,9 @@ abstract class DataTestBase extends KernelTestCase
     /**
      *
      */
-    protected function initContainer(): void
+    protected function initContainerDataBase(): void
     {
-        self::bootKernel();
-        $this->container = static::getContainer();
-        $this->entityManager = $this->container->get('doctrine')->getManager();
+        $this->initContainer();
         $this->rootDir = $this->container->getParameter('kernel.project_dir');
     }
 
