@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-
 /**
  * TestBase
  */
@@ -18,7 +17,7 @@ abstract class TestBase extends KernelTestCase
     /**
      *
      */
-    protected function initContainer()
+    protected function initContainer(): void
     {
         self::bootKernel();
         $this->container = static::getContainer();

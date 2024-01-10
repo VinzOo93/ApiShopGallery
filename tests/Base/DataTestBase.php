@@ -5,7 +5,6 @@ namespace App\Tests\Base;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityRepository;
 
-
 /**
  * DataTest
  */

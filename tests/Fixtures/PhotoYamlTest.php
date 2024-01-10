@@ -26,7 +26,7 @@ class PhotoYamlTest extends DataTestBase
 
     /**
      * getContainerPhoto.
-     * 
+     *
      * @return void
      */
     protected function getContainerPhoto(): void
@@ -38,7 +38,7 @@ class PhotoYamlTest extends DataTestBase
 
     /**
      * testPhotoSetUp.
-     * 
+     *
      * @return void
      */
     public function testPhotoSetUp(): void

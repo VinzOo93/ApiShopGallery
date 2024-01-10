@@ -93,7 +93,7 @@ class Item
     /**
      * @return Collection<int, Cart>
      */
-    public function getCart(): Collection
+    public function getCarts(): Collection
     {
         return $this->cart;
     }

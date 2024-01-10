@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Tests\Entity;
 
+use App\Entity\Photo;
 use App\Tests\Base\TestBase;
 
 /**
@@ -9,10 +10,52 @@ use App\Tests\Base\TestBase;
  */
 class PhotoTest extends TestBase
 {
+    private Photo $photo;
 
-    protected function getContainerCart(): void
+    protected function getContainerPhoto(): void
     {
         $this->getContainer();
+        $this->photo = new Photo();
     }
 
-} 
+    public function testPrintFormatSetUp(): void
+    {
+        $this->getContainerPhoto();
+        $this->testName();
+        $this->testUrlCdn();
+        $this->testQuantitySold();
+    }
+
+    /**
+     * testName
+     *
+     * @return void
+     */
+    private function testName(): void
+    {
+        $this->photo->setName('oulah oulah');
+        $this->assertEquals('oulah oulah', $this->photo->getName());
+    }
+
+    /**
+     * getUrlCdn
+     *
+     * @return void
+     */
+    private function testUrlCdn(): void
+    {
+        $this->photo->setUrlCdn('http://cdn.fr/oulahoulah.jpg');
+        $this->assertEquals('http://cdn.fr/oulahoulah.jpg', $this->photo->getUrlCdn());
+    }
+
+    /**
+     * testQuantitySold
+     *
+     * @return void
+     */
+    private function testQuantitySold()
+    {
+        $this->photo->setQuantitySold(10);
+        $this->assertEquals(10, $this->photo->getQuantitySold());
+    }
+}
