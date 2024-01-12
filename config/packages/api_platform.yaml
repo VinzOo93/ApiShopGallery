@@ -1,0 +1,16 @@
+api_platform:
+    title: API SHOP GALLERY
+    version: 1.0.0
+    formats:
+      jsonld: ['application/ld+json']
+    swagger:
+         api_keys:
+             JWT:
+                name: Authorization
+                type: header
+    defaults:
+      extra_properties:
+          standard_put: true
+          extra_properties:
+            rfc_7807_compliant_errors: true
+    keep_legacy_inflector: false
