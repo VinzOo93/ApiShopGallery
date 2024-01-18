@@ -3,32 +3,54 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\AuthPasswordHasherService;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * DevUserProvider
+ * DevUserProvider.
  */
 class DevUserProvider implements UserProviderInterface
 {
+    private const EMAIL_DEV = 'dev@apiShopGallery.com';
+    private const PASSWORD_DEV = 'devShop';
+    private const ROLE_DEV = ['ROLE_USER'];
+
+    private AuthPasswordHasherService $hasher;
 
     /**
-     * loadUserByIdentifier
+     * __construct.
      *
-     * @param  mixed $identifier
-     * @return UserInterface
+     * @param AuthPasswordHasherService $hasher
+     *
+     * @return void
      */
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function __construct(AuthPasswordHasherService $hasher)
     {
-        // Retourner un utilisateur "en dur" pour le développement
-        return new User('dev@apiShopGallery.com', 'devShop', ['ROLE_USER']);
+        $this->hasher = $hasher;
     }
 
     /**
-     * refreshUser
+     * loadUserByIdentifier.
      *
-     * @param  mixed $user
-     * @return UserInterface
+     * @param string $identifier
+     */
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $user = new User();
+        $user->setEmail(self::EMAIL_DEV)
+            ->setPassword(
+                $this->hasher->hashPassword(self::PASSWORD_DEV)
+            )
+            ->setRoles(self::ROLE_DEV);
+
+        return $user;
+    }
+
+    /**
+     * refreshUser.
+     *
+     * @param UserInterface $user
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
@@ -36,10 +58,9 @@ class DevUserProvider implements UserProviderInterface
     }
 
     /**
-     * supportsClass
+     * supportsClass.
      *
-     * @param  mixed $class
-     * @return bool
+     * @param string $class
      */
     public function supportsClass(string $class): bool
     {

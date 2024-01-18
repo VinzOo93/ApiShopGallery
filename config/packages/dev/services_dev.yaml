@@ -1,0 +1,5 @@
+services:
+    app.user_provider.dev:
+        class: App\Security\DevUserProvider
+        arguments:
+            $hasher: '@App\Service\AuthPasswordHasherService'

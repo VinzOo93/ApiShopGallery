@@ -1,0 +1,6 @@
+App\Entity\User:
+  user{1..1}:
+    email: <email()>
+    roles: 
+    - ROLE_USER
+    password: <hashPassword('hello123')>

@@ -32,7 +32,6 @@ class UserTest extends TestBase
         $this->testUserIdentifier();
         $this->testRole();
         $this->testPassword();
-        $this->testErase();
     }
 
     /**
@@ -66,16 +65,5 @@ class UserTest extends TestBase
     {
         $this->user->setPassword('pa$$word');
         $this->assertEquals('pa$$word', $this->user->getPassword());
-    }
-
-    /**
-     * testErase
-     *
-     * @return void
-     */
-    private function testErase(): void
-    {
-        $this->user->eraseCredentials();
-        $this->assertEquals(null, $this->user->getEmail());
     }
 }

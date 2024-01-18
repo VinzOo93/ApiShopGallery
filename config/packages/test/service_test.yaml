@@ -1,0 +1,8 @@
+services:
+    app.auth_password_hasher.test:
+        class: 'App\Service\AuthPasswordHasherService'
+        public: true
+        autowire: true
+        arguments:
+            $hasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+    

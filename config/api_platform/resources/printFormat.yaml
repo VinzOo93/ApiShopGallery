@@ -2,5 +2,8 @@ App\Entity\PrintFormat:
   operations:
     ApiPlatform\Metadata\GetCollection:
       method: GET
+      formats: ['json']
     ApiPlatform\Metadata\Get:
       method: GET
+      formats: ['json']
+
