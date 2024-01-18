@@ -19,7 +19,7 @@ security:
         main:
             stateless: true
             lazy: true
-            provider: app_user_provider
+            provider: dev_user_provider
             json_login:
                 check_path: /auth # The name in routes.yaml is enough for mapping
                 username_path: email

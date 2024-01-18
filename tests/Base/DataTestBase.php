@@ -2,8 +2,10 @@
 
 namespace App\Tests\Base;
 
+use App\Entity\Item;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityRepository;
+use phpDocumentor\Reflection\Types\ArrayKey;
 
 /**
  * DataTest
@@ -132,7 +134,7 @@ abstract class DataTestBase extends TestBase
 
         $this->assertTrue(
             $assertion,
-            "une valeur $data est dupliquée dans la fixture partie"
+            "une valeur $data est dupliquée dans la fixture partie classe"
         );
     }
 
@@ -147,7 +149,7 @@ abstract class DataTestBase extends TestBase
 
         foreach ($item as $attribut) {
             $dataValue = $params['dataValue'];
-            if ($attribut !== $item[$params['avoid']]) {
+            if ($attribut !== $this->checkavoiding($params, $item)) {
                 $dataValue = $this->registerClassValues($columns, $attribLoop);
             }
             $this->checkYamlKeyParameterByClassValue($this->parsedYaml[self::PARAMETERS_IDX], $attribut);
@@ -155,6 +157,18 @@ abstract class DataTestBase extends TestBase
 
             ++$attribLoop;
         }
+    }
+
+    /**
+     * checkavoiding
+     *
+     * @param  array<string, mixed> $params
+     * @param  array<int, mixed> $item
+     * @return mixed
+     */
+    private function checkavoiding(array $params, array $item): mixed
+    {
+        return (array_key_exists('avoid', $params)) ? ($item[$params['avoid']]) : false;
     }
 
     /**
@@ -245,7 +259,6 @@ abstract class DataTestBase extends TestBase
             '\\',
             $this->classEntityPath
         ) . '_' . $this->index . '{' . $this->index . '..' . $this->index . '}';
-
         $this->assertArrayHasKey(
             $this->itemKey,
             $arrayClass,
