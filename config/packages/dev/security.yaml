@@ -29,5 +29,5 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
             refresh_jwt:
-                check_path: /api/token/refresh 
+                check_path: /token/refresh 
                 provider: dev_user_provider

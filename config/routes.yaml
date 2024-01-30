@@ -2,5 +2,7 @@ auth:
     path: /auth
     methods: ['POST']
 
-api_refresh_token:
-    path: /api/token/refresh
+refresh_token:
+    path: /token/refresh
+    methods: ['POST']
+

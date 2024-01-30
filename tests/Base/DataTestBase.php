@@ -2,10 +2,8 @@
 
 namespace App\Tests\Base;
 
-use App\Entity\Item;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityRepository;
-use phpDocumentor\Reflection\Types\ArrayKey;
 
 /**
  * DataTest

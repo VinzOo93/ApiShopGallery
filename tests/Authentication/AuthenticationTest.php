@@ -2,23 +2,10 @@
 
 namespace App\Tests\Authentication;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\Entity\User;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use App\Tests\Base\AuthenticationTestBase;
 
-class AuthenticationTest extends ApiTestCase
+class AuthenticationTest extends AuthenticationTestBase
 {
-    use ReloadDatabaseTrait;
-
-    private const EMAIL_TEST = 'test@example.com';
-    private const PASSWORD_TEST = '$3CR3T';
-    private const ROLE_TEST = ['ROLE_USER'];
-    private const URL_TEST = '/print_formats?page=1';
-
-    private Client $client;
-
     /**
      * testLogin
      *
@@ -27,62 +14,32 @@ class AuthenticationTest extends ApiTestCase
     public function testLogin(): void
     {
 
-
-        $this->client = static::createClient();
-        $container = self::getContainer();
-
-        $user = new User();
-        $encryptedPwd = $container->get('app.auth_password_hasher.test')->hashPassword(self::PASSWORD_TEST);
-        $user = $user->setEmail(self::EMAIL_TEST)
-            ->setPassword($encryptedPwd)
-            ->setRoles(self::ROLE_TEST);
-
-        $manager = $container->get('doctrine')->getManager();
-        $manager->persist($user);
-        $manager->flush();
-
+        $this->initTest();
+        $this->initEntityUserTest();
 
         $response = $this->prepareUser();
         $json = $response->toArray();
         $this->assertArrayHasKey('token', $json);
-
-        $this->client->request(
-            'GET',
-            self::URL_TEST,
-            [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
+        $this->getErrorAuth();
         $this->assertResponseStatusCodeSame(401);
-        $this->client->request(
-            'GET',
-            self::URL_TEST,
-            [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $json['token']
-                ]
-            ]
-        );
 
+        $this->getAuthentication($json);
         $this->assertResponseIsSuccessful();
     }
 
-    private function prepareUser(): ResponseInterface
+    /**
+     * getErrorAuth
+     *
+     * @return void
+     */
+    private function getErrorAuth(): void
     {
-        return $this->client->request(
-            'POST',
-            'auth',
+        $this->client->request(
+            'GET',
+            parent::URL_TEST,
             [
                 'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ],
-                'json' => [
-                    'email' => self::EMAIL_TEST,
-                    'password' => self::PASSWORD_TEST,
+                    'Accept' => 'application/json',
                 ],
             ]
         );
