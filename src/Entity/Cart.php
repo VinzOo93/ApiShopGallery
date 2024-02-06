@@ -22,8 +22,6 @@ class Cart
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-
-
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 
