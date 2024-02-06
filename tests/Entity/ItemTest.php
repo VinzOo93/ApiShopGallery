@@ -38,10 +38,13 @@ class ItemTest extends TestBase
     {
         $this->getContainerItem();
         $this->testQuantity();
-        $this->testPrice();
         $this->testImage();
         $this->testPrintFormat();
         $this->testCart();
+        $this->testUnitPrice();
+        $this->testUnitPreTaxPrice();
+        $this->testPreTaxPrice();
+        $this->testTaxPrice();
     }
 
     /**
@@ -53,17 +56,6 @@ class ItemTest extends TestBase
     {
         $this->item->setQuantity(5);
         $this->assertEquals(5, $this->item->getQuantity());
-    }
-
-    /**
-     * testPrice
-     *
-     * @return void
-     */
-    private function testPrice(): void
-    {
-        $this->item->setPrice('5.00');
-        $this->assertEquals('5.00', $this->item->getPrice());
     }
 
     /**
@@ -104,5 +96,49 @@ class ItemTest extends TestBase
             $this->item->removeCart($cart);
             $this->assertCount(0, $this->item->getCarts());
         }
+    }
+
+    /**
+     * testUnitPrice
+     *
+     * @return void
+     */
+    private function testUnitPrice(): void
+    {
+        $this->item->setUnitPrice('5.00');
+        $this->assertEquals('5.00', $this->item->getUnitPrice());
+    }
+
+    /**
+     * testUnitPreTaxPrice
+     *
+     * @return void
+     */
+    private function testUnitPreTaxPrice(): void
+    {
+        $this->item->setUnitPreTaxPrice('5.00');
+        $this->assertEquals('5.00', $this->item->getUnitPreTaxPrice());
+    }
+
+    /**
+     * testPreTaxPrice
+     *
+     * @return void
+     */
+    private function testPreTaxPrice(): void
+    {
+        $this->item->setUnitPreTaxPrice('5.00');
+        $this->assertEquals('5.00', $this->item->getUnitPreTaxPrice());
+    }
+
+    /**
+     * testTaxPrice
+     *
+     * @return void
+     */
+    private function testTaxPrice(): void
+    {
+        $this->item->setTaxPrice('5.00');
+        $this->assertEquals('5.00', $this->item->getTaxPrice());
     }
 }

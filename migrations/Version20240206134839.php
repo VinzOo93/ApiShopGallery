@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240118183953 extends AbstractMigration
+final class Version20240206134839 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20240118183953 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE refresh_tokens (id INT AUTO_INCREMENT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid DATETIME NOT NULL, UNIQUE INDEX UNIQ_9BACE7E1C74F2195 (refresh_token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE item ADD unit_price NUMERIC(6, 2) NOT NULL, ADD unit_pre_tax_price NUMERIC(6, 2) NOT NULL, ADD pre_tax_price NUMERIC(6, 2) NOT NULL, ADD tax_price NUMERIC(6, 2) NOT NULL, DROP price');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE refresh_tokens');
+        $this->addSql('ALTER TABLE item ADD price NUMERIC(5, 2) NOT NULL, DROP unit_price, DROP unit_pre_tax_price, DROP pre_tax_price, DROP tax_price');
     }
 }

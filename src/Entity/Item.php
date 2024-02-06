@@ -19,8 +19,7 @@ class Item
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
-    private ?string $price = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
@@ -31,6 +30,20 @@ class Item
 
     #[ORM\OneToMany(mappedBy: 'item', targetEntity: Cart::class)]
     private Collection $cart;
+
+
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    private ?string $unitPrice = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    private ?string $unitPreTaxPrice = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    private ?string $preTaxPrice = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    private ?string $taxPrice = null;
 
     public function __construct()
     {
@@ -50,18 +63,6 @@ class Item
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getPrice(): ?string
-    {
-        return $this->price;
-    }
-
-    public function setPrice(string $price): self
-    {
-        $this->price = $price;
 
         return $this;
     }
@@ -116,6 +117,53 @@ class Item
                 $cart->setItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUnitPrice(): ?string
+    {
+        return $this->unitPrice;
+    }
+
+    public function setUnitPrice(string $unitPrice): static
+    {
+        $this->unitPrice = $unitPrice;
+
+        return $this;
+    }
+
+    public function getUnitPreTaxPrice(): ?string
+    {
+        return $this->unitPreTaxPrice;
+    }
+
+    public function setUnitPreTaxPrice(string $unitPreTaxPrice): static
+    {
+        $this->unitPreTaxPrice = $unitPreTaxPrice;
+
+        return $this;
+    }
+
+    public function getPreTaxPrice(): ?string
+    {
+        return $this->preTaxPrice;
+    }
+
+    public function setPreTaxPrice(string $preTaxPrice): static
+    {
+        $this->preTaxPrice = $preTaxPrice;
+
+        return $this;
+    }
+    public function getTaxPrice(): ?string
+    {
+        return $this->taxPrice;
+    }
+
+    public function setTaxPrice(string $taxPrice): self
+    {
+        $this->taxPrice = $taxPrice;
 
         return $this;
     }
