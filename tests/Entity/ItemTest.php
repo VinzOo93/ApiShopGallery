@@ -82,23 +82,6 @@ class ItemTest extends TestBase
     }
 
     /**
-     * testCart
-     *
-     * @return void
-     */
-    private function testCart(): void
-    {
-        $cart = $this->cart->setTotal('100');
-        $this->item->addCart($cart);
-
-        foreach ($this->item->getCarts() as $cart) {
-            $this->assertEquals('100', $cart->getTotal());
-            $this->item->removeCart($cart);
-            $this->assertCount(0, $this->item->getCarts());
-        }
-    }
-
-    /**
      * testUnitPrice
      *
      * @return void
@@ -140,5 +123,17 @@ class ItemTest extends TestBase
     {
         $this->item->setTaxPrice('5.00');
         $this->assertEquals('5.00', $this->item->getTaxPrice());
+    }
+
+    /**
+     * testCart
+     *
+     * @return void
+     */
+    private function testCart(): void
+    {
+        $cart = $this->cart->setSubtotal("100.00");
+        $this->item->setCart($cart);
+        $this->assertEquals("100.00", $this->item->getCart()->getSubtotal());
     }
 }

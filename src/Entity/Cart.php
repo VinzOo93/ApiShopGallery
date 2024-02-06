@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CartRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,9 +22,7 @@ class Cart
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cart')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Item $item = null;
+
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
@@ -35,6 +35,14 @@ class Cart
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $total = null;
+
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, orphanRemoval: true)]
+    private Collection $item;
+
+    public function __construct()
+    {
+        $this->item = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,18 +69,6 @@ class Cart
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getItem(): ?Item
-    {
-        return $this->item;
-    }
-
-    public function setItem(?Item $item): self
-    {
-        $this->item = $item;
 
         return $this;
     }
@@ -121,6 +117,36 @@ class Cart
     public function setTotal(string $total): self
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Item>
+     */
+    public function getItem(): Collection
+    {
+        return $this->item;
+    }
+
+    public function addItem(Item $item): static
+    {
+        if (!$this->item->contains($item)) {
+            $this->item->add($item);
+            $item->setCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Item $item): static
+    {
+        if ($this->item->removeElement($item)) {
+            // set the owning side to null (unless already changed)
+            if ($item->getCart() === $this) {
+                $item->setCart(null);
+            }
+        }
 
         return $this;
     }
