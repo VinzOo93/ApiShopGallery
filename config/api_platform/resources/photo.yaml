@@ -2,4 +2,5 @@ App\Entity\Photo:
   operations:
     ApiPlatform\Metadata\Get:
       method: GET
-      formats: ['json']
+      formats:
+        json: ['application/json']

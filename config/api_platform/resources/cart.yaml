@@ -1,4 +1,4 @@
-App\Entity\PrintFormat:
+App\Entity\Cart:
   operations:
     ApiPlatform\Metadata\GetCollection:
       method: GET
@@ -8,4 +8,11 @@ App\Entity\PrintFormat:
       method: GET
       formats:
         json: ['application/json']
-
+    ApiPlatform\Metadata\Post:
+      method: POST
+      formats:
+        json: ['application/json']
+    ApiPlatform\Metadata\Put:
+      method: PUT
+      formats:
+        json: ['application/json']
