@@ -17,8 +17,6 @@ class Item
     #[ORM\Column]
     private ?int $quantity = null;
 
-
-
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
