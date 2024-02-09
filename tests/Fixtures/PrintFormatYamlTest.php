@@ -9,6 +9,8 @@ class PrintFormatYamlTest extends DataTestBase
 {
     private PrintFormatRepository $printFormatRepository;
     private const FILE_NAME = 'printFormat.yaml';
+    private const ATTRIB_PREFIX = '_pf';
+
 
     protected string $classEntityPathPrintFormat;
 
@@ -27,6 +29,7 @@ class PrintFormatYamlTest extends DataTestBase
     protected function getContainerPrintFormat(): void
     {
         $this->initContainerDataBase();
+        $this->attribPrefix = self::ATTRIB_PREFIX;
         $this->printFormatRepository = $this->container->get(PrintFormatRepository::class);
         $this->classEntityPathPrintFormat = $this->printFormatRepository->getClassName();
     }

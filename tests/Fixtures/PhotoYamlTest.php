@@ -14,6 +14,7 @@ class PhotoYamlTest extends DataTestBase
     private const QUANTITY_IDX = 'quantity_0';
     private const QUANTITY_SOLD = 'quantitySold';
     private const QUANTITY = 0;
+    private const ATTRIB_PREFIX = '_p';
 
     protected string $classEntityPathPhoto;
 
@@ -32,6 +33,7 @@ class PhotoYamlTest extends DataTestBase
     protected function getContainerPhoto(): void
     {
         $this->initContainerDataBase();
+        $this->attribPrefix = self::ATTRIB_PREFIX;
         $this->photoRepository = $this->container->get(PhotoRepository::class);
         $this->classEntityPathPhoto = $this->photoRepository->getClassName();
     }

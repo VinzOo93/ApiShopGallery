@@ -41,7 +41,7 @@ class PrintFormatDbTest extends DataTestBase
         return $this->printFormatRepository->findAll();
     }
     /**
-     * testPhotoData
+     * testPrintFormat
      *
      * @return void
      */
@@ -51,7 +51,7 @@ class PrintFormatDbTest extends DataTestBase
             $this->assertInstanceOf(
                 PrintFormat::class,
                 $printFormat,
-                "l'objet retourné ne provient pas de la classe Photo"
+                "l'objet retourné ne provient pas de la classe PrintFormat"
             );
 
             $this->checkDbUnicity($this->printFormatRepository, [

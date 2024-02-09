@@ -1,36 +1,36 @@
 parameters:
-  name_1: 30x20 cm
-  width_1: 30
-  height_1: 20
-  pre_tax_price_1: 5
+  name_pf_1: 30x20 cm
+  width_pf_1: 30
+  height_pf_1: 20
+  pre_tax_price_pf_1: 5
 
-  name_2: 60x40 cm
-  width_2: 60
-  height_2: 40
-  pre_tax_price_2: 10
+  name_pf_2: 60x40 cm
+  width_pf_2: 60
+  height_pf_2: 40
+  pre_tax_price_pf_2: 10
   
-  name_3: 80x65 cm
-  width_3: 80
-  height_3: 65
-  pre_tax_price_3: 15
+  name_pf_3: 80x65 cm
+  width_pf_3: 80
+  height_pf_3: 65
+  pre_tax_price_pf_3: 15
 
 App\Entity\PrintFormat:
   printformat_1{1..1}:
-    name: <{name_1}>
-    width: <{width_1}>
-    height: <{height_1}>
-    preTaxPrice: <{pre_tax_price_1}>
+    name: <{name_pf_1}>
+    width_pf: <{width_pf_1}>
+    height_pf: <{height_pf_1}>
+    preTaxPrice: <{pre_tax_price_pf_1}>
 
   printformat_2{2..2}:
-    name: <{name_2}>
-    width: <{width_2}>
-    height: <{height_2}>
-    preTaxPrice: <{pre_tax_price_2}>
+    name: <{name_pf_2}>
+    width_pf: <{width_pf_2}>
+    height_pf: <{height_pf_2}>
+    preTaxPrice: <{pre_tax_price_pf_2}>
 
   printformat_3{3..3}:
-    name: <{name_3}>
-    width: <{width_3}>
-    height: <{height_3}>
-    preTaxPrice: <{pre_tax_price_3}>
+    name: <{name_pf_3}>
+    width_pf: <{width_pf_3}>
+    height_pf: <{height_pf_3}>
+    preTaxPrice: <{pre_tax_price_pf_3}>
 
 

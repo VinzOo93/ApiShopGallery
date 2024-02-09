@@ -14,9 +14,11 @@ abstract class DataTestBase extends TestBase
 
     protected const PARAMETERS_IDX = 'parameters';
 
+    protected string $attribPrefix;
     protected string $rootDir;
     protected string $itemKey;
     protected int $index = 0;
+
 
 
 
@@ -147,7 +149,7 @@ abstract class DataTestBase extends TestBase
 
         foreach ($item as $attribut) {
             $dataValue = $params['dataValue'];
-            if ($attribut !== $this->checkavoiding($params, $item)) {
+            if ($attribut !== $this->checkAvoiding($params, $item)) {
                 $dataValue = $this->registerClassValues($columns, $attribLoop);
             }
             $this->checkYamlKeyParameterByClassValue($this->parsedYaml[self::PARAMETERS_IDX], $attribut);
@@ -164,7 +166,7 @@ abstract class DataTestBase extends TestBase
      * @param  array<int, mixed> $item
      * @return mixed
      */
-    private function checkavoiding(array $params, array $item): mixed
+    private function checkAvoiding(array $params, array $item): mixed
     {
         return (array_key_exists('avoid', $params)) ? ($item[$params['avoid']]) : false;
     }
@@ -176,7 +178,7 @@ abstract class DataTestBase extends TestBase
      */
     private function registerClassValues(array $columns, int $index): string
     {
-        $value = '<{' . $columns[$index] . '_' . $this->index . '}>';
+        $value = '<{' . $columns[$index] . $this->attribPrefix . '_' . $this->index . '}>';
         $this->valuesFromParameters[] = $value;
 
         return $value;
