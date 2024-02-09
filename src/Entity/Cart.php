@@ -130,9 +130,6 @@ class Cart
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getItems(): mixed
     {
         return $this->items->getValues();

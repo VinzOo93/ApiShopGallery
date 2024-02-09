@@ -21,7 +21,7 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
     /**
      * __invoke
      *
-     * @param  array $context
+     * @param array<int, mixed> $context
      * @return OpenApi
      */
     public function __invoke(array $context = []): OpenApi
@@ -43,7 +43,7 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
             'properties' => [
                 'refresh_token' => [
                     'type' => 'string',
-                    'example' => 'c474c4ca2ecb96633c942382eb286c909bbe503d66862c8ffd51d258ae44105e7403540bb1372c80d3e1acf23f58aadb76120ce66dd9e8496c9cae13f15bd285',
+                    'example' => $_ENV['JWT_REFRESH_TOKEN']
                 ],
             ],
         ]);
@@ -53,7 +53,6 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
             null,
             null,
             null,
-
             new Model\Operation(
                 'postCredentialsItem',
                 ['refresh_token'],

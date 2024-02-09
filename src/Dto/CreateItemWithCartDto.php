@@ -6,9 +6,9 @@ final class CreateItemWithCartDto
 {
     public int $quantity = 2;
 
-    public string $image;
+    public string $image = 'a07ed184-c9aa-4729-aa25-70571f0fb11a';
 
-    public string $printFormat;
+    public string $printFormat = '30x20 cm';
 
     public string $unitPrice = '500.00';
 
