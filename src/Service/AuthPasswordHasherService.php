@@ -7,14 +7,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthPasswordHasherService
 {
-    private UserPasswordHasherInterface $hasher;
-
     /**
      * __construct.
      *
      * @return void
      */
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(private UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
     }

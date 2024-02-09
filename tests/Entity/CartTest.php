@@ -40,7 +40,7 @@ class CartTest extends TestBase
         $this->getContainerCart();
         $this->testCreatedAt();
         $this->testUpdatedAt();
-        $this->testItem();
+        $this->testItems();
         $this->testSubtotal();
         $this->testTaxes();
         $this->testShipping();
@@ -107,7 +107,7 @@ class CartTest extends TestBase
      *
      * @return void
      */
-    private function testItem(): void
+    private function testItems(): void
     {
         $item = $this->item->setUnitPrice('100.00');
         $this->cart->addItem($item);

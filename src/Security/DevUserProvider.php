@@ -16,8 +16,6 @@ class DevUserProvider implements UserProviderInterface
     private const PASSWORD_DEV = 'devShop';
     private const ROLE_DEV = ['ROLE_USER'];
 
-    private AuthPasswordHasherService $hasher;
-
     /**
      * __construct.
      *
@@ -25,7 +23,7 @@ class DevUserProvider implements UserProviderInterface
      *
      * @return void
      */
-    public function __construct(AuthPasswordHasherService $hasher)
+    public function __construct(private AuthPasswordHasherService $hasher)
     {
         $this->hasher = $hasher;
     }
