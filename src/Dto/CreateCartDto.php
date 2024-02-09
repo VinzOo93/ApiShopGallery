@@ -2,8 +2,6 @@
 
 namespace App\Dto;
 
-use App\Entity\Item;
-
 final class CreateCartDto
 {
     public string $subtotal;
@@ -14,6 +12,6 @@ final class CreateCartDto
 
     public string $total;
 
-    /** @var Item[] */
-    public array $item = [];
+    /** @var CreateItemWithCartDto[] */
+    public array $items = [];
 }

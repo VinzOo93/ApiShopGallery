@@ -5,22 +5,19 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
+use App\Action\CreateCartWithItemsAction;
 use App\Dto\CreateCartDto;
 use App\Repository\CartRepository;
-use App\State\CartRepresentationProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(
-    operations: [
-        new Get(),
-        new GetCollection(),
-        new Post(input: CreateCartDto::class, output: CreateCartDto::class, processor: CartRepresentationProcessor::class)
-    ],
+#[ApiResource]
+#[Get]
+#[Post(
+    input: CreateCartDto::class,
+    controller: CreateCartWithItemsAction::class
 )]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
@@ -49,11 +46,11 @@ class Cart
     private ?string $total = null;
 
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, orphanRemoval: true)]
-    private Collection $item;
+    private Collection $items;
 
     public function __construct()
     {
-        $this->item = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,17 +131,17 @@ class Cart
     }
 
     /**
-     * @return Collection<int, Item>
+     * @return mixed
      */
-    public function getItem(): Collection
+    public function getItems(): mixed
     {
-        return $this->item;
+        return $this->items->getValues();
     }
 
     public function addItem(Item $item): static
     {
-        if (!$this->item->contains($item)) {
-            $this->item->add($item);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
             $item->setCart($this);
         }
 
@@ -153,7 +150,7 @@ class Cart
 
     public function removeItem(Item $item): static
     {
-        if ($this->item->removeElement($item)) {
+        if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
             if ($item->getCart() === $this) {
                 $item->setCart(null);

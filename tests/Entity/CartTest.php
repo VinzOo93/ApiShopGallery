@@ -112,10 +112,10 @@ class CartTest extends TestBase
         $item = $this->item->setUnitPrice('100.00');
         $this->cart->addItem($item);
 
-        foreach ($this->cart->getItem() as $cart) {
+        foreach ($this->cart->getItems() as $item) {
             $this->assertEquals('100.00', $item->getUnitPrice());
             $this->cart->removeItem($item);
-            $this->assertCount(0, $this->cart->getItem());
+            $this->assertCount(0, $this->cart->getItems());
         }
     }
 }

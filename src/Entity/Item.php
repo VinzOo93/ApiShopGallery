@@ -2,10 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource()]
+#[Post(
+    input: CreateItemDto::class
+)]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {
@@ -36,7 +43,7 @@ class Item
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $taxPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'item')]
+    #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
