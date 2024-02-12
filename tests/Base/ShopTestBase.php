@@ -2,6 +2,12 @@
 
 namespace App\Tests\Base;
 
-class ShopTestBase
+class ShopTestBase extends ApiTestBase
 {
+
+    protected function initShopTest()
+    {
+        $this->initApiTest();
+        $this->initApiEntityUserTest();
+    }
 }

@@ -8,42 +8,42 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ApiTestBase extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    protected const EMAIL_TEST = 'test@example.com';
-    protected const PASSWORD_TEST = '$3CR3T';
-    protected const ROLE_TEST = ['ROLE_USER'];
+    private const EMAIL_TEST = 'test@example.com';
+    private const PASSWORD_TEST = '$3CR3T';
+    private const ROLE_TEST = ['ROLE_USER'];
     protected const ROUTE_AUTH = 'auth';
+    protected const KEY_AUTH_TOKEN = 'token';
 
     protected Client $client;
     protected ContainerInterface $container;
     protected EntityManagerInterface $entityManager;
     protected User $user;
 
-
     /**
-     * initTest
+     * initApiTest
      *
      * @return void
      */
-    protected function initTest(): void
+    protected function initApiTest(): void
     {
         $this->client = static::createClient();
         $this->container  = self::getContainer();
         $this->entityManager = $this->container->get('doctrine')->getManager();
     }
 
-
     /**
-     * initEntityUserTest
+     * initApiEntityUserTest
      *
      * @return void
      */
-    protected function initEntityUserTest(): void
+    protected function initApiEntityUserTest(): void
     {
         $encryptedPwd = $this->container->get('app.auth_password_hasher.test')->hashPassword(self::PASSWORD_TEST);
         $this->user = new User();
@@ -79,6 +79,31 @@ class ApiTestBase extends ApiTestCase
     }
 
     /**
+     * postToApiWithAuthentication
+     *
+     * @param  array $json
+     * @param  array $object
+     * @param  string $keyToken
+     * @param  string $urlTest
+     * @return ResponseInterface
+     */
+    protected function postToApiWithAuthentication(array $json, array $data, string $keyToken, string $urlTest): ResponseInterface
+    {
+        return $this->client->request(
+            'POST',
+            $urlTest,
+            [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $json[$keyToken],
+                ],
+                'body' => json_encode($data)
+            ]
+        );
+    }
+
+    /**
      * testGetErrorAuth
      *
      * @param  string $urlTest
@@ -95,7 +120,7 @@ class ApiTestBase extends ApiTestCase
                 ],
             ]
         );
-        $this->assertResponseStatusCodeSame(401);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
     /**
      * prepareUser
