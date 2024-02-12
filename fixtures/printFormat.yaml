@@ -17,20 +17,20 @@ parameters:
 App\Entity\PrintFormat:
   printformat_1{1..1}:
     name: <{name_pf_1}>
-    width_pf: <{width_pf_1}>
-    height_pf: <{height_pf_1}>
+    width: <{width_pf_1}>
+    height: <{height_pf_1}>
     preTaxPrice: <{pre_tax_price_pf_1}>
 
   printformat_2{2..2}:
     name: <{name_pf_2}>
-    width_pf: <{width_pf_2}>
-    height_pf: <{height_pf_2}>
+    width: <{width_pf_2}>
+    height: <{height_pf_2}>
     preTaxPrice: <{pre_tax_price_pf_2}>
 
   printformat_3{3..3}:
     name: <{name_pf_3}>
-    width_pf: <{width_pf_3}>
-    height_pf: <{height_pf_3}>
+    width: <{width_pf_3}>
+    height: <{height_pf_3}>
     preTaxPrice: <{pre_tax_price_pf_3}>
 
 
