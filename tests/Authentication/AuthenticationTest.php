@@ -6,6 +6,8 @@ use App\Tests\Base\AuthenticationTestBase;
 
 class AuthenticationTest extends AuthenticationTestBase
 {
+    private const METHOD_AUTH = 'GET';
+
     /**
      * testLogin
      *
@@ -13,35 +15,11 @@ class AuthenticationTest extends AuthenticationTestBase
      */
     public function testLogin(): void
     {
+        $this->initAuthTest();
+        $this->testGetErrorAuth(parent::URL_TEST, self::METHOD_AUTH);
+        $json = $this->getTokensUser(parent::ROUTE_AUTH, parent::KEY_AUTH_TOKEN);
 
-        $this->initTest();
-        $this->initEntityUserTest();
-
-        $response = $this->prepareUser();
-        $json = $response->toArray();
-        $this->assertArrayHasKey('token', $json);
-        $this->getErrorAuth();
-        $this->assertResponseStatusCodeSame(401);
-
-        $this->getAuthentication($json);
+        $this->assertArrayHasKey(parent::KEY_AUTH_TOKEN, $json);
         $this->assertResponseIsSuccessful();
-    }
-
-    /**
-     * getErrorAuth
-     *
-     * @return void
-     */
-    private function getErrorAuth(): void
-    {
-        $this->client->request(
-            'GET',
-            parent::URL_TEST,
-            [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
     }
 }

@@ -8,6 +8,9 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 class RefreshTokenTest extends AuthenticationTestBase
 {
     private const ROUTE_REFRESH_TOKEN = '/token/refresh';
+    private const KEY_REFRESH_TOKEN = 'refresh_token';
+    private const METHOD_REFRESH_TOKEN = 'POST';
+
 
     /**
      * testRefreshToken
@@ -16,20 +19,19 @@ class RefreshTokenTest extends AuthenticationTestBase
      */
     public function testRefreshToken(): void
     {
-        $this->initTest();
-        $this->initEntityUserTest();
+        $this->initAuthTest();
 
-        $response = $this->prepareUser();
-        $json = $response->toArray();
-        $this->assertArrayHasKey('refresh_token', $json);
+        $this->testGetErrorAuth(self::ROUTE_REFRESH_TOKEN, self::METHOD_REFRESH_TOKEN);
 
-        $response = $this->getUserRefreshToken($json['refresh_token']);
-        $this->assertResponseIsSuccessful();
+        $json = $this->getTokensUser(parent::ROUTE_AUTH);
 
-        $json = $response->toArray();
-        $this->assertArrayHasKey('token', $json);
+        $this->assertArrayHasKey(self::KEY_REFRESH_TOKEN, $json);
 
-        $this->getAuthentication($json);
+        $response = $this->getUserRefreshToken($json[self::KEY_REFRESH_TOKEN]);
+
+        $this->assertArrayHasKey(parent::KEY_AUTH_TOKEN, $response->toArray());
+
+        $this->getUrlWithAuthentication($response->toArray(), parent::KEY_AUTH_TOKEN, parent::URL_TEST);
         $this->assertResponseIsSuccessful();
     }
 

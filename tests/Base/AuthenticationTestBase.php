@@ -2,101 +2,28 @@
 
 namespace App\Tests\Base;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
-use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
-
-class AuthenticationTestBase extends ApiTestCase
+class AuthenticationTestBase extends ApiTestBase
 {
-    use ReloadDatabaseTrait;
-
     protected const URL_TEST = '/print_formats?page=1';
+    protected const KEY_AUTH_TOKEN = 'token';
 
-    private const EMAIL_TEST = 'test@example.com';
-    private const PASSWORD_TEST = '$3CR3T';
-    private const ROLE_TEST = ['ROLE_USER'];
-    private const ROUTE_AUTH = 'auth';
-
-
-    protected Client $client;
-    protected ContainerInterface $container;
-    protected EntityManagerInterface $entityManager;
-    private User $user;
-
-
-    /**
-     * initTest
-     *
-     * @return void
-     */
-    protected function initTest(): void
+    protected function initAuthTest(): void
     {
-        $this->client = static::createClient();
-        $this->container  = self::getContainer();
-        $this->entityManager = $this->container->get('doctrine')->getManager();
-    }
-
-
-    /**
-     * initEntityUserTest
-     *
-     * @return void
-     */
-    protected function initEntityUserTest()
-    {
-        $encryptedPwd = $this->container->get('app.auth_password_hasher.test')->hashPassword(self::PASSWORD_TEST);
-        $this->user = new User();
-        $this->user = $this->user->setEmail(self::EMAIL_TEST)
-            ->setPassword($encryptedPwd)
-            ->setRoles(self::ROLE_TEST);
-        $this->entityManager->persist($this->user);
-        $this->entityManager->flush();
+        $this->initTest();
+        $this->initEntityUserTest();
     }
 
     /**
-     * prepareUser
+     * getTokensUser
      *
-     * @return ResponseInterface
+     * @param  mixed $urlRequest
+     * @param  mixed $key
+     * @return array 
      */
-    protected function prepareUser(): ResponseInterface
+    protected function getTokensUser(string $urlRequest): array
     {
-        return $this->client->request(
-            'POST',
-            self::ROUTE_AUTH,
-            [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ],
-                'json' => [
-                    'email' => self::EMAIL_TEST,
-                    'password' => self::PASSWORD_TEST,
-                ],
-            ]
-        );
-    }
+        $response = $this->prepareUser($urlRequest);
 
-    /**
-     * getAuthentifcation
-     *
-     * @param  array<string, string> $json
-     * @return void
-     */
-    protected function getAuthentication(array $json)
-    {
-        $this->client->request(
-            'GET',
-            self::URL_TEST,
-            [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $json['token']
-                ]
-            ]
-        );
+        return $response->toArray();
     }
 }
