@@ -4,8 +4,12 @@ namespace App\Tests\Base;
 
 class ShopTestBase extends ApiTestBase
 {
-
-    protected function initShopTest()
+    /**
+     * initShopTest
+     *
+     * @return void
+     */
+    protected function initShopTest(): void
     {
         $this->initApiTest();
         $this->initApiEntityUserTest();

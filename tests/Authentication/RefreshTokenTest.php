@@ -21,18 +21,20 @@ class RefreshTokenTest extends AuthenticationTestBase
     {
         $this->initAuthTest();
 
-        $this->testGetErrorAuth(self::ROUTE_REFRESH_TOKEN, self::METHOD_REFRESH_TOKEN);
+        $this->assertArrayHasKey(
+            self::KEY_REFRESH_TOKEN,
+            $json = $this->getLogin(
+                self::METHOD_REFRESH_TOKEN,
+                self::ROUTE_REFRESH_TOKEN
+            )
+        );
 
-        $json = $this->getTokensUser(parent::ROUTE_AUTH);
+        $this->assertArrayHasKey(
+            parent::KEY_AUTH_TOKEN,
+            $response = $this->getUserRefreshToken($json[self::KEY_REFRESH_TOKEN])->toArray()
+        );
 
-        $this->assertArrayHasKey(self::KEY_REFRESH_TOKEN, $json);
-
-        $response = $this->getUserRefreshToken($json[self::KEY_REFRESH_TOKEN]);
-
-        $this->assertArrayHasKey(parent::KEY_AUTH_TOKEN, $response->toArray());
-
-        $this->getUrlWithAuthentication($response->toArray(), parent::KEY_AUTH_TOKEN, parent::URL_TEST);
-        $this->assertResponseIsSuccessful();
+        $this->testRouteWithLogin($response);
     }
 
     /**

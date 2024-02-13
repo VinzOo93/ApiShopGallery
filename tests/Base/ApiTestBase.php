@@ -59,7 +59,7 @@ class ApiTestBase extends ApiTestCase
     /**
      * getUrlWithAuthentication
      *
-     * @param  array $json
+     * @param  array<string,mixed> $json
      * @param  string $keyToken
      * @param  string $urlTest
      * @return ResponseInterface
@@ -81,14 +81,18 @@ class ApiTestBase extends ApiTestCase
     /**
      * postToApiWithAuthentication
      *
-     * @param  array $json
-     * @param  array $object
+     * @param  array<string,mixed> $json
+     * @param  array<string,mixed> $data
      * @param  string $keyToken
      * @param  string $urlTest
      * @return ResponseInterface
      */
-    protected function postToApiWithAuthentication(array $json, array $data, string $keyToken, string $urlTest): ResponseInterface
-    {
+    protected function postToApiWithAuthentication(
+        array $json,
+        array $data,
+        string $keyToken,
+        string $urlTest
+    ): ResponseInterface {
         return $this->client->request(
             'POST',
             $urlTest,
@@ -109,7 +113,7 @@ class ApiTestBase extends ApiTestCase
      * @param  string $urlTest
      * @return void
      */
-    protected function testGetErrorAuth(string $urlTest, string $method): void
+    protected function testGetErrorAuth(string $urlTest, string $method = 'GET'): void
     {
         $this->client->request(
             $method,

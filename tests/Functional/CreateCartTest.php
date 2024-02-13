@@ -4,9 +4,11 @@ namespace App\Tests\Shop;
 
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class CreateCartTest extends ShopTestBase
 {
+    /** @var array<string,mixed>*/
     private array $cartWithItems = [
         'subtotal' => '800.00',
         'taxes' => '200.00',
@@ -27,6 +29,11 @@ class CreateCartTest extends ShopTestBase
 
     private const ROUTE_CREATE_CART = '/carts';
 
+    /**
+     * testCreateCartWithItem
+     *
+     * @return void
+     */
     public function testCreateCartWithItem(): void
     {
         $this->initShopTest();
@@ -42,21 +49,30 @@ class CreateCartTest extends ShopTestBase
         $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * testAuthCreateCart
+     *
+     * @return void
+     */
     private function testAuthCreateCart()
     {
         $this->createCartWithItemNoAuth();
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
-    private function createCartWithItemNoAuth()
+    /**
+     * createCartWithItemNoAuth
+     *
+     * @return ResponseInterface
+     */
+    private function createCartWithItemNoAuth(): ResponseInterface
     {
-        $this->client->request(
+        return $this->client->request(
             'POST',
             self::ROUTE_CREATE_CART,
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($this->cartWithItems)
+            [
+                'json' => json_encode($this->cartWithItems)
+            ]
         );
     }
 }

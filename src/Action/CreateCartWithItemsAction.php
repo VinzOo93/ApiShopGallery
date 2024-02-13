@@ -28,7 +28,7 @@ class CreateCartWithItemsAction
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
         private SerializerInterface $serializer,
-        private string $content  = ''
+        private string $content = ''
     ) {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
@@ -46,8 +46,8 @@ class CreateCartWithItemsAction
     {
         $this->content = $request->getContent();
 
-        $this->validateCart($this->content);
-        $this->validateItem($this->content);
+        $this->validateCart();
+        $this->validateItem();
 
         $this->entityManager->beginTransaction();
         try {
@@ -108,8 +108,7 @@ class CreateCartWithItemsAction
     private function validateCart()
     {
         $cartDto = $this->serializer->deserialize($this->content, CreateCartDto::class, 'json');
-        $errors = $this->validator->validate($cartDto);
-        $this->getErrors($errors);
+        $this->checkErrors($this->validator->validate($cartDto));
     }
 
     /**
@@ -120,20 +119,36 @@ class CreateCartWithItemsAction
     private function validateItem()
     {
         $itemDto = $this->serializer->deserialize($this->content, CreateItemWithCartDto::class, 'json');
-        $errors = $this->validator->validate($itemDto);
-        $this->getErrors($errors);
+        $this->checkErrors($this->validator->validate($itemDto));
     }
 
     /**
      * getErrors
      *
-     * @param  mixed $errors
-     * @return void
+     * @param  ConstraintViolationListInterface $errors
+     * @return Response
      */
-    private function getErrors(ConstraintViolationListInterface $errors)
+    private function showErrors(ConstraintViolationListInterface $errors): Response
     {
-        if (!empty($errors)) {
-            return new Response((string) $errors, 400);
+        $errorsArray = [];
+
+        foreach ($errors as $error) {
+            $errorsArray[] = [
+                'property' => $error->getPropertyPath(),
+                'message' => $error->getMessage()
+            ];
         }
+        return new Response(json_encode($errorsArray), 400);
+    }
+
+    /**
+     * getErrors
+     *
+     * @param  ConstraintViolationListInterface $errors
+     * @return mixed
+     */
+    private function checkErrors(ConstraintViolationListInterface $errors)
+    {
+        return (count($errors) > 0) ? $this->showErrors($errors) : false;
     }
 }

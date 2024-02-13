@@ -13,16 +13,38 @@ class AuthenticationTestBase extends ApiTestBase
     }
 
     /**
+     * getLogin
+     *
+     * @param  string $method
+     * @return array<string,string>
+     */
+    protected function getLogin(string $method = 'GET', string $loginRoute = self::URL_TEST): array
+    {
+        $this->testGetErrorAuth($loginRoute, $method);
+
+        return $this->getTokensUser(parent::ROUTE_AUTH);
+    }
+
+    /**
+     * testRouteWithLogin
+     *
+     * @param  array<string,mixed> $response
+     * @return void
+     */
+    protected function testRouteWithLogin(array $response): void
+    {
+        $this->getUrlWithAuthentication($response, self::KEY_AUTH_TOKEN, self::URL_TEST);
+        $this->assertResponseIsSuccessful();
+    }
+
+
+    /**
      * getTokensUser
      *
-     * @param  mixed $urlRequest
-     * @param  mixed $key
-     * @return array 
-     */
-    protected function getTokensUser(string $urlRequest): array
+     * @param  string $urlRequest
+     * @return array<string,string>     */
+    private function getTokensUser(string $urlRequest): array
     {
-        $response = $this->prepareUser($urlRequest);
-
-        return $response->toArray();
+        return $this->prepareUser($urlRequest)->toArray();
     }
 }
