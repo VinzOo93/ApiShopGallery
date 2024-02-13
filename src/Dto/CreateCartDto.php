@@ -4,6 +4,8 @@ namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use App\Validator as AcmeAssert;
+
 final class CreateCartDto
 {
     #[Assert\NotBlank]
@@ -20,6 +22,7 @@ final class CreateCartDto
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
+    #[AcmeAssert\Constraints\CartTotal]
     public string $total = "1005.00";
 
     /** @var CreateItemWithCartDto[] */
