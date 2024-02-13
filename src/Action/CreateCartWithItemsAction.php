@@ -24,11 +24,16 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class CreateCartWithItemsAction
 {
+    private const OBJECT_DTO = [
+        CreateCartDto::class,
+        CreateItemWithCartDto::class
+    ];
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
         private SerializerInterface $serializer,
-        private string $content = ''
+        private string $content = '',
     ) {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
@@ -46,8 +51,9 @@ class CreateCartWithItemsAction
     {
         $this->content = $request->getContent();
 
-        $this->validateCart();
-        $this->validateItem();
+        foreach (self::OBJECT_DTO as $object) {
+            $this->validateObject($object);
+        }
 
         $this->entityManager->beginTransaction();
         try {
@@ -100,26 +106,25 @@ class CreateCartWithItemsAction
         }
     }
 
-    /**
-     * validateCart
-     *
-     * @return void
-     */
-    private function validateCart()
+    private function checkCartValues()
     {
-        $cartDto = $this->serializer->deserialize($this->content, CreateCartDto::class, 'json');
-        $this->checkErrors($this->validator->validate($cartDto));
     }
 
     /**
-     * validateItem
+     * validateObject
      *
      * @return void
      */
-    private function validateItem()
+    private function validateObject(mixed $object)
     {
-        $itemDto = $this->serializer->deserialize($this->content, CreateItemWithCartDto::class, 'json');
-        $this->checkErrors($this->validator->validate($itemDto));
+
+        $this->checkErrors($this->validator->validate(
+            $this->serializer->deserialize(
+                $this->content,
+                $object,
+                'json'
+            )
+        ));
     }
 
     /**
