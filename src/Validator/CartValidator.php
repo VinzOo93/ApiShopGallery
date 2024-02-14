@@ -11,17 +11,21 @@ use UnexpectedValueException;
 
 class CartValidator extends ConstraintValidator
 {
-    public function validate(mixed $cart, Constraint $constraint): void
+    public function validate(mixed $total, Constraint $constraint): void
     {
+
+        /** @var Cart */
+        $cart = $this->context->getObject();
+        $calculatedTotal = $cart->getSubtotal() + $cart->getTaxes() + $cart->getShipping();
+
+        if (!$cart instanceof Cart) {
+            throw new UnexpectedValueException('Expected instance of Cart');
+        }
+
         if (!$constraint instanceof CartTotal) {
             throw new UnexpectedTypeException($constraint, CartTotal::class);
         }
-
-        if (!$cart instanceof Cart) {
-            throw new UnexpectedValueException($cart, Cart::class);
-        }
-        $isValid = true;
-        if (!$isValid) {
+        if ($calculatedTotal != $cart->getTotal()) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }

@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Validator as AcmeAssert;
 
 #[ApiResource]
 #[Get]
@@ -42,6 +43,7 @@ class Cart
     #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
     private ?string $shipping = null;
 
+    #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $total = null;
 
