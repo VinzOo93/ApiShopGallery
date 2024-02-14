@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Validator as AcmeAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
 #[Get]
@@ -34,16 +35,20 @@ class Cart
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTaxes]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $taxes = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
     private ?string $shipping = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $total = null;

@@ -8,6 +8,7 @@ use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource()]
 #[Post(
@@ -21,25 +22,34 @@ class Item
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'La quantité doit être suprieur à 1.')]
     #[ORM\Column]
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
+    #[Assert\Choice(
+        choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
+        message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
+    )]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?PrintFormat $printFormat = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $unitPrice = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $unitPreTaxPrice = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $preTaxPrice = null;
 
+    #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $taxPrice = null;
 

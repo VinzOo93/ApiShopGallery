@@ -19,10 +19,10 @@ class CreateCartTest extends ShopTestBase
                 'quantity' => 2,
                 'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
                 'printFormat' => '30x20 cm',
-                'unitPrice' => '500.00',
+                'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '200.00',
+                'taxPrice' => '160.00',
             ]
         ]
     ];
@@ -38,10 +38,10 @@ class CreateCartTest extends ShopTestBase
                 'quantity' => 2,
                 'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
                 'printFormat' => '30x20 cm',
-                'unitPrice' => '500.00',
+                'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '200.00',
+                'taxPrice' => '160.00',
             ]
         ]
     ];
@@ -49,7 +49,7 @@ class CreateCartTest extends ShopTestBase
     /** @var array<string,mixed>*/
     private array $cartWithItemsTaxes = [
         'subtotal' => '800.00',
-        'taxes' => '200.00',
+        'taxes' => '160.00',
         'shipping' => '5.00',
         'total' => '1005.00',
         'items' => [
@@ -57,10 +57,67 @@ class CreateCartTest extends ShopTestBase
                 'quantity' => 2,
                 'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
                 'printFormat' => '30x20 cm',
-                'unitPrice' => '500.00',
+                'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '200.00',
+                'taxPrice' => '160.00',
+            ]
+        ]
+    ];
+
+    /** @var array<string,mixed>*/
+    private array $cartWithItemsQuantity = [
+        'subtotal' => '800.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '800.00',
+                'taxPrice' => '160.00',
+            ]
+        ]
+    ];
+
+    /** @var array<string,mixed>*/
+    private array $cartWithItemsNegative = [
+        'subtotal' => '-1.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '800.00',
+                'taxPrice' => '160.00',
+            ]
+        ]
+    ];
+
+    /** @var array<string,mixed>*/
+    private array $cartWithItemPrintFormat = [
+        'subtotal' => '-1.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => 'boubou',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '800.00',
+                'taxPrice' => '160.00',
             ]
         ]
     ];
@@ -79,6 +136,9 @@ class CreateCartTest extends ShopTestBase
 
         $this->testTotalCartFailure();
         $this->testTaxesCartFailure();
+        $this->testQuantityItemFailure();
+        $this->testNegativeCartFieldFailure();
+        $this->testItemPrintFormatFieldFailure();
         $this->testCartCreation();
     }
 
@@ -114,6 +174,40 @@ class CreateCartTest extends ShopTestBase
         $this->createItem($this->cartWithItemsTaxes);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
+
+    /**
+     * testQuantityItemFailure
+     *
+     * @return void
+     */
+    private function testNegativeCartFieldFailure(): void
+    {
+        $this->createItem($this->cartWithItemsNegative);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testQuantityItemFailure
+     *
+     * @return void
+     */
+    private function testItemPrintFormatFieldFailure(): void
+    {
+        $this->createItem($this->cartWithItemPrintFormat);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testQuantityItemFailure
+     *
+     * @return void
+     */
+    private function testQuantityItemFailure(): void
+    {
+        $this->createItem($this->cartWithItemsQuantity);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
 
     /**
      * testAuthCreateCart

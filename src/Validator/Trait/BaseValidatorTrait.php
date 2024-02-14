@@ -10,6 +10,8 @@ trait BaseValidatorTrait
     public mixed $constraint;
     public mixed $object;
 
+    const TAXE_RATE = '20.00';
+
     /**
      * initItemValidator
      *

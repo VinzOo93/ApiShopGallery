@@ -65,9 +65,6 @@ class CreateCartWithItemsAction
             /** @var DateTimeInterface */
             $date = new DateTime('NOW', new DateTimeZone('Europe/Paris'));
 
-            /** @var PrintFormatRepository */
-            $printFormatRepository = $this->entityManager->getRepository(PrintFormat::class);
-
             $cart->setSubtotal($cartData['subtotal'])
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date)
@@ -83,7 +80,7 @@ class CreateCartWithItemsAction
                 $item = new Item();
 
                 /** @var PrintFormat */
-                $printFormat = $printFormatRepository->findOneBy(['name' => $itemData['printFormat']]);
+                $printFormat = $this->getPrintFormat($itemData);
 
                 $item->setQuantity($itemData['quantity'])
                     ->setImage($itemData['image'])
@@ -102,8 +99,25 @@ class CreateCartWithItemsAction
             return $cart;
         } catch (\Exception $e) {
             $this->entityManager->rollback();
-            throw new HttpException(400, "impossible to create Cart $e");
+            throw new HttpException(
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                "impossible to create Cart $e"
+            );
         }
+    }
+
+    /**
+     * getPrintFormat
+     *
+     * @param  array $itemData
+     * @return void
+     */
+    private function getPrintFormat(array $itemData)
+    {
+        /** @var PrintFormatRepository */
+        $printFormatRepository = $this->entityManager->getRepository(PrintFormat::class);
+
+        return $printFormatRepository->findOneBy(['name' => $itemData['printFormat']]);
     }
 
     /**

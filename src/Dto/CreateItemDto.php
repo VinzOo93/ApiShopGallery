@@ -18,7 +18,7 @@ final class CreateItemDto
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
-    public string $unitPrice = '500.00';
+    public string $unitPrice = '480.00';
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
@@ -30,7 +30,7 @@ final class CreateItemDto
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
-    public string $taxPrice = '200.00';
+    public string $taxPrice = '160.00';
 
     public int $cart;
 }

@@ -10,11 +10,11 @@ final class CreateItemWithCartDto
 
     public string $printFormat = '30x20 cm';
 
-    public string $unitPrice = '500.00';
+    public string $unitPrice = '480.00';
 
     public string $unitPreTaxPrice = '400.00';
 
     public string $preTaxPrice = '800.00';
 
-    public string $taxPrice = '200.00';
+    public string $taxPrice = '160.00';
 }
