@@ -2,24 +2,23 @@
 
 namespace App\Validator\Trait;
 
-use App\Entity\Cart;
 use Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException;
 use UnexpectedValueException;
 
-trait CartValidatorTrait
+trait BaseValidatorTrait
 {
-    public Cart $cart;
     public mixed $constraint;
+    public mixed $object;
 
     /**
-     * initCartValidator
+     * initItemValidator
      *
      * @return void
      */
-    protected function initCartValidator(): void
+    protected function initValidator(string $class): void
     {
-        $this->cart = $this->context->getObject();
-        $this->checkInstanceOfObject();
+        $this->object = $this->context->getObject();
+        $this->checkInstanceOfObject($class);
     }
 
     /**
@@ -27,10 +26,10 @@ trait CartValidatorTrait
      *
      * @return void
      */
-    private function checkInstanceOfObject(): void
+    private function checkInstanceOfObject($class): void
     {
-        if (!$this->cart instanceof Cart) {
-            throw new UnexpectedValueException('Expected instance of Cart');
+        if (!$this->object instanceof $class) {
+            throw new UnexpectedValueException("Expected instance of $class");
         }
     }
 
@@ -46,7 +45,6 @@ trait CartValidatorTrait
             throw new UnexpectedTypeException($this->constraint, $classConstraint);
         }
     }
-
     /**
      * checkCondition
      *

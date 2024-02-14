@@ -12,7 +12,7 @@ final class CreateCartDto
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
-    public string $taxes = "200.00";
+    public string $taxes = "160.00";
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
@@ -20,7 +20,7 @@ final class CreateCartDto
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'numeric')]
-    public string $total = "1005.00";
+    public string $total = "965.00";
 
     /** @var CreateItemWithCartDto[] */
     public array $items = [];

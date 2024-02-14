@@ -2,23 +2,23 @@
 
 namespace App\Validator;
 
+use App\Entity\Cart;
 use App\Validator\Constraints\CartTotal;
-use App\Validator\Trait\CartValidatorTrait;
+use App\Validator\Trait\BaseValidatorTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class CartTotalValidator extends ConstraintValidator
 {
-    use CartValidatorTrait;
+    use BaseValidatorTrait;
 
     public function validate(mixed $total, Constraint $constraint): void
     {
-        $this->initCartValidator();
-        $calculatedTotal = (float) $this->cart->getSubtotal() + (float) $this->cart->getTaxes() + (float) $this->cart->getShipping();
+        $this->initValidator(Cart::class);
+        $calculatedTotal = (float) $this->object->getSubtotal() + (float) $this->object->getTaxes() + (float) $this->object->getShipping();
 
         $this->constraint = $constraint;
         $this->checkConstraint(CartTotal::class);
-
         $this->checkCondition($calculatedTotal != $total);
     }
 }
