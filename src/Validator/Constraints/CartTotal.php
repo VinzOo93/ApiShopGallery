@@ -2,7 +2,7 @@
 
 namespace App\Validator\Constraints;
 
-use App\Validator\CartValidator;
+use App\Validator\CartTotalValidator;
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
@@ -12,6 +12,6 @@ class CartTotal extends Constraint
 
     public function validatedBy(): string
     {
-        return CartValidator::class;
+        return CartTotalValidator::class;
     }
 }

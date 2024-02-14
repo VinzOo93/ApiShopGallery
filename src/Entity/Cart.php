@@ -37,6 +37,7 @@ class Cart
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 
+    #[AcmeAssert\Constraints\CartTaxes]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $taxes = null;
 

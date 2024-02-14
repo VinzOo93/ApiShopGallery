@@ -106,10 +106,6 @@ class CreateCartWithItemsAction
         }
     }
 
-    private function checkCartValues()
-    {
-    }
-
     /**
      * validateObject
      *
