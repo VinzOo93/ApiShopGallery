@@ -2,8 +2,8 @@
 
 namespace App\Validator\Trait;
 
+use App\Entity\Cart;
 use Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException;
-use UnexpectedValueException;
 
 trait BaseValidatorTrait
 {
@@ -17,22 +17,19 @@ trait BaseValidatorTrait
      *
      * @return void
      */
-    protected function initValidator(string $class): void
+    protected function initValidator(): void
     {
         $this->object = $this->context->getObject();
-        $this->checkInstanceOfObject($class);
     }
 
     /**
-     * checkInstanceOfObject
+     * isCartInstance
      *
-     * @return void
+     * @return bool
      */
-    private function checkInstanceOfObject($class): void
+    protected function isCartInstance(): bool
     {
-        if (!$this->object instanceof $class) {
-            throw new UnexpectedValueException("Expected instance of $class");
-        }
+        return $this->object instanceof Cart;
     }
 
     /**

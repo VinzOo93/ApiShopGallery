@@ -12,13 +12,13 @@ class CartTotalValidator extends ConstraintValidator
 {
     use BaseValidatorTrait;
 
-    public function validate(mixed $total, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         $this->initValidator(Cart::class);
         $calculatedTotal = (float) $this->object->getSubtotal() + (float) $this->object->getTaxes() + (float) $this->object->getShipping();
 
         $this->constraint = $constraint;
         $this->checkConstraint(CartTotal::class);
-        $this->checkCondition($calculatedTotal != $total);
+        $this->checkCondition($calculatedTotal != $value);
     }
 }

@@ -18,8 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 #[Get]
 #[Post(
-    input: CreateCartDto::class,
-    controller: CreateCartWithItemsAction::class
+    controller: CreateCartWithItemsAction::class,
+    input: CreateCartDto::class
 )]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart

@@ -16,5 +16,5 @@ final class CreateItemWithCartDto
 
     public string $preTaxPrice = '800.00';
 
-    public string $taxPrice = '160.00';
+    public string $taxPrice = '960.00';
 }

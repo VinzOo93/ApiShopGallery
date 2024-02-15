@@ -6,11 +6,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
+use App\Validator as AcmeAssert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Validator as AcmeAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 #[ApiResource()]
 #[Post(
@@ -136,6 +135,7 @@ class Item
 
         return $this;
     }
+
     public function getTaxPrice(): ?string
     {
         return $this->taxPrice;

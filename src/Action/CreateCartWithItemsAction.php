@@ -49,7 +49,6 @@ class CreateCartWithItemsAction
         try {
             $cartData = json_decode($this->content, true);
 
-            /** @var Cart */
             $cart = new Cart();
 
             /** @var \DateTimeInterface $date */
@@ -74,6 +73,8 @@ class CreateCartWithItemsAction
                     ->setPreTaxPrice($itemData['preTaxPrice'])
                     ->setTaxPrice($itemData['taxPrice'])
                     ->setCart($cart);
+
+                $this->entityManager->persist($item);
                 $cart->addItem($item);
             }
             $this->entityManager->persist($cart);

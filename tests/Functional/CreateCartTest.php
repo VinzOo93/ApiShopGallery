@@ -145,6 +145,7 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testCreateCartWithItem.
+     *
      * @throws TransportExceptionInterface
      */
     public function testCreateCart(): void
@@ -157,12 +158,13 @@ class CreateCartTest extends ShopTestBase
         $this->testQuantityItemFailure();
         $this->testNegativeCartFieldFailure();
         $this->testPrintFormatItemFieldFailure();
-        // $this->testUnitPriceItemFailure();
+        $this->testUnitPriceItemFailure();
         $this->testCartCreation();
     }
 
     /**
      * testCartCreation.
+     *
      * @throws TransportExceptionInterface
      */
     private function testCartCreation(): void
@@ -173,6 +175,7 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testTotalCartFailure.
+     *
      * @throws TransportExceptionInterface
      */
     private function testTotalCartFailure(): void
@@ -183,6 +186,7 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testTaxesCartFailure.
+     *
      * @throws TransportExceptionInterface
      */
     private function testTaxesCartFailure(): void
@@ -193,6 +197,7 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testNegativeCartFieldFailure.
+     *
      * @throws TransportExceptionInterface
      */
     private function testNegativeCartFieldFailure(): void
@@ -203,6 +208,8 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testQuantityItemFailure.
+     *
+     * @throws TransportExceptionInterface
      */
     private function testQuantityItemFailure(): void
     {
@@ -212,6 +219,8 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testPrintFormatItemFieldFailure.
+     *
+     * @throws TransportExceptionInterface
      */
     private function testPrintFormatItemFieldFailure(): void
     {
@@ -219,16 +228,15 @@ class CreateCartTest extends ShopTestBase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    // /**
-    //  * testUnitPriceItemFailure
-    //  *
-    //  * @return void
-    //  */
-    // private function testUnitPriceItemFailure(): void
-    // {
-    //     $this->createItem($this->cartWithItemUnitPrice);
-    //     $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-    // }
+    /**
+     * testUnitPriceItemFailure.
+     * @throws TransportExceptionInterface
+     */
+    private function testUnitPriceItemFailure(): void
+    {
+        $this->createItem($this->cartWithItemUnitPrice);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 
     /**
      * testAuthCreateCart.
