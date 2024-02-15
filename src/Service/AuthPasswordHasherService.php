@@ -14,7 +14,6 @@ class AuthPasswordHasherService
      */
     public function __construct(private UserPasswordHasherInterface $hasher)
     {
-        $this->hasher = $hasher;
     }
 
     /**

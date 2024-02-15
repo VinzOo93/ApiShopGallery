@@ -6,16 +6,14 @@ use App\Entity\PrintFormat;
 use App\Tests\Base\TestBase;
 
 /**
- * PrintFormatTest
+ * PrintFormatTest.
  */
 class PrintFormatTest extends TestBase
 {
     private PrintFormat $printFormat;
 
     /**
-     * getContainerPrintFormat
-     *
-     * @return void
+     * getContainerPrintFormat.
      */
     protected function getContainerPrintFormat(): void
     {
@@ -24,9 +22,7 @@ class PrintFormatTest extends TestBase
     }
 
     /**
-     * testPrintFormatSetUp
-     *
-     * @return void
+     * testPrintFormatSetUp.
      */
     public function testPrintFormatSetUp(): void
     {
@@ -34,13 +30,11 @@ class PrintFormatTest extends TestBase
         $this->testName();
         $this->testWidth();
         $this->testHeight();
-        $this->testPrestTaxPrice();
+        $this->testPreTaxPrice();
     }
 
     /**
-     * testName
-     *
-     * @return void
+     * testName.
      */
     private function testName(): void
     {
@@ -49,9 +43,7 @@ class PrintFormatTest extends TestBase
     }
 
     /**
-     * testWidth
-     *
-     * @return void
+     * testWidth.
      */
     private function testWidth(): void
     {
@@ -60,9 +52,7 @@ class PrintFormatTest extends TestBase
     }
 
     /**
-     * testHeight
-     *
-     * @return void
+     * testHeight.
      */
     private function testHeight(): void
     {
@@ -71,11 +61,9 @@ class PrintFormatTest extends TestBase
     }
 
     /**
-     * testPrestTaxPrice
-     *
-     * @return void
+     * testPreTaxPrice.
      */
-    private function testPrestTaxPrice(): void
+    private function testPreTaxPrice(): void
     {
         $this->printFormat->setPreTaxPrice('50.00');
         $this->assertEquals('50.00', $this->printFormat->getPreTaxPrice());

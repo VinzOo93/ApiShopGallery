@@ -11,14 +11,12 @@ class PrintFormatDbTest extends DataTestBase
     private PrintFormatRepository $printFormatRepository;
 
     /**
-     * @var array<int, PrintFormat> $printFormats
+     * @var array<int, PrintFormat>
      */
     private array $printFormats;
 
     /**
-     * getContainerPrintFormat
-     *
-     * @return void
+     * getContainerPrintFormat.
      */
     protected function getContainerPrintFormat(): void
     {
@@ -40,10 +38,9 @@ class PrintFormatDbTest extends DataTestBase
     {
         return $this->printFormatRepository->findAll();
     }
+
     /**
-     * testPrintFormat
-     *
-     * @return void
+     * testPrintFormat.
      */
     protected function testPrintFormatData(): void
     {

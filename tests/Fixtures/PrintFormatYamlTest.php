@@ -11,7 +11,6 @@ class PrintFormatYamlTest extends DataTestBase
     private const FILE_NAME = 'printFormat.yaml';
     private const ATTRIB_PREFIX = '_pf';
 
-
     protected string $classEntityPathPrintFormat;
 
     /**
@@ -19,12 +18,8 @@ class PrintFormatYamlTest extends DataTestBase
      */
     private array $printFormatParameters = [];
 
-
-
     /**
-     * getContainerPrintFormat
-     *
-     * @return void
+     * getContainerPrintFormat.
      */
     protected function getContainerPrintFormat(): void
     {
@@ -35,9 +30,7 @@ class PrintFormatYamlTest extends DataTestBase
     }
 
     /**
-     * testsPrintFormatSetUp
-     *
-     * @return void
+     * testsPrintFormatSetUp.
      */
     public function testsPrintFormatSetUp(): void
     {
@@ -47,9 +40,7 @@ class PrintFormatYamlTest extends DataTestBase
     }
 
     /**
-     * testPrintFormatYamlIsReadable
-     *
-     * @return void
+     * testPrintFormatYamlIsReadable.
      */
     protected function testPrintFormatYamlIsReadable(): void
     {
@@ -57,16 +48,15 @@ class PrintFormatYamlTest extends DataTestBase
         $this->printFormatParameters = $this->parsedYaml[parent::PARAMETERS_IDX];
         $this->assertYamlIsReadable($this->classEntityPathPrintFormat);
     }
+
     /**
-     * testPrintFormatParametersAndItems
-     *
-     * @return void
+     * testPrintFormatParametersAndItems.
      */
     protected function testPrintFormatParametersAndItems(): void
     {
         foreach ($this->printFormatParameters as $key => $data) {
             $this->checkParameterKeysAndValues($key, $data, [
-                'dataValue' => '<{' . $key . '}>',
+                'dataValue' => '<{'.$key.'}>',
             ]);
         }
         $this->checkYamlValueUnicityClass();

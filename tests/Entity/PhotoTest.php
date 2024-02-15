@@ -6,7 +6,7 @@ use App\Entity\Photo;
 use App\Tests\Base\TestBase;
 
 /**
- * PhotoTest
+ * PhotoTest.
  */
 class PhotoTest extends TestBase
 {
@@ -27,9 +27,7 @@ class PhotoTest extends TestBase
     }
 
     /**
-     * testName
-     *
-     * @return void
+     * testName.
      */
     private function testName(): void
     {
@@ -38,9 +36,7 @@ class PhotoTest extends TestBase
     }
 
     /**
-     * getUrlCdn
-     *
-     * @return void
+     * getUrlCdn.
      */
     private function testUrlCdn(): void
     {
@@ -49,11 +45,11 @@ class PhotoTest extends TestBase
     }
 
     /**
-     * testQuantitySold
+     * testQuantitySold.
      *
      * @return void
      */
-    private function testQuantitySold()
+    private function testQuantitySold(): void
     {
         $this->photo->setQuantitySold(10);
         $this->assertEquals(10, $this->photo->getQuantitySold());

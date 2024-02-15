@@ -8,7 +8,9 @@ use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Validator as AcmeAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ApiResource()]
 #[Post(
@@ -38,6 +40,7 @@ class Item
     private ?PrintFormat $printFormat = null;
 
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
+    #[AcmeAssert\Constraints\CartTaxes]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $unitPrice = null;
 

@@ -2,6 +2,8 @@
 
 namespace App\Tests\Base;
 
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+
 class AuthenticationTestBase extends ApiTestBase
 {
     protected const URL_TEST = '/print_formats?page=1';
@@ -13,23 +15,24 @@ class AuthenticationTestBase extends ApiTestBase
     }
 
     /**
-     * getLogin
+     * getLogin.
      *
-     * @param  string $method
      * @return array<string,string>
+     *
+     * @throws TransportExceptionInterface
      */
     protected function getLogin(string $method = 'GET', string $loginRoute = self::URL_TEST): array
     {
         $this->testGetErrorAuth($loginRoute, $method);
 
-        return $this->getTokensUser(parent::ROUTE_AUTH);
+        return $this->getTokensUser();
     }
 
     /**
-     * testRouteWithLogin
+     * testRouteWithLogin.
      *
-     * @param  array<string,mixed> $response
-     * @return void
+     * @param array<string,mixed> $response
+     * @throws TransportExceptionInterface
      */
     protected function testRouteWithLogin(array $response): void
     {
@@ -37,14 +40,14 @@ class AuthenticationTestBase extends ApiTestBase
         $this->assertResponseIsSuccessful();
     }
 
-
     /**
-     * getTokensUser
+     * getTokensUser.
      *
-     * @param  string $urlRequest
-     * @return array<string,string>     */
-    private function getTokensUser(string $urlRequest): array
+     * @return array<string,string>
+     * @throws TransportExceptionInterface
+     */
+    private function getTokensUser(): array
     {
-        return $this->prepareUser($urlRequest)->toArray();
+        return $this->prepareUser(parent::ROUTE_AUTH)->toArray();
     }
 }

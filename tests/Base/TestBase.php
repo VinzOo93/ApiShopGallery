@@ -2,21 +2,18 @@
 
 namespace App\Tests\Base;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * TestBase
+ * TestBase.
  */
 abstract class TestBase extends KernelTestCase
 {
     protected ContainerInterface $container;
     protected EntityManagerInterface $entityManager;
 
-    /**
-     *
-     */
     protected function initContainer(): void
     {
         self::bootKernel();

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ApiTestBase extends ApiTestCase
@@ -27,21 +28,17 @@ class ApiTestBase extends ApiTestCase
     protected User $user;
 
     /**
-     * initApiTest
-     *
-     * @return void
+     * initApiTest.
      */
     protected function initApiTest(): void
     {
         $this->client = static::createClient();
-        $this->container  = self::getContainer();
+        $this->container = self::getContainer();
         $this->entityManager = $this->container->get('doctrine')->getManager();
     }
 
     /**
-     * initApiEntityUserTest
-     *
-     * @return void
+     * initApiEntityUserTest.
      */
     protected function initApiEntityUserTest(): void
     {
@@ -54,15 +51,11 @@ class ApiTestBase extends ApiTestCase
         $this->entityManager->flush();
     }
 
-
-
     /**
-     * getUrlWithAuthentication
+     * getUrlWithAuthentication.
      *
-     * @param  array<string,mixed> $json
-     * @param  string $keyToken
-     * @param  string $urlTest
-     * @return ResponseInterface
+     * @param array<string,mixed> $json
+     * @throws TransportExceptionInterface
      */
     protected function getUrlWithAuthentication(array $json, string $keyToken, string $urlTest): ResponseInterface
     {
@@ -72,20 +65,18 @@ class ApiTestBase extends ApiTestCase
             [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $json[$keyToken]
-                ]
+                    'Authorization' => 'Bearer '.$json[$keyToken],
+                ],
             ]
         );
     }
 
     /**
-     * postToApiWithAuthentication
+     * postToApiWithAuthentication.
      *
-     * @param  array<string,mixed> $json
-     * @param  array<string,mixed> $data
-     * @param  string $keyToken
-     * @param  string $urlTest
-     * @return ResponseInterface
+     * @param array<string,mixed> $json
+     * @param array<string,mixed> $data
+     * @throws TransportExceptionInterface
      */
     protected function postToApiWithAuthentication(
         array $json,
@@ -100,18 +91,16 @@ class ApiTestBase extends ApiTestCase
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $json[$keyToken],
+                    'Authorization' => 'Bearer '.$json[$keyToken],
                 ],
-                'body' => json_encode($data)
+                'body' => json_encode($data),
             ]
         );
     }
 
     /**
-     * testGetErrorAuth
-     *
-     * @param  string $urlTest
-     * @return void
+     * testGetErrorAuth.
+     * @throws TransportExceptionInterface
      */
     protected function testGetErrorAuth(string $urlTest, string $method = 'GET'): void
     {
@@ -126,11 +115,10 @@ class ApiTestBase extends ApiTestCase
         );
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
+
     /**
-     * prepareUser
-     *
-     * @param  string $urlAuth
-     * @return ResponseInterface
+     * prepareUser.
+     * @throws TransportExceptionInterface
      */
     protected function prepareUser(string $urlAuth): ResponseInterface
     {
@@ -140,7 +128,7 @@ class ApiTestBase extends ApiTestCase
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
                     'email' => self::EMAIL_TEST,

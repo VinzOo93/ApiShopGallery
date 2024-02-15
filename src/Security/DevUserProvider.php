@@ -25,13 +25,13 @@ class DevUserProvider implements UserProviderInterface
      */
     public function __construct(private AuthPasswordHasherService $hasher)
     {
-        $this->hasher = $hasher;
     }
 
     /**
      * loadUserByIdentifier.
      *
      * @param string $identifier
+     * @return UserInterface
      */
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
@@ -49,6 +49,7 @@ class DevUserProvider implements UserProviderInterface
      * refreshUser.
      *
      * @param UserInterface $user
+     * @return UserInterface
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
@@ -59,6 +60,7 @@ class DevUserProvider implements UserProviderInterface
      * supportsClass.
      *
      * @param string $class
+     * @return bool
      */
     public function supportsClass(string $class): bool
     {

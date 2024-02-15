@@ -4,11 +4,11 @@ namespace App\Tests\Shop;
 
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class CreateCartTest extends ShopTestBase
 {
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItems = [
         'subtotal' => '800.00',
         'taxes' => '160.00',
@@ -22,12 +22,12 @@ class CreateCartTest extends ShopTestBase
                 'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItemsTotal = [
         'subtotal' => '800.00',
         'taxes' => '160.00',
@@ -41,12 +41,12 @@ class CreateCartTest extends ShopTestBase
                 'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItemsTaxes = [
         'subtotal' => '800.00',
         'taxes' => '160.00',
@@ -60,12 +60,12 @@ class CreateCartTest extends ShopTestBase
                 'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItemsQuantity = [
         'subtotal' => '800.00',
         'taxes' => '160.00',
@@ -79,12 +79,12 @@ class CreateCartTest extends ShopTestBase
                 'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItemsNegative = [
         'subtotal' => '-1.00',
         'taxes' => '160.00',
@@ -98,14 +98,14 @@ class CreateCartTest extends ShopTestBase
                 'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
-    /** @var array<string,mixed>*/
+    /** @var array<string,mixed> */
     private array $cartWithItemPrintFormat = [
-        'subtotal' => '-1.00',
+        'subtotal' => '800.00',
         'taxes' => '160.00',
         'shipping' => '5.00',
         'total' => '1005.00',
@@ -113,21 +113,39 @@ class CreateCartTest extends ShopTestBase
             [
                 'quantity' => 0,
                 'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
-                'printFormat' => 'boubou',
-                'unitPrice' => '480.00',
+                'printFormat' => 'bouuuubouuu',
+                'unitPrice' => '450.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
-                'taxPrice' => '160.00',
-            ]
-        ]
+                'taxPrice' => '960.00',
+            ],
+        ],
+    ];
+
+    /** @var array<string,mixed> */
+    private array $cartWithItemUnitPrice = [
+        'subtotal' => '800.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '430.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '800.00',
+                'taxPrice' => '960.00',
+            ],
+        ],
     ];
 
     private const ROUTE_CREATE_CART = '/carts';
 
     /**
-     * testCreateCartWithItem
-     *
-     * @return void
+     * testCreateCartWithItem.
+     * @throws TransportExceptionInterface
      */
     public function testCreateCart(): void
     {
@@ -138,14 +156,14 @@ class CreateCartTest extends ShopTestBase
         $this->testTaxesCartFailure();
         $this->testQuantityItemFailure();
         $this->testNegativeCartFieldFailure();
-        $this->testItemPrintFormatFieldFailure();
+        $this->testPrintFormatItemFieldFailure();
+        // $this->testUnitPriceItemFailure();
         $this->testCartCreation();
     }
 
     /**
-     * testCartCreation
-     *
-     * @return void
+     * testCartCreation.
+     * @throws TransportExceptionInterface
      */
     private function testCartCreation(): void
     {
@@ -154,9 +172,8 @@ class CreateCartTest extends ShopTestBase
     }
 
     /**
-     * testTotalCartFailure
-     *
-     * @return void
+     * testTotalCartFailure.
+     * @throws TransportExceptionInterface
      */
     private function testTotalCartFailure(): void
     {
@@ -165,9 +182,8 @@ class CreateCartTest extends ShopTestBase
     }
 
     /**
-     * testTaxesCartFailure
-     *
-     * @return void
+     * testTaxesCartFailure.
+     * @throws TransportExceptionInterface
      */
     private function testTaxesCartFailure(): void
     {
@@ -176,9 +192,8 @@ class CreateCartTest extends ShopTestBase
     }
 
     /**
-     * testQuantityItemFailure
-     *
-     * @return void
+     * testNegativeCartFieldFailure.
+     * @throws TransportExceptionInterface
      */
     private function testNegativeCartFieldFailure(): void
     {
@@ -187,20 +202,7 @@ class CreateCartTest extends ShopTestBase
     }
 
     /**
-     * testQuantityItemFailure
-     *
-     * @return void
-     */
-    private function testItemPrintFormatFieldFailure(): void
-    {
-        $this->createItem($this->cartWithItemPrintFormat);
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    /**
-     * testQuantityItemFailure
-     *
-     * @return void
+     * testQuantityItemFailure.
      */
     private function testQuantityItemFailure(): void
     {
@@ -208,11 +210,28 @@ class CreateCartTest extends ShopTestBase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * testPrintFormatItemFieldFailure.
+     */
+    private function testPrintFormatItemFieldFailure(): void
+    {
+        $this->createItem($this->cartWithItemPrintFormat);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    // /**
+    //  * testUnitPriceItemFailure
+    //  *
+    //  * @return void
+    //  */
+    // private function testUnitPriceItemFailure(): void
+    // {
+    //     $this->createItem($this->cartWithItemUnitPrice);
+    //     $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    // }
 
     /**
-     * testAuthCreateCart
-     *
-     * @return void
+     * testAuthCreateCart.
      */
     private function testAuthCreateCart(): void
     {
@@ -220,13 +239,12 @@ class CreateCartTest extends ShopTestBase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
-
-
     /**
-     * createItem
+     * createItem.
      *
-     * @param  array<string,mixed> $cart
-     * @return void
+     * @param array<string,mixed> $cart
+     *
+     * @throws TransportExceptionInterface
      */
     private function createItem(array $cart): void
     {
@@ -240,17 +258,15 @@ class CreateCartTest extends ShopTestBase
     }
 
     /**
-     * createCartWithItemNoAuth
-     *
-     * @return ResponseInterface
+     * createCartWithItemNoAuth.
      */
-    private function createCartWithItemNoAuth(): ResponseInterface
+    private function createCartWithItemNoAuth(): void
     {
-        return $this->client->request(
+        $this->client->request(
             'POST',
             self::ROUTE_CREATE_CART,
             [
-                'json' => json_encode($this->cartWithItems)
+                'json' => json_encode($this->cartWithItems),
             ]
         );
     }

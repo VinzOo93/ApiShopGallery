@@ -5,35 +5,29 @@ namespace App\Tests\Entity;
 use App\Entity\Cart;
 use App\Entity\Item;
 use App\Tests\Base\TestBase;
-use DateTime;
-use DateTimeInterface;
 
 /**
- * CartTest
+ * CartTest.
  */
 class CartTest extends TestBase
 {
     private Cart $cart;
-    private DateTimeInterface $date;
+    private \DateTimeInterface $date;
     private Item $item;
 
     /**
-     * getContainerCart
-     *
-     * @return void
+     * getContainerCart.
      */
     protected function getContainerCart(): void
     {
         $this->getContainer();
         $this->cart = new Cart();
         $this->item = new Item();
-        $this->date = new DateTime('10/01/2023');
+        $this->date = new \DateTime('10/01/2023');
     }
 
     /**
-     * testSetUpCart
-     *
-     * @return void
+     * testSetUpCart.
      */
     public function testSetUpCart(): void
     {
@@ -48,9 +42,7 @@ class CartTest extends TestBase
     }
 
     /**
-     * testCreatedAt
-     *
-     * @return void
+     * testCreatedAt.
      */
     private function testCreatedAt(): void
     {
@@ -59,9 +51,7 @@ class CartTest extends TestBase
     }
 
     /**
-     * testUpdatedAt
-     *
-     * @return void
+     * testUpdatedAt.
      */
     private function testUpdatedAt(): void
     {
@@ -70,9 +60,7 @@ class CartTest extends TestBase
     }
 
     /**
-     * testSubtotal
-     *
-     * @return void
+     * testSubtotal.
      */
     private function testSubtotal(): void
     {
@@ -93,19 +81,16 @@ class CartTest extends TestBase
     }
 
     /**
-     * testTotal
-     *
-     * @return void
+     * testTotal.
      */
     private function testTotal(): void
     {
         $this->cart->setTotal('100.00');
         $this->assertEquals('100.00', $this->cart->getTotal());
     }
+
     /**
-     * testItem
-     *
-     * @return void
+     * testItem.
      */
     private function testItems(): void
     {

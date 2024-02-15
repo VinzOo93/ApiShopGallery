@@ -6,10 +6,11 @@ use App\Entity\Photo;
 use App\Repository\PhotoRepository;
 use App\Tests\Base\DataTestBase;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * PhotoDbTest
+ * PhotoDbTest.
  */
 class PhotoDbTest extends DataTestBase
 {
@@ -20,14 +21,12 @@ class PhotoDbTest extends DataTestBase
     private HttpClientInterface $client;
 
     /**
-     * @var array<int, Photo> $photos
+     * @var array<int, Photo>
      */
     private array $photos;
 
     /**
-     * getContainerPhoto
-     *
-     * @return void
+     * getContainerPhoto.
      */
     protected function getContainerPhoto(): void
     {
@@ -37,9 +36,7 @@ class PhotoDbTest extends DataTestBase
     }
 
     /**
-     * testsPhotoSetUp
-     *
-     * @return void
+     * testsPhotoSetUp.
      */
     public function testsPhotoSetUp(): void
     {
@@ -50,9 +47,7 @@ class PhotoDbTest extends DataTestBase
     }
 
     /**
-     * testPhotoData
-     *
-     * @return void
+     * testPhotoData.
      */
     protected function testPhotoData(): void
     {
@@ -72,25 +67,24 @@ class PhotoDbTest extends DataTestBase
     }
 
     /**
-     * testPhotoUrl
-     *
-     * @return void
+     * testPhotoUrl.
+     * @throws TransportExceptionInterface
      */
     protected function testPhotoUrl(): void
     {
         foreach ($this->photos as $photo) {
-            $urlCdnImage = self::URL_HOST_CDN . $photo->getUrlCdn() . self::URL_PARAM_CDN;
+            $urlCdnImage = self::URL_HOST_CDN.$photo->getUrlCdn().self::URL_PARAM_CDN;
             $response = $this->client->request('GET', $urlCdnImage);
 
             $this->assertEquals(
                 200,
                 $response->getStatusCode(),
-                "L'image " . $photo->getName() . " dont l'url est  : $urlCdnImage n'a pas été trouvée dans le cdn"
+                "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'a pas été trouvée dans le cdn"
             );
             $this->assertEquals(
                 'image/jpeg',
                 $response->getHeaders()['content-type'][0],
-                "L'image " . $photo->getName() . " dont l'url est  : $urlCdnImage n'est retournée au format image/jpeg"
+                "L'image ".$photo->getName()." dont l'url est  : $urlCdnImage n'est retournée au format image/jpeg"
             );
         }
     }

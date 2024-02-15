@@ -11,11 +11,8 @@ class RefreshTokenTest extends AuthenticationTestBase
     private const KEY_REFRESH_TOKEN = 'refresh_token';
     private const METHOD_REFRESH_TOKEN = 'POST';
 
-
     /**
-     * testRefreshToken
-     *
-     * @return void
+     * testRefreshToken.
      */
     public function testRefreshToken(): void
     {
@@ -38,10 +35,7 @@ class RefreshTokenTest extends AuthenticationTestBase
     }
 
     /**
-     * getUserRefreshToken
-     *
-     * @param  string $token
-     * @return ResponseInterface
+     * getUserRefreshToken.
      */
     private function getUserRefreshToken(string $token): ResponseInterface
     {
@@ -51,10 +45,10 @@ class RefreshTokenTest extends AuthenticationTestBase
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
-                    'refresh_token' => $token
+                    'refresh_token' => $token,
                 ],
             ]
         );

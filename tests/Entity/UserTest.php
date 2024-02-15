@@ -6,12 +6,11 @@ use App\Entity\User;
 use App\Tests\Base\TestBase;
 
 /**
- * UserTest
+ * UserTest.
  */
 class UserTest extends TestBase
 {
     private User $user;
-
 
     protected function getContainerUser(): void
     {
@@ -20,9 +19,7 @@ class UserTest extends TestBase
     }
 
     /**
-     * testUserSetUp
-     *
-     * @return void
+     * testUserSetUp.
      */
     public function testUserSetUp(): void
     {
@@ -34,33 +31,23 @@ class UserTest extends TestBase
         $this->testPassword();
     }
 
-    /**
-     * @return void
-     */
     private function testEmail(): void
     {
         $this->user->setEmail('pablo@live.fr');
         $this->assertEquals('pablo@live.fr', $this->user->getEmail());
     }
 
-
     private function testUserIdentifier(): void
     {
         $this->assertEquals('pablo@live.fr', $this->user->getUserIdentifier());
     }
 
-    /**
-     * @return void
-     */
     private function testRole(): void
     {
         $this->user->setRoles(['ROLE_USER']);
         $this->assertEquals(['ROLE_USER'], $this->user->getRoles());
     }
 
-    /**
-     * @return void
-     */
     private function testPassword(): void
     {
         $this->user->setPassword('pa$$word');

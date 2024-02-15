@@ -9,9 +9,7 @@ class AuthenticationTest extends AuthenticationTestBase
     private const METHOD_AUTH = 'GET';
 
     /**
-     * testLogin
-     *
-     * @return void
+     * testLogin.
      */
     public function testLogin(): void
     {

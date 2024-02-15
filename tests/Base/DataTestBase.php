@@ -2,11 +2,11 @@
 
 namespace App\Tests\Base;
 
-use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Yaml\Yaml;
 
 /**
- * DataTest
+ * DataTest.
  */
 abstract class DataTestBase extends TestBase
 {
@@ -19,28 +19,18 @@ abstract class DataTestBase extends TestBase
     protected string $itemKey;
     protected int $index = 0;
 
-
-
-
     /**
-     * @var array<int, string> $valuesFromParameters
+     * @var array<int, string>
      */
     protected array $valuesFromParameters = [];
 
     /**
-     * @var array<string, array<mixed>> $parsedYaml
+     * @var array<string, array>
      */
     protected array $parsedYaml = [];
 
+    private string $classEntityPath;
 
-    /**
-     * @var string
-     */
-    private $classEntityPath;
-
-    /**
-     *
-     */
     protected function initContainerDataBase(): void
     {
         $this->initContainer();
@@ -48,7 +38,6 @@ abstract class DataTestBase extends TestBase
     }
 
     /**
-     * @param EntityRepository $repository
      * @param array<string, string> $params
      */
     protected function checkDbUnicity(EntityRepository $repository, array $params): void
@@ -58,13 +47,10 @@ abstract class DataTestBase extends TestBase
 
         $this->assertTrue(
             $assertion,
-            "La valeur portant l'url de CDN '" . $params['value'] . "' est dupliquée en BDD"
+            "La valeur portant l'url de CDN '".$params['value']."' est dupliquée en BDD"
         );
     }
 
-    /**
-     *
-     */
     protected function checkYamlValueUnicityClass(): void
     {
         $this->assertFalse(
@@ -73,10 +59,6 @@ abstract class DataTestBase extends TestBase
         );
     }
 
-    /**
-     * @param string $yamlFileName
-     * @return mixed
-     */
     protected function getYamlContent(string $yamlFileName): mixed
     {
         $yamlContent = file_get_contents("$this->rootDir/fixtures/$yamlFileName");
@@ -85,9 +67,6 @@ abstract class DataTestBase extends TestBase
         return Yaml::parse($yamlContent);
     }
 
-    /**
-     * @param string $classEntityPath
-     */
     protected function assertYamlIsReadable(string $classEntityPath): void
     {
         $this->assertArrayHasKey(
@@ -106,8 +85,6 @@ abstract class DataTestBase extends TestBase
     }
 
     /**
-     * @param string $key
-     * @param string $data
      * @param array<string ,mixed> $paramsClass
      */
     protected function checkParameterKeysAndValues(string $key, string $data, array $paramsClass): void
@@ -125,7 +102,6 @@ abstract class DataTestBase extends TestBase
 
     /**
      * @param array<string, mixed> $array
-     * @param mixed $data
      */
     private function checkYamlValueUnicityParameter(array $array, mixed $data): void
     {
@@ -139,7 +115,7 @@ abstract class DataTestBase extends TestBase
     }
 
     /**
-     * @param array<int, string> $item
+     * @param array<int, string>   $item
      * @param array<string, mixed> $params
      */
     private function checkParametersValuesOnClass(array $item, array $params): void
@@ -160,11 +136,10 @@ abstract class DataTestBase extends TestBase
     }
 
     /**
-     * checkavoiding
+     * checkavoiding.
      *
-     * @param  array<string, mixed> $params
-     * @param  array<int, mixed> $item
-     * @return mixed
+     * @param array<string, mixed> $params
+     * @param array<int, mixed>    $item
      */
     private function checkAvoiding(array $params, array $item): mixed
     {
@@ -173,12 +148,10 @@ abstract class DataTestBase extends TestBase
 
     /**
      * @param array<int, string> $columns
-     * @param int $index
-     * @return string
      */
     private function registerClassValues(array $columns, int $index): string
     {
-        $value = '<{' . $columns[$index] . $this->attribPrefix . '_' . $this->index . '}>';
+        $value = '<{'.$columns[$index].$this->attribPrefix.'_'.$this->index.'}>';
         $this->valuesFromParameters[] = $value;
 
         return $value;
@@ -186,7 +159,6 @@ abstract class DataTestBase extends TestBase
 
     /**
      * @param array<string, mixed> $array
-     * @param mixed $value
      */
     private function checkYamlKeyParameterByClassValue(array $array, mixed $value): void
     {
@@ -199,10 +171,6 @@ abstract class DataTestBase extends TestBase
         );
     }
 
-    /**
-     * @param string $value
-     * @param mixed $attribut
-     */
     private function checkYamlValueByAttributClass(string $value, mixed $attribut): void
     {
         $this->assertEquals(
@@ -214,37 +182,24 @@ abstract class DataTestBase extends TestBase
 
     /**
      * @param array<int, mixed> $objects
-     * @param int $valueCounted
-     * @return bool
      */
     private function countIfMore(array $objects, int $valueCounted): bool
     {
         return count($objects) === $valueCounted;
     }
 
-    /**
-     * @param string $haystack
-     * @param string $path
-     * @return string
-     */
-    private function getEndOfPath(string $haystack, string $path): string
+    private function getEndOfPath(string $path): string
     {
-        $arrPath = explode($haystack, $path);
+        $arrPath = explode('\\', $path);
 
         return strtolower(end($arrPath));
     }
 
-    /**
-     * @param string $key
-     * @return mixed
-     */
     private function getIndexFromString(string $key): mixed
     {
         return filter_var($key, FILTER_SANITIZE_NUMBER_INT);
     }
-    /**
-     * @param string $key
-     */
+
     private function shouldProcessKey(string $key): bool
     {
         return $this->index != $this->getIndexFromString($key);
@@ -256,9 +211,8 @@ abstract class DataTestBase extends TestBase
     private function checkItemKeyExist(array $arrayClass): void
     {
         $this->itemKey = $this->getEndOfPath(
-            '\\',
             $this->classEntityPath
-        ) . '_' . $this->index . '{' . $this->index . '..' . $this->index . '}';
+        ).'_'.$this->index.'{'.$this->index.'..'.$this->index.'}';
         $this->assertArrayHasKey(
             $this->itemKey,
             $arrayClass,

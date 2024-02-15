@@ -9,9 +9,8 @@ use ApiPlatform\OpenApi\OpenApi;
 class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
 {
     /**
-     * __construct
+     * __construct.
      *
-     * @param  OpenApiFactoryInterface $decorated
      * @return void
      */
     public function __construct(private OpenApiFactoryInterface $decorated)
@@ -19,10 +18,9 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
     }
 
     /**
-     * __invoke
+     * __invoke.
      *
      * @param array<int, mixed> $context
-     * @return OpenApi
      */
     public function __invoke(array $context = []): OpenApi
     {
@@ -43,7 +41,7 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
             'properties' => [
                 'refresh_token' => [
                     'type' => 'string',
-                    'example' => $_ENV['JWT_REFRESH_TOKEN']
+                    'example' => $_ENV['JWT_REFRESH_TOKEN'],
                 ],
             ],
         ]);
@@ -86,6 +84,6 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/token/refresh', $pathItem);
 
-        return  $openApi;
+        return $openApi;
     }
 }

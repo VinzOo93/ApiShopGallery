@@ -5,9 +5,7 @@ namespace App\Tests\Base;
 class ShopTestBase extends ApiTestBase
 {
     /**
-     * initShopTest
-     *
-     * @return void
+     * initShopTest.
      */
     protected function initShopTest(): void
     {
