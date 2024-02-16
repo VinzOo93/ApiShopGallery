@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shop;
+namespace App\Tests\Functional;
 
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,7 +114,7 @@ class CreateCartTest extends ShopTestBase
                 'quantity' => 0,
                 'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
                 'printFormat' => 'bouuuubouuu',
-                'unitPrice' => '450.00',
+                'unitPrice' => '480.00',
                 'unitPreTaxPrice' => '400.00',
                 'preTaxPrice' => '800.00',
                 'taxPrice' => '960.00',
@@ -141,6 +141,63 @@ class CreateCartTest extends ShopTestBase
         ],
     ];
 
+    /** @var array<string,mixed> */
+    private array $cartWithItemPreTaxPrice = [
+        'subtotal' => '800.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '1000.00',
+                'taxPrice' => '960.00',
+            ],
+        ],
+    ];
+
+    /** @var array<string,mixed> */
+    private array $cartWithItemTaxPrice = [
+        'subtotal' => '800.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '1000.00',
+                'taxPrice' => '900.00',
+            ],
+        ],
+    ];
+
+    /** @var array<string,mixed> */
+    private array $cartWithCathSubtotal = [
+        'subtotal' => '700.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '1000.00',
+                'taxPrice' => '900.00',
+            ],
+        ],
+    ];
+
     private const ROUTE_CREATE_CART = '/carts';
 
     /**
@@ -159,6 +216,9 @@ class CreateCartTest extends ShopTestBase
         $this->testNegativeCartFieldFailure();
         $this->testPrintFormatItemFieldFailure();
         $this->testUnitPriceItemFailure();
+        $this->testPreTaxPriceItemFailure();
+        $this->testTaxPriceItemFailure();
+        $this->testSubtotalCartFailure();
         $this->testCartCreation();
     }
 
@@ -230,11 +290,45 @@ class CreateCartTest extends ShopTestBase
 
     /**
      * testUnitPriceItemFailure.
+     *
      * @throws TransportExceptionInterface
      */
     private function testUnitPriceItemFailure(): void
     {
         $this->createItem($this->cartWithItemUnitPrice);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testUnitPriceItemFailure.
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function testPreTaxPriceItemFailure(): void
+    {
+        $this->createItem($this->cartWithItemPreTaxPrice);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testUnitPriceItemFailure.
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function testTaxPriceItemFailure(): void
+    {
+        $this->createItem($this->cartWithItemTaxPrice);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testUnitPriceItemFailure.
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function testSubtotalCartFailure(): void
+    {
+        $this->createItem($this->cartWithCathSubtotal);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 

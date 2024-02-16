@@ -10,12 +10,10 @@ trait BaseValidatorTrait
     public mixed $constraint;
     public mixed $object;
 
-    const TAXE_RATE = '20.00';
+    public const TAXE_RATE = '20.00';
 
     /**
-     * initItemValidator
-     *
-     * @return void
+     * initItemValidator.
      */
     protected function initValidator(): void
     {
@@ -23,9 +21,7 @@ trait BaseValidatorTrait
     }
 
     /**
-     * isCartInstance
-     *
-     * @return bool
+     * isCartInstance.
      */
     protected function isCartInstance(): bool
     {
@@ -33,10 +29,7 @@ trait BaseValidatorTrait
     }
 
     /**
-     * checkConstraint
-     *
-     * @param  string $classConstraint
-     * @return void
+     * checkConstraint.
      */
     protected function checkConstraint(string $classConstraint): void
     {
@@ -44,11 +37,9 @@ trait BaseValidatorTrait
             throw new UnexpectedTypeException($this->constraint, $classConstraint);
         }
     }
+
     /**
-     * checkCondition
-     *
-     * @param  bool $condition
-     * @return void
+     * checkCondition.
      */
     protected function checkCondition(bool $condition): void
     {

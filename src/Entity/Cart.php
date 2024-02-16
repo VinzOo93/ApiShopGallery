@@ -36,6 +36,7 @@ class Cart
     private ?\DateTimeInterface $updatedAt = null;
 
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
+    #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 

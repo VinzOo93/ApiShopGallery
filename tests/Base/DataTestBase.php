@@ -25,7 +25,7 @@ abstract class DataTestBase extends TestBase
     protected array $valuesFromParameters = [];
 
     /**
-     * @var array<string, array>
+     * @var array<string, mixed>
      */
     protected array $parsedYaml = [];
 

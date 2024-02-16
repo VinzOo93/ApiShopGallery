@@ -91,6 +91,7 @@ class CreateCartWithItemsAction
     /**
      * getPrintFormat.
      *
+     * @param array<string, string> $itemData
      * @return ?PrintFormat
      */
     private function getPrintFormat(array $itemData): ?PrintFormat

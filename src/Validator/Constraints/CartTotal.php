@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraint;
 #[\Attribute]
 class CartTotal extends Constraint
 {
-    public string $message = 'Le total du panier ne correspond pas à la somme des articles avec la TVA.';
+    public string $message = 'Le total du panier ou de la ligne produit sont incohérents.';
 
     public function validatedBy(): string
     {

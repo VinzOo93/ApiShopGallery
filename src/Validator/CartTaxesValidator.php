@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use App\Entity\Cart;
 use App\Entity\Item;
 use App\Validator\Constraints\CartTaxes;
 use App\Validator\Trait\BaseValidatorTrait;
@@ -12,19 +13,20 @@ class CartTaxesValidator extends ConstraintValidator
 {
     use BaseValidatorTrait;
 
-    private float $unitPrice = 0;
-    private Item $item;
 
     public function validate(mixed $value, Constraint $constraint): void
     {
         $this->initValidator();
         $this->constraint = $constraint;
         $this->checkConstraint(CartTaxes::class);
+
         if ($this->isCartInstance()) {
-            $this->checkTaxValidityCart();
+            /** @var Cart $cart */
+            $cart = $this->object;
+
+            $this->checkTaxValidityCart($cart);
             foreach ($this->object->getItems() as $item) {
-                $this->item = $item;
-                $this->checkTaxValidityItem();
+                $this->checkTaxValidityItem($item);
             }
         }
     }
@@ -32,34 +34,37 @@ class CartTaxesValidator extends ConstraintValidator
     /**
      * checkTaxesValidityCart.
      */
-    private function checkTaxValidityCart(): void
+    private function checkTaxValidityCart(Cart $cart): void
     {
-        $this->checkCondition($this->calculateCartTaxesBySubtotal() != (float) $this->object->getTaxes());
+        $this->checkCondition($this->calculateCartTaxesBySubtotal($cart) != (float) $cart->getTaxes());
     }
 
     /**
-     * checkTaxesValidityItem.
+     * @param Item $item
+     * @return void
      */
-    private function checkTaxValidityItem(): void
+    private function checkTaxValidityItem(Item $item): void
     {
-        $this->checkCondition($this->calculateItemUnitPreTax() != (float) $this->item->getUnitPrice());
+        $this->checkCondition($this->calculateItemUnitPreTax($item) != (float) $item->getUnitPrice());
     }
 
     /**
-     * calculateTaxesBySubtotal.
+     * @param Cart $cart
+     * @return float
      */
-    private function calculateCartTaxesBySubtotal(): float
+    private function calculateCartTaxesBySubtotal(Cart $cart): float
     {
-        return $this->calculateTaxes((float) $this->object->getSubtotal());
+        return $this->calculateTaxes((float) $cart->getSubtotal());
     }
 
     /**
-     * calculateItemTaxes.
+     * @param Item $item
+     * @return float
      */
-    private function calculateItemUnitPreTax(): float
+    private function calculateItemUnitPreTax(Item $item): float
     {
-        return (float) $this->item->getUnitPreTaxPrice()
-            + $this->calculateTaxes((float) $this->item->getUnitPreTaxPrice());
+        return (float) $item->getUnitPreTaxPrice()
+            + $this->calculateTaxes((float) $item->getUnitPreTaxPrice());
     }
 
     /**
