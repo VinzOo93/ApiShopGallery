@@ -5,14 +5,12 @@ namespace App\Validator;
 use App\Entity\Cart;
 use App\Entity\Item;
 use App\Validator\Constraints\CartTaxes;
-use App\Validator\Trait\BaseValidatorTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class CartTaxesValidator extends ConstraintValidator
 {
     use BaseValidatorTrait;
-
 
     public function validate(mixed $value, Constraint $constraint): void
     {

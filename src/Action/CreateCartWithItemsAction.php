@@ -2,7 +2,6 @@
 
 namespace App\Action;
 
-use _PHPStan_c997ea9ee\Nette\Schema\ValidationException;
 use App\Dto\CreateCartDto;
 use App\Dto\CreateItemWithCartDto;
 use App\Entity\Cart;
@@ -13,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -79,6 +79,7 @@ class CreateCartWithItemsAction
                 $this->entityManager->persist($item);
                 $cart->addItem($item);
             }
+            $this->checkErrors($this->validator->validate($cart));
             $this->entityManager->persist($cart);
             $this->entityManager->flush();
             $this->entityManager->commit();
@@ -93,7 +94,8 @@ class CreateCartWithItemsAction
     /**
      * getPrintFormat.
      *
-     * @param array<string, string> $itemData
+     * @param array<string, string> $itemData*
+     *
      * @return ?PrintFormat
      */
     private function getPrintFormat(array $itemData): ?PrintFormat
@@ -104,9 +106,6 @@ class CreateCartWithItemsAction
         return $printFormatRepository->findOneBy(['name' => $itemData['printFormat']]);
     }
 
-    /**
-     * validateObject.
-     */
     private function validateObject(mixed $object): void
     {
         $this->checkErrors($this->validator->validate(
@@ -118,32 +117,12 @@ class CreateCartWithItemsAction
         ));
     }
 
-    /**
-     * getErrors.
-     */
-    private function showErrors(ConstraintViolationListInterface $errors): void
-    {
-        $errorsArray = [];
-
-        foreach ($errors as $error) {
-            $errorsArray[] = [
-                'property' => $error->getPropertyPath(),
-                'message' => $error->getMessage(),
-            ];
-        }
-
-        new Response(json_encode(['errors' => $errorsArray]), Response::HTTP_BAD_REQUEST);
-    }
-
-    /**
-     * getErrors.
-     */
     private function checkErrors(ConstraintViolationListInterface $errors): void
     {
-        $errorsArray = [];
-        foreach ($errors as $error) {
-            $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                throw new UnprocessableEntityHttpException($error->getMessage());
+            }
         }
-        throw new ValidationException(new Response(json_encode(['errors' => $errorsArray])));
     }
 }

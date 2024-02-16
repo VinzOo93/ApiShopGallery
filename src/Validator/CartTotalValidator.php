@@ -5,7 +5,6 @@ namespace App\Validator;
 use App\Entity\Cart;
 use App\Entity\Item;
 use App\Validator\Constraints\CartTotal;
-use App\Validator\Trait\BaseValidatorTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -13,6 +12,11 @@ class CartTotalValidator extends ConstraintValidator
 {
     use BaseValidatorTrait;
 
+    /**
+     * @param mixed $value
+     * @param Constraint $constraint
+     * @return void
+     */
     public function validate(mixed $value, Constraint $constraint): void
     {
         $this->initValidator();
@@ -24,6 +28,8 @@ class CartTotalValidator extends ConstraintValidator
             $cart = $this->object;
 
             $pretaxPrice = 0;
+
+            /** @var array<int, float> $valuesTotal */
             $valuesTotal = [
                 $cart->getSubtotal(),
                 $cart->getTaxes(),
@@ -41,22 +47,34 @@ class CartTotalValidator extends ConstraintValidator
         }
     }
 
+    /**
+     * @param array<int, string|float> $values
+     */
     private function calculateTotal(array $values): float|int
     {
         $total = 0;
         foreach ($values as $value) {
             $total += (float) $value;
         }
+
         return $total;
     }
 
-    private function calculateTaxPrice(Item $item): float|int
+    /**
+     * @param Item $item
+     * @return float
+     */
+    private function calculateTaxPrice(Item $item): float
     {
-        return $item->getUnitPrice() * $item->getQuantity();
+        return (float) $item->getUnitPrice() * (int) $item->getQuantity();
     }
 
-    private function calculatePreTaxPrice(Item $item): float|int
+    /**
+     * @param Item $item
+     * @return float
+     */
+    private function calculatePreTaxPrice(Item $item): float
     {
-        return $item->getUnitPreTaxPrice() * $item->getQuantity();
+        return (float) $item->getUnitPreTaxPrice() * (int) $item->getQuantity();
     }
 }

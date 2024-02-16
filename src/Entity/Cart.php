@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Cart
 {
     #[ORM\Id]
+    #[ApiProperty(identifier: false)]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;

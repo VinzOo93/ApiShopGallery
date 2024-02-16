@@ -2,32 +2,13 @@
 
 namespace App\Tests\Functional;
 
+use App\Entity\Cart;
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class CreateCartTest extends ShopTestBase
 {
-    /** @var array<string,mixed> */
-    private array $cartWithItems = [
-        'subtotal' => '800.00',
-        'taxes' => '160.00',
-        'shipping' => '5.00',
-        'total' => '965.00',
-        'items' => [
-            [
-                'quantity' => 2,
-                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
-                'printFormat' => '30x20 cm',
-                'unitPrice' => '480.00',
-                'unitPreTaxPrice' => '400.00',
-                'preTaxPrice' => '800.00',
-                'taxPrice' => '960.00',
-            ],
-        ],
-        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
-    ];
-
     /** @var array<string,mixed> */
     private array $cartWithItemsTotal = [
         'subtotal' => '800.00',
@@ -228,7 +209,6 @@ class CreateCartTest extends ShopTestBase
         'token' => 'chaussettes',
     ];
 
-    private const ROUTE_CREATE_CART = '/carts';
 
     /**
      * testCreateCartWithItem.
@@ -251,6 +231,7 @@ class CreateCartTest extends ShopTestBase
         $this->testSubtotalCartFailure();
         $this->testTokenCartFailure();
         $this->testCartCreation();
+        $this->testTokenDoubleCartFailure();
     }
 
     /**
@@ -260,8 +241,9 @@ class CreateCartTest extends ShopTestBase
      */
     protected function testCartCreation(): void
     {
-        $this->createItem($this->cartWithItems);
+        $this->createOnDb($this->cartWithItems, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+        $this->assertEquals(1, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -271,8 +253,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testTotalCartFailure(): void
     {
-        $this->createItem($this->cartWithItemsTotal);
+        $this->createOnDb($this->cartWithItemsTotal, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -282,8 +265,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testTaxesCartFailure(): void
     {
-        $this->createItem($this->cartWithItemsTaxes);
+        $this->createOnDb($this->cartWithItemsTaxes, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -293,8 +277,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testNegativeCartFieldFailure(): void
     {
-        $this->createItem($this->cartWithItemsNegative);
+        $this->createOnDb($this->cartWithItemsNegative, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -304,8 +289,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testQuantityItemFailure(): void
     {
-        $this->createItem($this->cartWithItemsQuantity);
+        $this->createOnDb($this->cartWithItemsQuantity, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -315,8 +301,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testPrintFormatItemFieldFailure(): void
     {
-        $this->createItem($this->cartWithItemPrintFormat);
+        $this->createOnDb($this->cartWithItemPrintFormat, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -326,8 +313,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testUnitPriceItemFailure(): void
     {
-        $this->createItem($this->cartWithItemUnitPrice);
+        $this->createOnDb($this->cartWithItemUnitPrice, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -337,8 +325,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testPreTaxPriceItemFailure(): void
     {
-        $this->createItem($this->cartWithItemPreTaxPrice);
+        $this->createOnDb($this->cartWithItemPreTaxPrice, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -348,8 +337,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testTaxPriceItemFailure(): void
     {
-        $this->createItem($this->cartWithItemTaxPrice);
+        $this->createOnDb($this->cartWithItemTaxPrice, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -359,8 +349,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testSubtotalCartFailure(): void
     {
-        $this->createItem($this->cartWithCartSubtotal);
+        $this->createOnDb($this->cartWithCartSubtotal, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -370,8 +361,21 @@ class CreateCartTest extends ShopTestBase
      */
     private function testTokenCartFailure(): void
     {
-        $this->createItem($this->cartWithCartToken);
+        $this->createOnDb($this->cartWithCartToken, self::ROUTE_CREATE_CART);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
+    }
+
+    /**
+     * testUnitPriceItemFailure.
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function testTokenDoubleCartFailure(): void
+    {
+        $this->createOnDb($this->cartWithItems, self::ROUTE_CREATE_CART);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertEquals(1, $this->countObjectsOnDb(Cart::class));
     }
 
     /**
@@ -381,25 +385,9 @@ class CreateCartTest extends ShopTestBase
     {
         $this->createCartWithItemNoAuth();
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
-    /**
-     * createItem.
-     *
-     * @param array<string,mixed> $cart
-     *
-     * @throws TransportExceptionInterface
-     */
-    private function createItem(array $cart): void
-    {
-        $response = $this->prepareUser(parent::ROUTE_AUTH);
-        $this->postToApiWithAuthentication(
-            $response->toArray(),
-            $cart,
-            parent::KEY_AUTH_TOKEN,
-            self::ROUTE_CREATE_CART
-        );
-    }
 
     /**
      * createCartWithItemNoAuth.
