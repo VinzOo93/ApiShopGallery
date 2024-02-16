@@ -25,6 +25,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -44,6 +45,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -63,6 +65,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -82,6 +85,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -101,6 +105,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -120,6 +125,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -139,6 +145,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -158,6 +165,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -177,10 +185,11 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '900.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
-    private array $cartWithCathSubtotal = [
+    private array $cartWithCartSubtotal = [
         'subtotal' => '700.00',
         'taxes' => '160.00',
         'shipping' => '5.00',
@@ -196,6 +205,27 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '900.00',
             ],
         ],
+        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+    ];
+
+    /** @var array<string,mixed> */
+    private array $cartWithCartToken = [
+        'subtotal' => '700.00',
+        'taxes' => '160.00',
+        'shipping' => '5.00',
+        'total' => '1005.00',
+        'items' => [
+            [
+                'quantity' => 0,
+                'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+                'printFormat' => '30x20 cm',
+                'unitPrice' => '480.00',
+                'unitPreTaxPrice' => '400.00',
+                'preTaxPrice' => '1000.00',
+                'taxPrice' => '900.00',
+            ],
+        ],
+        'token' => 'chaussettes',
     ];
 
     private const ROUTE_CREATE_CART = '/carts';
@@ -219,6 +249,7 @@ class CreateCartTest extends ShopTestBase
         $this->testPreTaxPriceItemFailure();
         $this->testTaxPriceItemFailure();
         $this->testSubtotalCartFailure();
+        $this->testTokenCartFailure();
         $this->testCartCreation();
     }
 
@@ -328,7 +359,18 @@ class CreateCartTest extends ShopTestBase
      */
     private function testSubtotalCartFailure(): void
     {
-        $this->createItem($this->cartWithCathSubtotal);
+        $this->createItem($this->cartWithCartSubtotal);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * testUnitPriceItemFailure.
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function testTokenCartFailure(): void
+    {
+        $this->createItem($this->cartWithCartToken);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 

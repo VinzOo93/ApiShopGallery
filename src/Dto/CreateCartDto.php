@@ -22,6 +22,10 @@ final class CreateCartDto
     #[Assert\Type(type: 'numeric')]
     public string $total = '965.00';
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    public string $token = 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=';
+
     /** @var CreateItemWithCartDto[] */
     public array $items = [];
 }

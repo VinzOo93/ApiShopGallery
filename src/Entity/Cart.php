@@ -57,6 +57,14 @@ class Cart
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, orphanRemoval: true)]
     private Collection $items;
 
+    #[Assert\Length(
+        min: 44,
+        max: 44,
+        exactMessage: 'La chaîne doit avoir exactement 44 caractères.'
+    )]
+    #[ORM\Column(length: 255)]
+    private ?string $token = null;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -162,6 +170,18 @@ class Cart
                 $item->setCart(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }

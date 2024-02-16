@@ -59,7 +59,8 @@ class CreateCartWithItemsAction
                 ->setUpdatedAt($date)
                 ->setTaxes($cartData['taxes'])
                 ->setShipping($cartData['shipping'])
-                ->setTotal($cartData['total']);
+                ->setTotal($cartData['total'])
+                ->setToken($cartData['token']);
 
             foreach ($cartData['items'] as $itemData) {
                 $item = new Item();
