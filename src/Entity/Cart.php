@@ -2,21 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
 use App\Action\CreateCartWithItemsAction;
 use App\Dto\CreateCartDto;
 use App\Repository\CartRepository;
+use App\State\CartProvider;
+use App\Validator as AcmeAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Validator as AcmeAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
-#[Get]
+#[Get(
+    uriTemplate: '/carts/{token}',
+    uriVariables: [
+        'token' => new Link(
+            fromProperty: 'token',
+            toProperty: 'token',
+            fromClass: Cart::class,
+        )],
+    provider: CartProvider::class,
+)]
 #[Post(
     controller: CreateCartWithItemsAction::class,
     input: CreateCartDto::class
@@ -59,10 +71,11 @@ class Cart
 
     #[Assert\Length(
         min: 44,
-        max: 44,
+        max: 50,
         exactMessage: 'La chaîne doit avoir exactement 44 caractères.'
     )]
-    #[ORM\Column(length: 255)]
+    #[ApiProperty(identifier: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $token = null;
 
     public function __construct()

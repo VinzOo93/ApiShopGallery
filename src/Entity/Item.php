@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use App\Validator as AcmeAssert;
@@ -15,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Post(
     input: CreateItemDto::class
 )]
+#[Put]
+#[Delete]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {

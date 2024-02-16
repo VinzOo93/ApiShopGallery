@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use _PHPStan_c997ea9ee\Nette\Schema\ValidationException;
 use App\Dto\CreateCartDto;
 use App\Dto\CreateItemWithCartDto;
 use App\Entity\Cart;
@@ -131,7 +132,7 @@ class CreateCartWithItemsAction
             ];
         }
 
-        new Response(json_encode($errorsArray), 400);
+        new Response(json_encode(['errors' => $errorsArray]), Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -139,8 +140,10 @@ class CreateCartWithItemsAction
      */
     private function checkErrors(ConstraintViolationListInterface $errors): void
     {
-        if (count($errors) > 0) {
-            $this->showErrors($errors);
+        $errorsArray = [];
+        foreach ($errors as $error) {
+            $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
         }
+        throw new ValidationException(new Response(json_encode(['errors' => $errorsArray])));
     }
 }

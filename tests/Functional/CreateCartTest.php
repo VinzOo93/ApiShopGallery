@@ -25,7 +25,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -45,7 +45,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -65,7 +65,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -85,7 +85,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -105,7 +105,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -125,7 +125,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -145,7 +145,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -165,7 +165,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '960.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -185,7 +185,7 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '900.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
@@ -205,12 +205,12 @@ class CreateCartTest extends ShopTestBase
                 'taxPrice' => '900.00',
             ],
         ],
-        'token' => 'U2FsdGVkX19zFZglY9uxbJgmze/rmb3d1Eu6gj224lg=',
+        'token' => 'U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=',
     ];
 
     /** @var array<string,mixed> */
     private array $cartWithCartToken = [
-        'subtotal' => '700.00',
+        'subtotal' => '900.00',
         'taxes' => '160.00',
         'shipping' => '5.00',
         'total' => '1005.00',
@@ -258,7 +258,7 @@ class CreateCartTest extends ShopTestBase
      *
      * @throws TransportExceptionInterface
      */
-    private function testCartCreation(): void
+    protected function testCartCreation(): void
     {
         $this->createItem($this->cartWithItems);
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
