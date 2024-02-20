@@ -2,7 +2,6 @@
 
 namespace App\Tests\Base;
 
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ShopTestBase extends ApiTestBase
@@ -53,20 +52,16 @@ class ShopTestBase extends ApiTestBase
     }
 
     /**
-     * @param mixed $class
-     * @return int
+     * @param class-string $className
      */
-    protected function countObjectsOnDb(mixed $class): int
+    protected function countObjectsOnDb(string $className): int
     {
-        $cartRepo = $this->entityManager->getRepository($class);
+        /** @var class-string $className * */
+        $repository = $this->entityManager->getRepository($className);
 
-        return count($cartRepo->findAll());
+        return count($repository->findAll());
     }
 
-    /**
-     * @param string $route
-     * @return ResponseInterface
-     */
     protected function getApiRoute(string $route): ResponseInterface
     {
         $response = $this->prepareUser(parent::ROUTE_AUTH);

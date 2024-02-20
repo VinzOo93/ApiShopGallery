@@ -3,6 +3,7 @@
 namespace App\Tests\Authentication;
 
 use App\Tests\Base\AuthenticationTestBase;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class AuthenticationTest extends AuthenticationTestBase
 {
@@ -10,6 +11,7 @@ class AuthenticationTest extends AuthenticationTestBase
 
     /**
      * testLogin.
+     * @throws TransportExceptionInterface
      */
     public function testLogin(): void
     {

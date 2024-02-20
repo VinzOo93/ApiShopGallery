@@ -11,6 +11,7 @@ use App\Repository\ItemRepository;
 use App\Validator as AcmeAssert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource()]
@@ -22,18 +23,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {
+    #[Groups(['cart:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 1, message: 'La quantité doit être suprieur à 1.')]
     #[ORM\Column]
     private ?int $quantity = null;
 
+    #[Groups(['cart:read'])]
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\Choice(
         choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
         message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
@@ -42,20 +47,24 @@ class Item
     #[ORM\JoinColumn(nullable: false)]
     private ?PrintFormat $printFormat = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTaxes]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $unitPrice = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $unitPreTaxPrice = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $preTaxPrice = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]

@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
@@ -27,7 +28,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             toProperty: 'token',
             fromClass: Cart::class,
         )],
-    provider: CartProvider::class,
+    normalizationContext: ['groups' => 'cart:read'],
+    denormalizationContext: ['groups' => 'cart:write'],
+    provider: CartProvider::class
 )]
 #[Post(
     controller: CreateCartWithItemsAction::class,
@@ -36,38 +39,46 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
 {
+    #[Groups(['cart:read'])]
     #[ORM\Id]
     #[ApiProperty(identifier: false)]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['cart:read'])]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[Groups(['cart:read'])]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTaxes]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $taxes = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
     private ?string $shipping = null;
 
+    #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $total = null;
 
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, orphanRemoval: true)]
+    #[Groups(['cart:read'])]
     private Collection $items;
 
     #[Assert\Length(
