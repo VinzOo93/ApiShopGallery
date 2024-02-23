@@ -5,34 +5,30 @@ namespace App\Action;
 use App\Dto\CreateCartDto;
 use App\Dto\CreateItemWithCartDto;
 use App\Entity\Cart;
-use App\Entity\Item;
-use App\Entity\PrintFormat;
-use App\Repository\PrintFormatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * CreateCartWithItemsAction.
  */
-class CreateCartWithItemsAction
+class CreateCartWithItemsAction extends BaseShopAction
 {
-    private const OBJECT_DTO = [
+    private const OBJECTS_DTO = [
         CreateCartDto::class,
         CreateItemWithCartDto::class,
     ];
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ValidatorInterface $validator,
-        private readonly SerializerInterface $serializer,
-        private string $content = '',
-    ) {
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
+        SerializerInterface $serializer,
+        string $content = '')
+    {
+        parent::__construct($entityManager, $validator, $serializer, $content);
     }
 
     /**
@@ -42,9 +38,7 @@ class CreateCartWithItemsAction
     {
         $this->content = $request->getContent();
 
-        foreach (self::OBJECT_DTO as $object) {
-            $this->validateObject($object);
-        }
+        $this->initValidationAction(self::OBJECTS_DTO);
 
         $this->entityManager->beginTransaction();
         try {
@@ -52,8 +46,7 @@ class CreateCartWithItemsAction
 
             $cart = new Cart();
 
-            /** @var \DateTimeInterface $date */
-            $date = new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
+            $date = $this->getCurrentDateTimeEurope();
 
             $cart->setSubtotal($cartData['subtotal'])
                 ->setCreatedAt($date)
@@ -64,18 +57,7 @@ class CreateCartWithItemsAction
                 ->setToken($cartData['token']);
 
             foreach ($cartData['items'] as $itemData) {
-                $item = new Item();
-                $printFormat = $this->getPrintFormat($itemData);
-
-                $item->setQuantity($itemData['quantity'])
-                    ->setImage($itemData['image'])
-                    ->setPrintFormat($printFormat)
-                    ->setUnitPrice($itemData['unitPrice'])
-                    ->setUnitPreTaxPrice($itemData['unitPreTaxPrice'])
-                    ->setPreTaxPrice($itemData['preTaxPrice'])
-                    ->setTaxPrice($itemData['taxPrice'])
-                    ->setCart($cart);
-
+                $item = $this->createItemAction($cart, $itemData);
                 $this->entityManager->persist($item);
                 $cart->addItem($item);
             }
@@ -88,41 +70,6 @@ class CreateCartWithItemsAction
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, "impossible to create Cart $e");
-        }
-    }
-
-    /**
-     * getPrintFormat.
-     *
-     * @param array<string, string> $itemData*
-     *
-     * @return ?PrintFormat
-     */
-    private function getPrintFormat(array $itemData): ?PrintFormat
-    {
-        /** @var PrintFormatRepository $printFormatRepository */
-        $printFormatRepository = $this->entityManager->getRepository(PrintFormat::class);
-
-        return $printFormatRepository->findOneBy(['name' => $itemData['printFormat']]);
-    }
-
-    private function validateObject(mixed $object): void
-    {
-        $this->checkErrors($this->validator->validate(
-            $this->serializer->deserialize(
-                $this->content,
-                $object,
-                'json'
-            )
-        ));
-    }
-
-    private function checkErrors(ConstraintViolationListInterface $errors): void
-    {
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                throw new UnprocessableEntityHttpException($error->getMessage());
-            }
         }
     }
 }

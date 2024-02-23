@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Action\CreateItemInExistingCartAction;
 use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use App\Validator as AcmeAssert;
@@ -16,9 +17,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource()]
 #[Post(
+    controller: CreateItemInExistingCartAction::class,
     input: CreateItemDto::class
 )]
-#[Put]
+#[Put()]
 #[Delete]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
@@ -30,7 +32,7 @@ class Item
     private ?int $id = null;
 
     #[Groups(['cart:read'])]
-    #[Assert\GreaterThanOrEqual(value: 1, message: 'La quantité doit être suprieur à 1.')]
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'La quantité doit être supérieur à 1.')]
     #[ORM\Column]
     private ?int $quantity = null;
 
@@ -39,10 +41,6 @@ class Item
     private ?string $image = null;
 
     #[Groups(['cart:read'])]
-    #[Assert\Choice(
-        choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
-        message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
-    )]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?PrintFormat $printFormat = null;

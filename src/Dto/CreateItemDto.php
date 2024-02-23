@@ -14,6 +14,10 @@ final class CreateItemDto
     public string $image = 'a07ed184-c9aa-4729-aa25-70571f0fb11a';
 
     #[Assert\NotBlank]
+    #[Assert\Choice(
+        choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
+        message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
+    )]
     public string $printFormat = '30x20 cm';
 
     #[Assert\NotBlank]
@@ -32,5 +36,5 @@ final class CreateItemDto
     #[Assert\Type(type: 'numeric')]
     public string $taxPrice = '960.00';
 
-    public int $cart;
+    public int $cart = 15;
 }

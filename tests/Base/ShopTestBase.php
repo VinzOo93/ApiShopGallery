@@ -72,4 +72,20 @@ class ShopTestBase extends ApiTestBase
             $route
         );
     }
+
+    /**
+     * @param string $route
+     * @param array $object
+     * @return void
+     */
+    protected function createObjectWithNoAuth(string $route, array $object)
+    {
+        $this->client->request(
+            'POST',
+            $route,
+            [
+                'json' => json_encode($object),
+            ]
+        );
+    }
 }

@@ -383,23 +383,9 @@ class CreateCartTest extends ShopTestBase
      */
     private function testAuthCreateCart(): void
     {
-        $this->createCartWithItemNoAuth();
+        $this->createObjectWithNoAuth(self::ROUTE_CREATE_CART, $this->cartWithItems);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertEquals(0, $this->countObjectsOnDb(Cart::class));
     }
 
-
-    /**
-     * createCartWithItemNoAuth.
-     */
-    private function createCartWithItemNoAuth(): void
-    {
-        $this->client->request(
-            'POST',
-            self::ROUTE_CREATE_CART,
-            [
-                'json' => json_encode($this->cartWithItems),
-            ]
-        );
-    }
 }

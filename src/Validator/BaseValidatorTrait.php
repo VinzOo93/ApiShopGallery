@@ -4,7 +4,6 @@ namespace App\Validator;
 
 use App\Entity\Cart;
 use Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 trait BaseValidatorTrait
