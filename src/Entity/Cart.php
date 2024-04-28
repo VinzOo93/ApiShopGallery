@@ -7,10 +7,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
-use App\Action\CreateCartWithItemsAction;
 use App\Dto\CreateCartDto;
 use App\Repository\CartRepository;
 use App\State\CartProvider;
+use App\State\CreateCartWithItemsProcessor;
 use App\Validator as AcmeAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,19 +29,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             fromClass: Cart::class,
         )],
     normalizationContext: ['groups' => 'cart:read'],
-    denormalizationContext: ['groups' => 'cart:write'],
     provider: CartProvider::class
 )]
 #[Post(
-    controller: CreateCartWithItemsAction::class,
-    input: CreateCartDto::class
+    input: CreateCartDto::class,
+    processor: CreateCartWithItemsProcessor::class
 )]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
 {
+
     #[Groups(['cart:read'])]
     #[ORM\Id]
-    #[ApiProperty(identifier: false)]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
@@ -54,16 +53,20 @@ class Cart
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'numeric')]
     #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $subtotal = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'numeric')]
     #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTaxes]
-    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $taxes = null;
 
     #[Groups(['cart:read'])]
@@ -71,13 +74,15 @@ class Cart
     #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
     private ?string $shipping = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'numeric')]
     #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTotal]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $total = null;
 
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Item::class, cascade: ['remove', 'persist'], orphanRemoval: true)]
     #[Groups(['cart:read'])]
     private Collection $items;
 
@@ -86,6 +91,7 @@ class Cart
         max: 50,
         exactMessage: 'La chaîne doit avoir exactement 44 caractères.'
     )]
+
     #[ApiProperty(identifier: true)]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $token = null;

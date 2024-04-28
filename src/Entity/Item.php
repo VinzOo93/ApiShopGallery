@@ -17,8 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource()]
 #[Post(
-    controller: CreateItemInExistingCartAction::class,
-    input: CreateItemDto::class
+    input: CreateItemDto::class,
+    processor: CreateItemInExistingCartAction::class
 )]
 #[Put()]
 #[Delete]
@@ -31,20 +31,30 @@ class Item
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'numeric')]
     #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 1, message: 'La quantité doit être supérieur à 1.')]
     #[ORM\Column]
     private ?int $quantity = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[Groups(['cart:read'])]
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
     #[Groups(['cart:read'])]
+    #[Assert\Choice(
+        choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
+        message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
+    )]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?PrintFormat $printFormat = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'numeric')]
     #[Groups(['cart:read'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La valeur doit être positive.')]
     #[AcmeAssert\Constraints\CartTaxes]

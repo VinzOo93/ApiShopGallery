@@ -13,7 +13,7 @@ final readonly class CartProvider implements ProviderInterface
     {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): null|Cart
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?Cart
     {
         return $this->cartRepository->findOneBy(['token' => $uriVariables['token'] ?? null]);
     }

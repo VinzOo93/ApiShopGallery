@@ -25,15 +25,7 @@ services:
             - '../src/Kernel.php'
     
     App\Service\AuthPasswordHasherService:
-        tags: [ { name: nelmio_alice.faker.provider } ]   
-
-    App\Action\CreateCartWithItemsAction:
-        public: true
-        tags: ['controller.service_arguments']
-
-    App\Action\CreateItemInExistingCartAction:
-        public: true
-        tags: ['controller.service_arguments']
+        tags: [ { name: nelmio_alice.faker.provider } ]
 
     App\Swagger\JwtRefreshTokenDecorator:
             decorates: 'api_platform.openapi.factory'
