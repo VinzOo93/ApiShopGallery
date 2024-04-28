@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0.36
+    environment:
+      MYSQL_ROOT_PASSWORD: 4pyzG6VAXgRAmyN4QHH
+      MYSQL_DATABASE: ApiShopGallery
+      MYSQL_USER: shopAdmin
+      MYSQL_PASSWORD: Q7o5z19THLZeSEM0gYs
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
