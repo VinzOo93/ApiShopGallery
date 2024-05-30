@@ -2,21 +2,23 @@
 
 namespace App\Dto;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator as AcmeAssert;
-
 final class CreateCartDto
 {
-
     public string $subtotal = '800.00';
 
     public string $taxes = '160.00';
-
 
     public string $shipping = '5.00';
 
     public string $total = '965.00';
 
-    /** @var CreateItemDto[] */
-    public array $items = [];
+    public array $items = [
+        'quantity' => 2,
+        'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
+        'printFormat' => '30x20 cm',
+        'unitPrice' => '480.00',
+        'unitPreTaxPrice' => '400.00',
+        'preTaxPrice' => '800.00',
+        'taxPrice' => '960.00',
+    ];
 }

@@ -6,9 +6,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Action\CreateItemInExistingCartAction;
 use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
+use App\State\CreateItemInExistingCartProcessor;
 use App\Validator as AcmeAssert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource()]
 #[Post(
     input: CreateItemDto::class,
-    processor: CreateItemInExistingCartAction::class
+    processor: CreateItemInExistingCartProcessor::class
 )]
 #[Put()]
 #[Delete]
@@ -45,10 +45,6 @@ class Item
     private ?string $image = null;
 
     #[Groups(['cart:read'])]
-    #[Assert\Choice(
-        choices: ['30x20 cm', '60x40 cm', '80x65 cm'],
-        message: "Veuillez respecter strictement ces valeurs '30x20 cm', '60x40 cm', '80x65 cm.'"
-    )]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?PrintFormat $printFormat = null;

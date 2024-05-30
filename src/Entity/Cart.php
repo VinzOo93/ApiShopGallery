@@ -43,6 +43,7 @@ class Cart
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
     #[Groups(['cart:read'])]
@@ -88,7 +89,7 @@ class Cart
 
     #[Assert\Length(
         min: 44,
-        max: 50,
+        max: 44,
         exactMessage: 'La chaîne doit avoir exactement 44 caractères.'
     )]
 

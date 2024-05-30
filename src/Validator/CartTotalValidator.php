@@ -12,11 +12,6 @@ class CartTotalValidator extends ConstraintValidator
 {
     use BaseValidatorTrait;
 
-    /**
-     * @param mixed $value
-     * @param Constraint $constraint
-     * @return void
-     */
     public function validate(mixed $value, Constraint $constraint): void
     {
         $this->initValidator();
@@ -36,14 +31,14 @@ class CartTotalValidator extends ConstraintValidator
                 $cart->getShipping(),
             ];
 
-            $this->checkCondition($this->calculateTotal($valuesTotal) != $cart->getTotal());
+            $this->checkCondition($this->calculateTotal($valuesTotal) != (float) $cart->getTotal());
 
             foreach ($cart->getItems() as $item) {
-                $pretaxPrice = (float) $this->calculatePreTaxPrice($item);
-                $this->checkCondition($pretaxPrice != $item->getPreTaxPrice());
-                $this->checkCondition($this->calculateTaxPrice($item) != $item->getTaxPrice());
+                $pretaxPrice = $this->calculatePreTaxPrice($item);
+                $this->checkCondition($pretaxPrice != (float) $item->getPreTaxPrice());
+                $this->checkCondition($this->calculateTaxPrice($item) != (float) $item->getTaxPrice());
             }
-            $this->checkCondition(floatval($cart->getSubtotal()) != $pretaxPrice);
+            $this->checkCondition((float) $cart->getSubtotal() != (float) $pretaxPrice);
         }
     }
 
@@ -60,19 +55,11 @@ class CartTotalValidator extends ConstraintValidator
         return $total;
     }
 
-    /**
-     * @param Item $item
-     * @return float
-     */
     private function calculateTaxPrice(Item $item): float
     {
         return (float) $item->getUnitPrice() * (int) $item->getQuantity();
     }
 
-    /**
-     * @param Item $item
-     * @return float
-     */
     private function calculatePreTaxPrice(Item $item): float
     {
         return (float) $item->getUnitPreTaxPrice() * (int) $item->getQuantity();
