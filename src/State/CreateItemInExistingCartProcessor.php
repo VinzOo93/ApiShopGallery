@@ -14,10 +14,16 @@ class CreateItemInExistingCartProcessor extends BaseShopProcessor implements Pro
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Item
     {
         try {
+            /** @var array $item */
+            $item = $data->item;
             /** @var Cart $cart */
             $cart = $data->cart;
-            $item = $this->createItemAction($cart, $data);
+            $item = $this->createItemAction($cart, $item);
             $this->checkErrors($this->validator->validate($item));
+            $cart = $this->updateCart($cart);
+            $this->checkErrors($this->validator->validate($cart));
+            $this->entityManager->persist($cart);
+            $this->entityManager->flush();
 
             return $this->persistProcessor->process($item, $operation, $uriVariables, $context);
         } catch (\Exception $e) {

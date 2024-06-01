@@ -3,7 +3,6 @@
 namespace App\State;
 
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\CreateItemDto;
 use App\Entity\Cart;
 use App\Entity\Item;
 use App\Entity\PrintFormat;
@@ -44,17 +43,17 @@ class BaseShopProcessor
         return new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
     }
 
-    protected function createItemAction(Cart $cart, CreateItemDto $itemData): Item
+    protected function createItemAction(Cart $cart, array $itemData): Item
     {
         $item = new Item();
-        $printFormat = $this->entityManager->getRepository(PrintFormat::class)->findOneBy(['name' => $itemData->printFormat]);
-        $item->setQuantity($itemData->quantity)
-            ->setImage($itemData->image)
+        $printFormat = $this->entityManager->getRepository(PrintFormat::class)->findOneBy(['name' => $itemData['printFormat']]);
+        $item->setQuantity($itemData['quantity'])
+            ->setImage($itemData['image'])
             ->setPrintFormat($printFormat)
-            ->setUnitPrice($itemData->unitPrice)
-            ->setUnitPreTaxPrice($itemData->unitPreTaxPrice)
-            ->setPreTaxPrice($itemData->preTaxPrice)
-            ->setTaxPrice($itemData->taxPrice)
+            ->setUnitPrice($itemData['unitPrice'])
+            ->setUnitPreTaxPrice($itemData['unitPreTaxPrice'])
+            ->setPreTaxPrice($itemData['preTaxPrice'])
+            ->setTaxPrice($itemData['taxPrice'])
             ->setCart($cart);
 
         return $item;
@@ -72,13 +71,11 @@ class BaseShopProcessor
         $cart->setUpdatedAt($this->getCurrentDateTimeEurope());
 
         foreach ($cart->getItems() as $item) {
-            dump($item);
-            $pretaxPrice = $item->getPreTaxPrice() * $item->getQuantity();
+            $pretaxPrice = $item->getPreTaxPrice();
             $subtotal += $pretaxPrice;
             $taxes += $pretaxPrice * self::TAXE_RATE;
         }
         $total += $subtotal + $taxes + $cart->getShipping();
-        dump($total, $subtotal);
 
         $cart->setSubtotal($subtotal);
         $cart->setTaxes($taxes);

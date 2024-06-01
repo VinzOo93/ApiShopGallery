@@ -21,8 +21,8 @@ class CartTotalValidator extends ConstraintValidator
         if ($this->isCartInstance()) {
             /** @var Cart $cart */
             $cart = $this->object;
-
             $pretaxPrice = 0;
+            $subtotal = 0;
 
             /** @var array<int, float> $valuesTotal */
             $valuesTotal = [
@@ -30,15 +30,14 @@ class CartTotalValidator extends ConstraintValidator
                 $cart->getTaxes(),
                 $cart->getShipping(),
             ];
-
             $this->checkCondition($this->calculateTotal($valuesTotal) != (float) $cart->getTotal());
-
             foreach ($cart->getItems() as $item) {
                 $pretaxPrice = $this->calculatePreTaxPrice($item);
+                $subtotal += $pretaxPrice;
                 $this->checkCondition($pretaxPrice != (float) $item->getPreTaxPrice());
                 $this->checkCondition($this->calculateTaxPrice($item) != (float) $item->getTaxPrice());
             }
-            $this->checkCondition((float) $cart->getSubtotal() != (float) $pretaxPrice);
+            $this->checkCondition((float) $cart->getSubtotal() != $subtotal);
         }
     }
 
@@ -51,7 +50,6 @@ class CartTotalValidator extends ConstraintValidator
         foreach ($values as $value) {
             $total += (float) $value;
         }
-
         return $total;
     }
 

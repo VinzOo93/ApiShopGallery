@@ -12,12 +12,11 @@ class CreateCartWithItemsProcessor extends BaseShopProcessor implements Processo
 {
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Cart
     {
-
         try {
             $cart = new Cart();
+            $items = $data->items;
 
             $date = $this->getCurrentDateTimeEurope();
-
             $cart->setSubtotal($data->subtotal)
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date)
@@ -26,7 +25,7 @@ class CreateCartWithItemsProcessor extends BaseShopProcessor implements Processo
                 ->setTotal($data->total)
                 ->setToken($this->generateToken());
 
-            foreach ($data->items as $itemData) {
+            foreach ($items as $itemData) {
                 $item = $this->createItemAction($cart, $itemData);
                 $cart->addItem($item);
             }
@@ -43,7 +42,6 @@ class CreateCartWithItemsProcessor extends BaseShopProcessor implements Processo
         try {
             $bytes = random_bytes(33);
 
-            // Convertir en base64
             $token = base64_encode($bytes);
 
             return str_replace(['+', '/', '='], ['-', '_', ''], $token);
