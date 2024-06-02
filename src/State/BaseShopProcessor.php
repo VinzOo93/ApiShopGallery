@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class BaseShopProcessor
 {
     private const float TAXE_RATE = 0.20;
+    private const float SHIPPING = 5.00;
 
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
@@ -30,6 +31,7 @@ class BaseShopProcessor
     {
         if (count($errors) > 0) {
             foreach ($errors as $error) {
+                $this->entityManager->rollback();
                 throw new UnprocessableEntityHttpException($error->getMessage());
             }
         }
@@ -62,6 +64,24 @@ class BaseShopProcessor
     /**
      * @throws \Exception
      */
+    protected function createCartAction(): Cart
+    {
+        $cart = new Cart();
+        $date = $this->getCurrentDateTimeEurope();
+        $cart->setCreatedAt($date)
+            ->setUpdatedAt($date)
+            ->setSubtotal(0)
+            ->setTaxes(0)
+            ->setTotal(0)
+            ->setShipping(self::SHIPPING)
+            ->setToken($this->generateToken());
+
+        return $cart;
+    }
+
+    /**
+     * @throws \Exception
+     */
     protected function updateCart(Cart $cart): Cart
     {
         $subtotal = 0;
@@ -76,11 +96,23 @@ class BaseShopProcessor
             $taxes += $pretaxPrice * self::TAXE_RATE;
         }
         $total += $subtotal + $taxes + $cart->getShipping();
-
         $cart->setSubtotal($subtotal);
         $cart->setTaxes($taxes);
         $cart->setTotal($total);
 
         return $cart;
+    }
+
+    protected function generateToken(): string
+    {
+        try {
+            $bytes = random_bytes(33);
+
+            $token = base64_encode($bytes);
+
+            return str_replace(['+', '/', '='], ['-', '_', ''], $token);
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to generate the token.');
+        }
     }
 }

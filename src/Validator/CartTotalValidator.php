@@ -21,7 +21,6 @@ class CartTotalValidator extends ConstraintValidator
         if ($this->isCartInstance()) {
             /** @var Cart $cart */
             $cart = $this->object;
-            $pretaxPrice = 0;
             $subtotal = 0;
 
             /** @var array<int, float> $valuesTotal */

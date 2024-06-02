@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CreateItemTest extends ShopTestBase
 {
-    private const ROUTE_CREATE_ITEM = '/items';
+    private const string ROUTE_CREATE_ITEM = '/items';
 
     /** @var array<string,mixed> */
     private array $itemToBeCreated = [
@@ -20,7 +20,6 @@ class CreateItemTest extends ShopTestBase
         'unitPreTaxPrice' => '400.00',
         'preTaxPrice' => '800.00',
         'taxPrice' => '960.00',
-        'cart' => 1,
     ];
 
     /** @var array<string,mixed> */

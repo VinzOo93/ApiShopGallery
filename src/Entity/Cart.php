@@ -31,10 +31,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => 'cart:read'],
     provider: CartProvider::class
 )]
-#[Post(
-    input: CreateCartDto::class,
-    processor: CreateCartWithItemsProcessor::class
-)]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
 {

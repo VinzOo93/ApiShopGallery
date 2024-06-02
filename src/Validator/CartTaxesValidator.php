@@ -25,6 +25,8 @@ class CartTaxesValidator extends ConstraintValidator
             $this->checkTaxValidityCart($cart);
             foreach ($this->object->getItems() as $item) {
                 $this->checkTaxValidityItem($item);
+                $this->checkUnitPriceValidity($item);
+                $this->checkUnitTaxPriceValidity($item);
             }
         }
     }
@@ -37,28 +39,28 @@ class CartTaxesValidator extends ConstraintValidator
         $this->checkCondition($this->calculateCartTaxesBySubtotal($cart) != (float) $cart->getTaxes());
     }
 
-    /**
-     * @param Item $item
-     * @return void
-     */
     private function checkTaxValidityItem(Item $item): void
     {
         $this->checkCondition($this->calculateItemUnitPreTax($item) != (float) $item->getUnitPrice());
     }
 
-    /**
-     * @param Cart $cart
-     * @return float
-     */
+    private function checkUnitPriceValidity(Item $item): void
+    {
+        $this->checkCondition($this->calculatePrice($item->getUnitPreTaxPrice()) != $item->getUnitPrice());
+    }
+
+    private function checkUnitTaxPriceValidity(Item $item): void
+    {
+        dump($item->getPreTaxPrice());
+        dump($this->calculatePrice($item->getPreTaxPrice()),$item->getTaxPrice());
+        $this->checkCondition($this->calculatePrice($item->getPreTaxPrice()) != $item->getTaxPrice());
+    }
+
     private function calculateCartTaxesBySubtotal(Cart $cart): float
     {
         return $this->calculateTaxes((float) $cart->getSubtotal());
     }
 
-    /**
-     * @param Item $item
-     * @return float
-     */
     private function calculateItemUnitPreTax(Item $item): float
     {
         return (float) $item->getUnitPreTaxPrice()
@@ -71,5 +73,10 @@ class CartTaxesValidator extends ConstraintValidator
     private function calculateTaxes(float $amount): float
     {
         return $amount * self::TAXE_RATE / '100.00';
+    }
+
+    private function calculatePrice(float $amount): float
+    {
+        return $amount * (1 + self::TAXE_RATE / 100);
     }
 }
