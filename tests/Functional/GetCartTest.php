@@ -16,8 +16,6 @@ class GetCartTest extends ShopTestBase
     public function testGetCart(): void
     {
         $this->initShopTest();
-        $this->createOnDb($this->cartWithItems, self::ROUTE_CREATE_CART);
-
         $this->testAuthorizedGetCartRoute();
         $this->testNotAuthorizedGetCartRoute();
     }

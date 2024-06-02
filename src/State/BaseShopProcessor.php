@@ -8,6 +8,8 @@ use App\Entity\Item;
 use App\Entity\PrintFormat;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -45,10 +47,14 @@ class BaseShopProcessor
         return new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
     }
 
-    protected function createItemAction(Cart $cart, array $itemData): Item
+    protected function createItemAction(Cart $cart, array $itemData): Item|false
     {
         $item = new Item();
         $printFormat = $this->entityManager->getRepository(PrintFormat::class)->findOneBy(['name' => $itemData['printFormat']]);
+        if (null === $printFormat) {
+            $this->entityManager->rollback();
+            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'print Format not found');
+        }
         $item->setQuantity($itemData['quantity'])
             ->setImage($itemData['image'])
             ->setPrintFormat($printFormat)

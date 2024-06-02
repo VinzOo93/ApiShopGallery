@@ -74,7 +74,7 @@ class Item
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $taxPrice = null;
 
-    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'items')]
+    #[ORM\ManyToOne(inversedBy: 'items', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 

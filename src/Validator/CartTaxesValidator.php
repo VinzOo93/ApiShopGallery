@@ -51,8 +51,6 @@ class CartTaxesValidator extends ConstraintValidator
 
     private function checkUnitTaxPriceValidity(Item $item): void
     {
-        dump($item->getPreTaxPrice());
-        dump($this->calculatePrice($item->getPreTaxPrice()),$item->getTaxPrice());
         $this->checkCondition($this->calculatePrice($item->getPreTaxPrice()) != $item->getTaxPrice());
     }
 
