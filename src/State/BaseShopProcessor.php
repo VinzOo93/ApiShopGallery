@@ -47,7 +47,7 @@ class BaseShopProcessor
         return new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
     }
 
-    protected function createItemAction(Cart $cart, array $itemData): Item|false
+    protected function createItemAction(array $itemData): Item|false
     {
         $item = new Item();
         $printFormat = $this->entityManager->getRepository(PrintFormat::class)->findOneBy(['name' => $itemData['printFormat']]);
@@ -61,8 +61,7 @@ class BaseShopProcessor
             ->setUnitPrice($itemData['unitPrice'])
             ->setUnitPreTaxPrice($itemData['unitPreTaxPrice'])
             ->setPreTaxPrice($itemData['preTaxPrice'])
-            ->setTaxPrice($itemData['taxPrice'])
-            ->setCart($cart);
+            ->setTaxPrice($itemData['taxPrice']);
 
         return $item;
     }

@@ -16,11 +16,11 @@ class ApiTestBase extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    private const EMAIL_TEST = 'test@example.com';
-    private const PASSWORD_TEST = '$3CR3T';
-    private const ROLE_TEST = ['ROLE_USER'];
-    protected const ROUTE_AUTH = 'auth';
-    protected const KEY_AUTH_TOKEN = 'token';
+    private const string EMAIL_TEST = 'test@example.com';
+    private const string PASSWORD_TEST = '$3CR3T';
+    private const array ROLE_TEST = ['ROLE_USER'];
+    protected const string ROUTE_AUTH = 'auth';
+    protected const string KEY_AUTH_TOKEN = 'token';
 
     protected Client $client;
     protected ContainerInterface $container;
@@ -64,7 +64,7 @@ class ApiTestBase extends ApiTestCase
             $urlTest,
             [
                 'headers' => [
-                    'Accept' => 'application/json',
+                    'Accept' => 'application/ld+json',
                     'Authorization' => 'Bearer '.$json[$keyToken],
                 ],
             ]

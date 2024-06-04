@@ -8,30 +8,35 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class GetCartTest extends ShopTestBase
 {
-    private const GET_URL_CART = 'carts/U2FsdGVkX19zFZglY9uaxbJgmzermb3d1Eu6gj224lg=';
-
     /**
      * @throws TransportExceptionInterface
      */
     public function testGetCart(): void
     {
         $this->initShopTest();
+        $this->createCart();
         $this->testAuthorizedGetCartRoute();
         $this->testNotAuthorizedGetCartRoute();
     }
 
     private function testAuthorizedGetCartRoute(): void
     {
-        $this->getApiRoute(self::GET_URL_CART);
+        $cart = $this->getExistingCart();
+        $this->getApiRoute(self::ROUTE_CART.'/'.$cart->getToken());
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     private function testNotAuthorizedGetCartRoute(): void
     {
+        $cart = $this->getExistingCart();
         $this->client->request(
             'GET',
-            self::GET_URL_CART
+            self::ROUTE_CART.'/'.$cart->getToken()
         );
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
+
 }

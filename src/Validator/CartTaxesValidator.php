@@ -25,8 +25,7 @@ class CartTaxesValidator extends ConstraintValidator
             $this->checkTaxValidityCart($cart);
             foreach ($this->object->getItems() as $item) {
                 $this->checkTaxValidityItem($item);
-                $this->checkUnitPriceValidity($item);
-                $this->checkUnitTaxPriceValidity($item);
+                $this->checkTaxePriceItem($item);
             }
         }
     }
@@ -44,14 +43,9 @@ class CartTaxesValidator extends ConstraintValidator
         $this->checkCondition($this->calculateItemUnitPreTax($item) != (float) $item->getUnitPrice());
     }
 
-    private function checkUnitPriceValidity(Item $item): void
+    private function checkTaxePriceItem(Item $item): void
     {
-        $this->checkCondition($this->calculatePrice($item->getUnitPreTaxPrice()) != $item->getUnitPrice());
-    }
-
-    private function checkUnitTaxPriceValidity(Item $item): void
-    {
-        $this->checkCondition($this->calculatePrice($item->getPreTaxPrice()) != $item->getTaxPrice());
+        $this->checkCondition($this->calculaTaxePriceItem($item) != $item->getTaxPrice());
     }
 
     private function calculateCartTaxesBySubtotal(Cart $cart): float
@@ -63,6 +57,11 @@ class CartTaxesValidator extends ConstraintValidator
     {
         return (float) $item->getUnitPreTaxPrice()
             + $this->calculateTaxes((float) $item->getUnitPreTaxPrice());
+    }
+
+    private function calculaTaxePriceItem(Item $item): float
+    {
+        return $this->calculatePrice($item->getUnitPreTaxPrice()) * $item->getQuantity();
     }
 
     /**

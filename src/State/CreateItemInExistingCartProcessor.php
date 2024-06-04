@@ -19,7 +19,7 @@ class CreateItemInExistingCartProcessor extends BaseShopProcessor implements Pro
             /** @var Cart $cart */
             $cart = !empty($data->cart) ? $data->cart : $this->createCartAction();
 
-            $item = $this->createItemAction($cart, $item);
+            $item = $this->createItemAction($item);
             $this->checkErrors($this->validator->validate($item));
             $this->entityManager->persist($item);
             $cart->addItem($item);
