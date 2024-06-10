@@ -55,13 +55,23 @@ class BaseShopProcessor
             $this->entityManager->rollback();
             throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'print Format not found');
         }
-        $item->setQuantity($itemData['quantity'])
+        $item->setQuantity(1)
             ->setImage($itemData['image'])
             ->setPrintFormat($printFormat)
             ->setUnitPrice($itemData['unitPrice'])
             ->setUnitPreTaxPrice($itemData['unitPreTaxPrice'])
-            ->setPreTaxPrice($itemData['preTaxPrice'])
-            ->setTaxPrice($itemData['taxPrice']);
+            ->setPreTaxPrice($itemData['unitPreTaxPrice'])
+            ->setTaxPrice($itemData['unitPrice']);
+
+        return $item;
+    }
+
+    protected function updateItemAction(Item $item, array $itemData): Item
+    {
+        $quantity = $item->getQuantity() + 1;
+        $item->setQuantity($item->getQuantity() + 1)
+        ->setPreTaxPrice($itemData['unitPreTaxPrice'] * $quantity)
+        ->setTaxPrice($itemData['unitPrice'] * $quantity);
 
         return $item;
     }

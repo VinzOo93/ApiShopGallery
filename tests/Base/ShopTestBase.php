@@ -13,13 +13,11 @@ class ShopTestBase extends ApiTestBase
 
     /** @var array<string,mixed> */
     public array $itemToBeCreated = [
-        'quantity' => 2,
+        'quantity' => 1,
         'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
         'printFormat' => '30x20 cm',
         'unitPrice' => '480.00',
         'unitPreTaxPrice' => '400.00',
-        'preTaxPrice' => '800.00',
-        'taxPrice' => '960.00',
     ];
 
     /**

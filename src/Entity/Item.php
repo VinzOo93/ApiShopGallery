@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Dto\CreateItemDto;
 use App\Repository\ItemRepository;
 use App\State\CreateItemInExistingCartProcessor;
@@ -20,7 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     input: CreateItemDto::class,
     processor: CreateItemInExistingCartProcessor::class
 )]
-#[Put()]
 #[Delete]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
