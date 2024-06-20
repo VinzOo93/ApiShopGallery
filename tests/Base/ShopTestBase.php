@@ -2,7 +2,6 @@
 
 namespace App\Tests\Base;
 
-use App\Dto\CreateItemDto;
 use App\Entity\Cart;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -13,11 +12,8 @@ class ShopTestBase extends ApiTestBase
 
     /** @var array<string,mixed> */
     public array $itemToBeCreated = [
-        'quantity' => 1,
-        'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
-        'printFormat' => '30x20 cm',
-        'unitPrice' => '480.00',
-        'unitPreTaxPrice' => '400.00',
+        'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11b',
+        'printFormat' => '/print_formats/1',
     ];
 
     /**
@@ -77,15 +73,6 @@ class ShopTestBase extends ApiTestBase
         );
     }
 
-    protected function createItemDto(array $item): CreateItemDto
-    {
-        $data = new CreateItemDto();
-        $data->item = $item;
-        $data->cart = $this->getExistingCart();
-
-        return $data;
-    }
-
     protected function getExistingCart(): Cart
     {
         $cartRepository = $this->entityManager->getRepository(Cart::class);
@@ -95,8 +82,6 @@ class ShopTestBase extends ApiTestBase
 
     protected function createCart(): void
     {
-        $data = new CreateItemDto();
-        $data->item = $this->itemToBeCreated;
-        $this->createOnDb([$data], self::ROUTE_ITEM);
+        $this->createOnDb($this->itemToBeCreated, self::ROUTE_ITEM);
     }
 }

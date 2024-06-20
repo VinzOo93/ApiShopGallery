@@ -3,15 +3,14 @@
 namespace App\Dto;
 
 use App\Entity\Cart;
+use App\Entity\PrintFormat;
 
 final class CreateItemDto
 {
-    public array $item = [
-        'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11a',
-        'printFormat' => '30x20 cm',
-        'unitPrice' => '240.00',
-        'unitPreTaxPrice' => '200.00',
-    ];
+    public string $image = 'a07ed184-c9aa-4729-aa25-70571f0fb11a';
 
-    public Cart $cart;
+    public ?PrintFormat $printFormat;
+
+    public ?Cart $cart = null;
+
 }

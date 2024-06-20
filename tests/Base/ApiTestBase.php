@@ -55,6 +55,7 @@ class ApiTestBase extends ApiTestCase
      * getUrlWithAuthentication.
      *
      * @param array<string,mixed> $json
+     *
      * @throws TransportExceptionInterface
      */
     protected function getUrlWithAuthentication(array $json, string $keyToken, string $urlTest): ResponseInterface
@@ -76,11 +77,12 @@ class ApiTestBase extends ApiTestCase
      *
      * @param array<string,mixed> $json
      * @param array<string,mixed> $data
+     *
      * @throws TransportExceptionInterface
      */
     protected function postToApiWithAuthentication(
         array $json,
-        array $data,
+        mixed $data,
         string $keyToken,
         string $urlTest
     ): ResponseInterface {
@@ -100,6 +102,7 @@ class ApiTestBase extends ApiTestCase
 
     /**
      * testGetErrorAuth.
+     *
      * @throws TransportExceptionInterface
      */
     protected function testGetErrorAuth(string $urlTest, string $method = 'GET'): void
@@ -118,6 +121,7 @@ class ApiTestBase extends ApiTestCase
 
     /**
      * prepareUser.
+     *
      * @throws TransportExceptionInterface
      */
     protected function prepareUser(string $urlAuth): ResponseInterface

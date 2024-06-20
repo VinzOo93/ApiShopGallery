@@ -47,31 +47,28 @@ class BaseShopProcessor
         return new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
     }
 
-    protected function createItemAction(array $itemData): Item|false
+    protected function createItemAction(string $image, PrintFormat $printFormat): Item|false
     {
         $item = new Item();
-        $printFormat = $this->entityManager->getRepository(PrintFormat::class)->findOneBy(['name' => $itemData['printFormat']]);
-        if (null === $printFormat) {
-            $this->entityManager->rollback();
-            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'print Format not found');
-        }
+        $quantity = 1;
+        $unitPrice = $printFormat->getPreTaxPrice() * 1.2;
         $item->setQuantity(1)
-            ->setImage($itemData['image'])
+            ->setImage($image)
             ->setPrintFormat($printFormat)
-            ->setUnitPrice($itemData['unitPrice'])
-            ->setUnitPreTaxPrice($itemData['unitPreTaxPrice'])
-            ->setPreTaxPrice($itemData['unitPreTaxPrice'])
-            ->setTaxPrice($itemData['unitPrice']);
+            ->setUnitPrice($unitPrice)
+            ->setUnitPreTaxPrice($printFormat->getPreTaxPrice())
+            ->setPreTaxPrice($printFormat->getPreTaxPrice() * $quantity)
+            ->setTaxPrice($unitPrice * $quantity);
 
         return $item;
     }
 
-    protected function updateItemAction(Item $item, array $itemData): Item
+    protected function updateItemAction(Item $item, int $quantity): Item
     {
-        $quantity = $item->getQuantity() + 1;
-        $item->setQuantity($item->getQuantity() + 1)
-        ->setPreTaxPrice($itemData['unitPreTaxPrice'] * $quantity)
-        ->setTaxPrice($itemData['unitPrice'] * $quantity);
+        $unitPrice = $item->getUnitPreTaxPrice() * 1.2;
+        $item->setQuantity($quantity)
+        ->setPreTaxPrice($item->getUnitPreTaxPrice() * $quantity)
+        ->setTaxPrice($unitPrice * $quantity);
 
         return $item;
     }

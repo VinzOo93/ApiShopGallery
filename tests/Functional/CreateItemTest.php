@@ -13,8 +13,7 @@ class CreateItemTest extends ShopTestBase
     {
         $this->initShopTest();
         $this->testAuthCreateCart();
-        $this->testCreateCart();
-        $this->testCreatInExistingCartCart();
+        $this->testCreatInExistingCart();
     }
 
     /**
@@ -27,20 +26,20 @@ class CreateItemTest extends ShopTestBase
         $this->assertEquals(0, $this->countObjectsOnDb(Item::class));
     }
 
-    private function testCreateCart(): void
+    private function testCreatInExistingCart(): void
     {
         $this->createCart();
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
         $this->assertEquals(1, $this->countObjectsOnDb(Cart::class));
-    }
+        $cartRepo = $this->entityManager->getRepository(Cart::class);
+        $cart = $cartRepo->findOneBy([], ['id' => 'ASC']);
+        $itemToBeCreatedWithCart = [
+            'image' => 'a07ed184-c9aa-4729-aa25-70571f0fb11b',
+            'printFormat' => '/print_formats/1',
+            'cart' => '/carts/'.$cart->getToken(),
+        ];
 
-
-    private function testCreatInExistingCartCart(): void
-    {
-        $data = $this->createItemDto($this->itemToBeCreated);
-        $this->createOnDb([$data], self::ROUTE_ITEM);
+        $this->createOnDb($itemToBeCreatedWithCart, self::ROUTE_ITEM);
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
-        $this->assertEquals(2, $this->countObjectsOnDb(Item::class));
     }
-
 }

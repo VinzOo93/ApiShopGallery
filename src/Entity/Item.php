@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Dto\CreateItemDto;
+use App\Dto\UpdateQuantityDto;
 use App\Repository\ItemRepository;
 use App\State\CreateItemInExistingCartProcessor;
+use App\State\UpdateItemInExistingCartProcessor;
 use App\Validator as AcmeAssert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,6 +21,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Post(
     input: CreateItemDto::class,
     processor: CreateItemInExistingCartProcessor::class
+)]
+#[Patch(
+    input: UpdateQuantityDto::class,
+    processor: UpdateItemInExistingCartProcessor::class
 )]
 #[Delete]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]

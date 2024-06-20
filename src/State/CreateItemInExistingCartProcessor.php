@@ -15,29 +15,29 @@ class CreateItemInExistingCartProcessor extends BaseShopProcessor implements Pro
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Cart|false
     {
         try {
-            $this->entityManager->beginTransaction();
-            /** @var array $item */
-            $item = $data->item;
-
-            if (empty($item)) {
+            /** @var PrintFormat $printFormat */
+            $printFormat = $data->printFormat;
+            $image = $data->image;
+            if (empty($image)) {
                 return false;
             }
 
             $itemRepository = $this->entityManager->getRepository(Item::class);
-            $printFormatRepository = $this->entityManager->getRepository(PrintFormat::class);
 
             /* @var Cart $cart */
             $cart = !empty($data->cart) ? $data->cart : $this->createCartAction();
-
             $existantItem = $itemRepository->findOneBy(
                 [
                     'cart' => $cart,
-                    'image' => $item['image'],
-                    'printFormat' => $printFormatRepository->findOneBy(['name' => $item['printFormat']]),
+                    'image' => $image,
+                    'printFormat' => $printFormat,
                 ]);
+
+            $this->entityManager->beginTransaction();
+
             $existantItem = !$existantItem ?
-                $this->createItemAction($item) :
-                $this->updateItemAction($existantItem, $item);
+                $this->createItemAction($image, $printFormat) :
+                $this->updateItemAction($existantItem, $existantItem->getQuantity() + 1);
 
             $cart->addItem($existantItem);
             $cart = $this->updateCart($cart);
