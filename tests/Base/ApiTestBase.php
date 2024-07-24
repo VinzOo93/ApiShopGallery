@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -73,26 +74,28 @@ class ApiTestBase extends ApiTestCase
     }
 
     /**
-     * postToApiWithAuthentication.
+     * sendToApiWithAuthentication.
      *
      * @param array<string,mixed> $json
      * @param array<string,mixed> $data
      *
      * @throws TransportExceptionInterface
      */
-    protected function postToApiWithAuthentication(
+    protected function sendToApiWithAuthentication(
         array $json,
         mixed $data,
         string $keyToken,
-        string $urlTest
+        string $urlTest,
+        string $method = Request::METHOD_POST
     ): ResponseInterface {
         return $this->client->request(
-            'POST',
+            $method,
             $urlTest,
             [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
+                    'Content-Type' => Request::METHOD_PATCH === $method ?
+                        'application/merge-patch+json' : 'application/json',
                     'Authorization' => 'Bearer '.$json[$keyToken],
                 ],
                 'body' => json_encode($data),

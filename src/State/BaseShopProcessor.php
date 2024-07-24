@@ -8,8 +8,6 @@ use App\Entity\Item;
 use App\Entity\PrintFormat;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -51,7 +49,7 @@ class BaseShopProcessor
     {
         $item = new Item();
         $quantity = 1;
-        $unitPrice = $printFormat->getPreTaxPrice() * 1.2;
+        $unitPrice = $printFormat->getPreTaxPrice() * (1 + self::TAXE_RATE);
         $item->setQuantity(1)
             ->setImage($image)
             ->setPrintFormat($printFormat)
@@ -65,7 +63,7 @@ class BaseShopProcessor
 
     protected function updateItemAction(Item $item, int $quantity): Item
     {
-        $unitPrice = $item->getUnitPreTaxPrice() * 1.2;
+        $unitPrice = $item->getUnitPreTaxPrice() * (1 + self::TAXE_RATE);
         $item->setQuantity($quantity)
         ->setPreTaxPrice($item->getUnitPreTaxPrice() * $quantity)
         ->setTaxPrice($unitPrice * $quantity);

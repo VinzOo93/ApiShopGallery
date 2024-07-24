@@ -5,6 +5,7 @@ namespace App\Tests\Functional;
 use App\Entity\Cart;
 use App\Entity\Item;
 use App\Tests\Base\ShopTestBase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateItemTest extends ShopTestBase
@@ -39,7 +40,7 @@ class CreateItemTest extends ShopTestBase
             'cart' => '/carts/'.$cart->getToken(),
         ];
 
-        $this->createOnDb($itemToBeCreatedWithCart, self::ROUTE_ITEM);
+        $this->sendRequestToApi($itemToBeCreatedWithCart, self::ROUTE_ITEM, Request::METHOD_POST);
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
     }
 }

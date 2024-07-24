@@ -3,6 +3,7 @@
 namespace App\Tests\Base;
 
 use App\Entity\Cart;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ShopTestBase extends ApiTestBase
@@ -25,15 +26,16 @@ class ShopTestBase extends ApiTestBase
         $this->initApiEntityUserTest();
     }
 
-    protected function createOnDb(mixed $object, string $route): ResponseInterface
+    protected function sendRequestToApi(mixed $object, string $route, string $method): ResponseInterface
     {
         $response = $this->prepareUser(parent::ROUTE_AUTH);
 
-        return $this->postToApiWithAuthentication(
+        return $this->sendToApiWithAuthentication(
             $response->toArray(),
             $object,
             parent::KEY_AUTH_TOKEN,
-            $route
+            $route,
+            $method
         );
     }
 
@@ -62,7 +64,7 @@ class ShopTestBase extends ApiTestBase
     /**
      * @return void
      */
-    protected function createObjectWithNoAuth(string $route, array $object)
+    protected function createObjectWithNoAuth(string $route, array $object): void
     {
         $this->client->request(
             'POST',
@@ -82,6 +84,6 @@ class ShopTestBase extends ApiTestBase
 
     protected function createCart(): void
     {
-        $this->createOnDb($this->itemToBeCreated, self::ROUTE_ITEM);
+        $this->sendRequestToApi($this->itemToBeCreated, self::ROUTE_ITEM, Request::METHOD_POST);
     }
 }
