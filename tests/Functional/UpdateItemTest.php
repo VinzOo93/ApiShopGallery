@@ -26,17 +26,26 @@ class UpdateItemTest extends ShopTestBase
         $this->itemRepository = $this->getContainer()->get(ItemRepository::class);
     }
 
-    public function testUpdateItemQuantity(): void
+    /** @dataProvider dataProviderUpdateItemQuantity */
+    public function testUpdateItemQuantity(bool $less, int $expected): void
     {
         /** @var Cart $cart */
         $cart = $this->cartRepository->findOneBy([], ['id' => 'ASC']);
         /** @var Item $item */
         $items = $cart->getItems();
-        $this->sendRequestToApi(['less' => false], self::ROUTE_ITEM.'/'.$items[0]->getId(), Request::METHOD_PATCH);
+        $this->sendRequestToApi(['less' => $less], self::ROUTE_ITEM.'/'.$items[0]->getId(), Request::METHOD_PATCH);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $item1 = $this->itemRepository->findOneBy(['cart' => $cart]);
-        $this->assertEquals(2, $item1->getQuantity());
-
+        $item1 ?
+            $this->assertEquals($expected, $item1->getQuantity()) :
+            $this->assertNull($item1);
     }
 
+    public static function dataProviderUpdateItemQuantity(): array
+    {
+        return [
+            [false, 2],
+            [true, 0],
+        ];
+    }
 }
