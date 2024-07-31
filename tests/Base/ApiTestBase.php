@@ -93,9 +93,9 @@ class ApiTestBase extends ApiTestCase
             $urlTest,
             [
                 'headers' => [
-                    'Accept' => 'application/ld+json',
+                    'Accept' => 'application/json',
                     'Content-Type' => Request::METHOD_PATCH === $method ?
-                        'application/merge-patch+json' : 'application/ld+json',
+                        'application/merge-patch+json' : 'application/json',
                     'Authorization' => 'Bearer '.$json[$keyToken],
                 ],
                 'body' => json_encode($data),
@@ -115,7 +115,7 @@ class ApiTestBase extends ApiTestCase
             $urlTest,
             [
                 'headers' => [
-                    'Accept' => 'application/ld+json',
+                    'Accept' => 'application/json',
                 ],
             ]
         );
@@ -134,8 +134,8 @@ class ApiTestBase extends ApiTestCase
             $urlAuth,
             [
                 'headers' => [
-                    'Content-Type' => 'application/ld+json',
-                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
                     'email' => self::EMAIL_TEST,

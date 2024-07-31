@@ -44,8 +44,8 @@ class RefreshTokenTest extends AuthenticationTestBase
             self::ROUTE_REFRESH_TOKEN,
             [
                 'headers' => [
-                    'Content-Type' => 'application/ld+json',
-                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
                     'refresh_token' => $token,

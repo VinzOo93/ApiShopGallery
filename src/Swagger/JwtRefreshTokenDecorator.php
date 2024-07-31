@@ -58,7 +58,7 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
                     '200' => [
                         'description' => 'Get JWT refresh token',
                         'content' => [
-                            'application/ld+json' => [
+                            'application/json' => [
                                 'refresh_token' => [
                                     '$ref' => 'refresh_token',
                                 ],
@@ -73,7 +73,7 @@ class JwtRefreshTokenDecorator implements OpenApiFactoryInterface
                 new Model\RequestBody(
                     'Return the connexion token',
                     new \ArrayObject([
-                        'application/ld+json' => [
+                        'application/json' => [
                             'schema' => [
                                 '$ref' => '#/components/schemas/Credentials',
                             ],
