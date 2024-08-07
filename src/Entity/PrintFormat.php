@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PrintFormatRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
     operations: [
@@ -22,6 +23,7 @@ class PrintFormat
     private ?int $id = null;
 
     #[ORM\Column(length: 64)]
+    #[Groups(['cart:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
