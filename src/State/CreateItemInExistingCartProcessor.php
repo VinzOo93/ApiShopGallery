@@ -18,8 +18,9 @@ class CreateItemInExistingCartProcessor extends BaseShopProcessor implements Pro
             /** @var PrintFormat $printFormat */
             $printFormat = $data->printFormat;
             $image = $data->image;
-            if (empty($image)) {
-                return false;
+            if (null === $image && null === $printFormat) {
+                $cart = $this->createCartAction();
+                return $this->persistProcessor->process($cart, $operation, $uriVariables, $context);
             }
 
             $itemRepository = $this->entityManager->getRepository(Item::class);
