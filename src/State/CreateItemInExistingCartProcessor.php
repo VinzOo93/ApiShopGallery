@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CreateItemInExistingCartProcessor extends BaseShopProcessor implements ProcessorInterface
 {
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Cart|false
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         try {
             /** @var PrintFormat $printFormat */
@@ -46,7 +46,7 @@ class CreateItemInExistingCartProcessor extends BaseShopProcessor implements Pro
             $this->entityManager->persist($cart);
             $this->entityManager->commit();
 
-            return $this->persistProcessor->process($cart, $operation, $uriVariables, $context);
+            return $this->persistProcessor->process($existantItem, $operation, $uriVariables, $context);
         } catch (\Exception $e) {
             throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, "impossible to create Item $e");
         }
