@@ -12,44 +12,37 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class DevUserProvider implements UserProviderInterface
 {
-    private const EMAIL_DEV = 'dev@apiShopGallery.com';
-    private const PASSWORD_DEV = 'devShop';
-    private const ROLE_DEV = ['ROLE_USER'];
+    private const array ROLE = ['ROLE_USER'];
 
     /**
      * __construct.
      *
-     * @param AuthPasswordHasherService $hasher
-     *
      * @return void
      */
-    public function __construct(private AuthPasswordHasherService $hasher)
-    {
+    public function __construct(
+        private readonly AuthPasswordHasherService $hasher,
+        private readonly string $idUserProvider,
+        private readonly string $pwdUserProvider
+    ) {
     }
 
     /**
      * loadUserByIdentifier.
-     *
-     * @param string $identifier
-     * @return UserInterface
      */
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $user = new User();
-        $user->setEmail(self::EMAIL_DEV)
+        $user->setEmail($this->idUserProvider)
             ->setPassword(
-                $this->hasher->hashPassword(self::PASSWORD_DEV)
+                $this->hasher->hashPassword($this->pwdUserProvider)
             )
-            ->setRoles(self::ROLE_DEV);
+            ->setRoles(self::ROLE);
 
         return $user;
     }
 
     /**
      * refreshUser.
-     *
-     * @param UserInterface $user
-     * @return UserInterface
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
@@ -58,9 +51,6 @@ class DevUserProvider implements UserProviderInterface
 
     /**
      * supportsClass.
-     *
-     * @param string $class
-     * @return bool
      */
     public function supportsClass(string $class): bool
     {

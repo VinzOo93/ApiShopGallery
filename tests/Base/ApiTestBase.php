@@ -17,8 +17,8 @@ class ApiTestBase extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    private const string EMAIL_TEST = 'test@example.com';
-    private const string PASSWORD_TEST = '$3CR3T';
+    private const string EMAIL_TEST = 'dev@apiShopGallery.com';
+    private const string PASSWORD_TEST = 'devShop';
     private const array ROLE_TEST = ['ROLE_USER'];
     protected const string ROUTE_AUTH = 'auth';
     protected const string KEY_AUTH_TOKEN = 'token';
