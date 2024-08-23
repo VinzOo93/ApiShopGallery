@@ -3,3 +3,8 @@ when@dev: &dev
         fixtures_path: fixtures
 
 when@test: *dev
+
+when@prod:
+    hautelook_alice:
+        fixtures_path: fixtures
+
