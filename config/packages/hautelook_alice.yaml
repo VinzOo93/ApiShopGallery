@@ -4,5 +4,7 @@ when@dev: &dev
 
 when@test: *dev
 
-when@prod: *dev
+when@prod:
+    hautelook_alice:
+        fixtures_path: fixtures
 
