@@ -1,5 +1,3 @@
-when@dev: &dev
-    hautelook_alice:
-        fixtures_path: fixtures
+hautelook_alice:
+    fixtures_path: '%kernel.project_dir%/fixtures'
 
-when@test: *dev
