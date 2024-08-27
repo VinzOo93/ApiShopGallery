@@ -5,4 +5,5 @@ when@dev: &dev
 when@test: *dev
 
 when@prod:
-    fixtures_path: '%kernel.project_dir%/fixtures'
+    hautelook_alice:
+        fixtures_path: '%kernel.project_dir%/fixtures'
