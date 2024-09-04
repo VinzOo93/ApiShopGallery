@@ -10,6 +10,7 @@ use App\Dto\CreateItemDto;
 use App\Dto\UpdateQuantityDto;
 use App\Repository\ItemRepository;
 use App\State\CreateItemInExistingCartProcessor;
+use App\State\DeleteItemInExistingCartProcessor;
 use App\State\UpdateItemQuantityInExistingCartProcessor;
 use App\Validator as AcmeAssert;
 use Doctrine\DBAL\Types\Types;
@@ -26,7 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     input: UpdateQuantityDto::class,
     processor: UpdateItemQuantityInExistingCartProcessor::class
 )]
-#[Delete]
+#[Delete(
+    processor: DeleteItemInExistingCartProcessor::class
+)]
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {

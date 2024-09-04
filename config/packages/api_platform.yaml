@@ -9,6 +9,7 @@ api_platform:
              JWT:
                 name: Authorization
                 type: header
+    use_symfony_listeners: true
     defaults:
       extra_properties:
           standard_put: true
