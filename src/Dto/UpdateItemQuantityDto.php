@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class UpdateQuantityDto
+final class UpdateItemQuantityDto
 {
     public bool $less;
 }

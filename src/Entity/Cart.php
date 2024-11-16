@@ -5,9 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Link;
 use App\Repository\CartRepository;
-use App\State\CartProvider;
 use App\Validator as AcmeAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,17 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
-#[Get(
-    uriTemplate: '/carts/{token}',
-    uriVariables: [
-        'token' => new Link(
-            fromProperty: 'token',
-            toProperty: 'token',
-            fromClass: Cart::class,
-        )],
-    normalizationContext: ['groups' => 'cart:read'],
-    provider: CartProvider::class
-)]
+#[Get]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
 {

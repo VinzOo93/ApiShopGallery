@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Dto\CreateItemDto;
-use App\Dto\UpdateQuantityDto;
+use App\Dto\UpdateItemQuantityDto;
 use App\Repository\ItemRepository;
 use App\State\CreateItemInExistingCartProcessor;
 use App\State\DeleteItemInExistingCartProcessor;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     processor: CreateItemInExistingCartProcessor::class
 )]
 #[Patch(
-    input: UpdateQuantityDto::class,
+    input: UpdateItemQuantityDto::class,
     processor: UpdateItemQuantityInExistingCartProcessor::class
 )]
 #[Delete(
