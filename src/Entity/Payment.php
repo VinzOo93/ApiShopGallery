@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource]
 #[Post(
-    uriTemplate: 'payment/checkout',
+    uriTemplate: '/payment/checkout',
     processor: CreatePaymentProcessor::class
 )]
 class Payment

@@ -3,6 +3,7 @@
 .env
 .env.dev
 .env.test
+.env.test.local
 /.env.local
 /.env.local.php
 /.env.*.local

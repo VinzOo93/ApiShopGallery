@@ -6,7 +6,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class AuthenticationTestBase extends ApiTestBase
 {
-    protected const URL_TEST = '/print_formats?page=1';
+    protected const string URL_TEST = '/print_formats?page=1';
 
     protected function initAuthTest(): void
     {
@@ -46,7 +46,7 @@ class AuthenticationTestBase extends ApiTestBase
      * @return array<string,string>
      * @throws TransportExceptionInterface
      */
-    private function getTokensUser(): array
+    protected function getTokensUser(): array
     {
         return $this->prepareUser(parent::ROUTE_AUTH)->toArray();
     }

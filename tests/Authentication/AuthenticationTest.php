@@ -3,12 +3,11 @@
 namespace App\Tests\Authentication;
 
 use App\Tests\Base\AuthenticationTestBase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class AuthenticationTest extends AuthenticationTestBase
 {
-    private const METHOD_AUTH = 'GET';
-
     /**
      * testLogin.
      * @throws TransportExceptionInterface
@@ -16,7 +15,7 @@ class AuthenticationTest extends AuthenticationTestBase
     public function testLogin(): void
     {
         $this->initAuthTest();
-        $this->assertArrayHasKey(parent::KEY_AUTH_TOKEN, $response = $this->getLogin(self::METHOD_AUTH));
+        $this->assertArrayHasKey(parent::KEY_AUTH_TOKEN, $response = $this->getLogin(Request::METHOD_GET));
         $this->testRouteWithLogin($response);
     }
 }
