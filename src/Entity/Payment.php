@@ -5,12 +5,16 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Repository\PaymentRepository;
+use App\State\CreatePaymentProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource]
-#[Post(uriTemplate: 'payment/checkout')]
+#[Post(
+    uriTemplate: 'payment/checkout',
+    processor: CreatePaymentProcessor::class
+)]
 class Payment
 {
     #[ORM\Id]
@@ -33,6 +37,9 @@ class Payment
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $amount = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -97,5 +104,15 @@ class Payment
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 }

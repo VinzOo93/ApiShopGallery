@@ -10,7 +10,9 @@ parameters:
         - var/cache/dev/Symfony/Config
     app.api.id_user_provider: '%env(ID_USER_PROVIDER)%'
     app.api.pwd_user_provider: '%env(PWD_USER_PROVIDER)%'
-
+    app.api.username_paypal_sandbox: '%env(PAYPAL_USERNAME_SANDBOX)%'
+    app.api.password_paypal_sandbox: '%env(PAYPAL_PASSWORD_SANDBOX)%'
+    app.api.baseurl_paypal_sandbox:  'https://api-m.sandbox.paypal.com'
 services:
     # default configuration for services in *this* file
     _defaults:
