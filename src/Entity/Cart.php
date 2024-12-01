@@ -15,7 +15,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
-#[Get]
+#[Get(
+    normalizationContext: ['groups' => 'cart:read'],
+)]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
 {

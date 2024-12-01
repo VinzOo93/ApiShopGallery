@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use App\Dto\PaymentCheckoutDto;
 use App\Repository\PaymentRepository;
 use App\State\CreatePaymentProcessor;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 #[Post(
     uriTemplate: '/payment/checkout',
+    input: PaymentCheckoutDto::class,
     processor: CreatePaymentProcessor::class
 )]
 class Payment

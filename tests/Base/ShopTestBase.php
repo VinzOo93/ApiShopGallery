@@ -67,7 +67,7 @@ class ShopTestBase extends ApiTestBase
     protected function createObjectWithNoAuth(string $route, array $object): void
     {
         $this->client->request(
-            'POST',
+            Request::METHOD_POST,
             $route,
             [
                 'json' => json_encode($object),
