@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Dto\PaymentCheckoutDto;
+use App\Enum\PaymentStatusEnum;
+use App\Enum\PaymentTypeEnum;
 use App\Repository\PaymentRepository;
 use App\State\CreatePaymentProcessor;
 use Doctrine\DBAL\Types\Types;
@@ -19,19 +21,25 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 class Payment
 {
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    private PaymentTypeEnum $type;
 
     #[ORM\Column(length: 1084)]
-    private ?string $link = null;
+    private ?string $link;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private PaymentStatusEnum $status;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,20 +48,23 @@ class Payment
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $amount = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeInterface $createdAt;
+
+    #[ORM\Column(length: 255)]
+    private ?string $token = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): PaymentTypeEnum
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(PaymentTypeEnum $type): static
     {
         $this->type = $type;
 
@@ -72,12 +83,12 @@ class Payment
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): PaymentStatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(PaymentStatusEnum $status): static
     {
         $this->status = $status;
 
@@ -116,5 +127,17 @@ class Payment
     public function setCreatedAt(?\DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
     }
 }

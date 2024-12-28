@@ -3,15 +3,23 @@
 namespace App\Tests\Functional;
 
 use App\Entity\Cart;
+use App\Entity\Payment;
 use App\Repository\CartRepository;
+use App\Repository\PaymentRepository;
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class CreatePaymentTest extends ShopTestBase
 {
     private const string ROUTE_PAYMENT_CHECKOUT = '/payment/checkout';
 
     private CartRepository $cartRepository;
+
     public function setUp(): void
     {
         $this->initApiTest();
@@ -20,6 +28,13 @@ class CreatePaymentTest extends ShopTestBase
         $this->cartRepository = $this->container->get(CartRepository::class);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     */
     public function testCheckoutPayment(): void
     {
         /** @var Cart $cart */
@@ -32,10 +47,23 @@ class CreatePaymentTest extends ShopTestBase
         );
         $this->assertResponseIsSuccessful();
 
-        if (str_contains(json_decode($response->getContent(), true), 'https://www.sandbox.paypal.com/checkoutnow?token=')) {
-            $checkoutNowUrlFound = true;
-        }
+        $this->assertJsonContains([
+            'id' => 1,
+            'type' => 'PAYPAL',
+            'link' => 'https://api-m.sandbox.paypal.com/checkoutnow?token=',
+            'status' => 'PENDING',
+            'amount' => '11.00',
+            'createdAt' => (new \DateTimeImmutable())->format('c'),
+        ]);
 
-        $this->assertTrue($checkoutNowUrlFound, 'No valid PayPal CheckoutNow URL was found in the response.');
+        $paymentRepository = $this->entityManager->getRepository(Payment::class);
+        /** @var Payment $payment */
+        $payment = $paymentRepository->find(1);
+
+        $data = json_decode($response->getContent());
+        $this->assertEquals($payment->getToken(), $data->token);
+        $this->assertEquals('/carts/'.$payment->getCart()->getToken(), $data->cart);
+        $this->assertEquals($payment->getAmount(), $payment->getCart()->getTotal());
+
     }
 }

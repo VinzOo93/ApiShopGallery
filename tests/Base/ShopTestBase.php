@@ -4,6 +4,11 @@ namespace App\Tests\Base;
 
 use App\Entity\Cart;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ShopTestBase extends ApiTestBase
@@ -26,6 +31,13 @@ class ShopTestBase extends ApiTestBase
         $this->initApiEntityUserTest();
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     protected function sendRequestToApi(mixed $object, string $route, string $method): ResponseInterface
     {
         $response = $this->prepareUser(parent::ROUTE_AUTH);
