@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Dto\PaymentCaptureDto;
 use App\Dto\PaymentCheckoutDto;
 use App\Enum\PaymentStatusEnum;
 use App\Enum\PaymentTypeEnum;
 use App\Repository\PaymentRepository;
 use App\State\CreatePaymentProcessor;
+use App\State\UpdatePaymentCaptureProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +24,11 @@ use Doctrine\ORM\Mapping as ORM;
     input: PaymentCheckoutDto::class,
     processor: CreatePaymentProcessor::class
 )]
+#[Patch(
+    uriTemplate: 'payment/capture',
+    input: PaymentCaptureDto::class,
+    processor: UpdatePaymentCaptureProcessor::class,
+)]
 class Payment
 {
     public function __construct()
@@ -26,10 +36,10 @@ class Payment
         $this->createdAt = new \DateTimeImmutable();
     }
 
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -52,7 +62,11 @@ class Payment
     private ?\DateTimeInterface $createdAt;
 
     #[ORM\Column(length: 255)]
+    #[ApiProperty(identifier: true)]
     private ?string $token = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $comment = null;
 
     public function getId(): ?int
     {
@@ -137,6 +151,18 @@ class Payment
     public function setToken(string $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
 
         return $this;
     }

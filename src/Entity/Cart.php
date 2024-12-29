@@ -75,7 +75,6 @@ class Cart
         max: 44,
         exactMessage: 'La chaîne doit avoir exactement 44 caractères.'
     )]
-
     #[ApiProperty(identifier: true)]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $token = null;

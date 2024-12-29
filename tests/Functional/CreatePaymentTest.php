@@ -5,7 +5,6 @@ namespace App\Tests\Functional;
 use App\Entity\Cart;
 use App\Entity\Payment;
 use App\Repository\CartRepository;
-use App\Repository\PaymentRepository;
 use App\Tests\Base\ShopTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -46,11 +45,10 @@ class CreatePaymentTest extends ShopTestBase
             Request::METHOD_POST
         );
         $this->assertResponseIsSuccessful();
-
         $this->assertJsonContains([
             'id' => 1,
             'type' => 'PAYPAL',
-            'link' => 'https://api-m.sandbox.paypal.com/checkoutnow?token=',
+            'link' => 'https://www.sandbox.paypal.com/checkoutnow?token=',
             'status' => 'PENDING',
             'amount' => '11.00',
             'createdAt' => (new \DateTimeImmutable())->format('c'),

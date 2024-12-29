@@ -2,6 +2,8 @@
 
 namespace App\State;
 
+use ApiPlatform\State\ProcessorInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -15,7 +17,11 @@ class BasePayementProcessor
 {
     protected const string ROUTE_AUTH = '/v1/oauth2/token';
 
+    protected const string ROUTE_CHECKOUT_ORDER = '/v2/checkout/orders';
+
     public function __construct(
+        #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
+        protected ProcessorInterface $persistProcessor,
         protected ParameterBagInterface $parameterBag,
         protected HttpClientInterface $client
     ) {
