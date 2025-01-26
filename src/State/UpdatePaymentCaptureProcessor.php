@@ -68,7 +68,7 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
         if (count($payments) > 1) {
             unset($payments[array_search($currentPayment, $payments)]);
             foreach ($payments as $payment) {
-                if (PaymentStatusEnum::REFUSED != $payment->getStatus()) {
+                if (PaymentStatusEnum::REFUSED != $payment->getStatus() || PaymentStatusEnum::ERROR != $payment->getStatus) {
                     $payment->setStatus(PaymentStatusEnum::EXPIRED);
                     $payment->setComment('Paiement payé :'.$currentPayment->getId());
                 }
@@ -88,9 +88,12 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
                     ],
                 ]);
             $dataResponse = json_decode($responseCapture->getContent(), true);
-dump($dataResponse);
+
             if (Response::HTTP_CREATED === $responseCapture->getStatusCode() && 'COMPLETED' === $dataResponse->status) {
                 $currentPayment->setStatus(PaymentStatusEnum::PAID);
+            } else {
+                $currentPayment->setStatus(PaymentStatusEnum::ERROR);
+                $currentPayment->setComment('PayPal error : '.$dataResponse->message);
             }
         } catch (\Exception $exception) {
             $this->entityManager->rollback();
