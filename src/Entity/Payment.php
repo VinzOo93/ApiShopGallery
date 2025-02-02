@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Dto\PaymentCaptureDto;
@@ -19,15 +20,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource]
 #[Post(
-    uriTemplate: '/payment/checkout',
+    uriTemplate: '/payments/checkout',
     input: PaymentCheckoutDto::class,
     processor: CreatePaymentProcessor::class
 )]
 #[Patch(
-    uriTemplate: 'payment/capture',
+    uriTemplate: 'payments/capture',
     input: PaymentCaptureDto::class,
     processor: UpdatePaymentCaptureProcessor::class,
 )]
+#[Get]
 class Payment
 {
     public function __construct()

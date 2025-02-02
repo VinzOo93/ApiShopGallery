@@ -17,6 +17,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements ProcessorInterface
 {
@@ -43,13 +44,15 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
         /** @var Payment $currentPayment */
         $currentPayment = $data->payment;
         $cart = $currentPayment->getCart();
+
+        $this->entityManager->beginTransaction();
+
         if (
             !$currentPayment instanceof Payment
             || PaymentStatusEnum::PENDING != $currentPayment->getStatus()
         ) {
             return false;
         }
-
         if ($cart->getTotal() != $currentPayment->getAmount()) {
             $currentPayment->setStatus(PaymentStatusEnum::REFUSED);
             $currentPayment->setComment('Le montant du paiement ne correspond pas à celui du panier');
@@ -75,25 +78,15 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
                 $this->entityManager->persist($payment);
             }
         }
+        $responseAuth = json_decode($this->getPaypalAuthResponse()->getContent(), true);
         try {
-            $responseAuth = json_decode($this->getPaypalAuthResponse()->getContent(), true);
-
-            $responseCapture = $this->client->request(
-                Request::METHOD_POST,
-                $this->parameterBag->get('app.api.baseurl_paypal_sandbox').parent::ROUTE_CHECKOUT_ORDER.$currentPayment->getToken().'/'.self::ROUTE_CAPTURE_ORDER,
-                [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Authorization' => 'Bearer '.$responseAuth['access_token'],
-                    ],
-                ]);
+            $responseCapture = $this->capturePayment($currentPayment, $responseAuth);
             $dataResponse = json_decode($responseCapture->getContent(), true);
-
-            if (Response::HTTP_CREATED === $responseCapture->getStatusCode() && 'COMPLETED' === $dataResponse->status) {
+            if (Response::HTTP_CREATED === $responseCapture->getStatusCode() && 'COMPLETED' === $dataResponse['status']) {
                 $currentPayment->setStatus(PaymentStatusEnum::PAID);
             } else {
                 $currentPayment->setStatus(PaymentStatusEnum::ERROR);
-                $currentPayment->setComment('PayPal error : '.$dataResponse->message);
+                $currentPayment->setComment('PayPal error : '.$dataResponse['message']);
             }
         } catch (\Exception $exception) {
             $this->entityManager->rollback();
@@ -101,5 +94,21 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
         }
 
         return $this->persistProcessor->process($currentPayment, $operation);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function capturePayment(Payment $currentPayment, mixed $responseAuth): ResponseInterface
+    {
+        return $this->client->request(
+            Request::METHOD_POST,
+            $this->parameterBag->get('app.api.baseurl_paypal_sandbox').parent::ROUTE_CHECKOUT_ORDER.'/'.$currentPayment->getToken().self::ROUTE_CAPTURE_ORDER,
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer '.$responseAuth['access_token'],
+                ],
+            ]);
     }
 }

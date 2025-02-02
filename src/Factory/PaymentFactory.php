@@ -46,11 +46,11 @@ final class PaymentFactory extends PersistentProxyObjectFactory
     {
         return [
             'amount' => '105.00',
-            'cart' => CartFactory::new(),
+            'cart' => CartFactory::createOne(),
             'createdAt' => new \DateTimeImmutable(),
             'link' => 'https://api-m.sandbox.paypal.com/checkoutnow?token=',
             'status' => PaymentStatusEnum::PENDING,
-            'token' => '1GW93453H4447225A',
+            'token' => '5O190127TN'.uniqid(),
             'type' => PaymentTypeEnum::PAYPAL,
         ];
     }

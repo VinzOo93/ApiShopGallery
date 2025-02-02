@@ -1,0 +1,7 @@
+Zenstruck\Foundry\Proxy:
+    payment_1:
+        __factory: { 'App\Factory\PaymentFactory::createOne': [] }
+    payment_2:
+        __factory: {'App\Factory\PaymentFactory::createOne': [amount: 99] }
+    payment_3:
+        __factory: { 'App\Factory\PaymentFactory::createOne': [status: !php/enum App\Enum\PaymentStatusEnum::REFUSED] }

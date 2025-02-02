@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class CreatePaymentTest extends ShopTestBase
 {
-    private const string ROUTE_PAYMENT_CHECKOUT = '/payment/checkout';
+    private const string ROUTE_PAYMENT_CHECKOUT = '/payments/checkout';
 
     private CartRepository $cartRepository;
 
