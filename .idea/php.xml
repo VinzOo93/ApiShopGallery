@@ -187,6 +187,7 @@
       <path value="$PROJECT_DIR$/vendor/zenstruck/assert" />
       <path value="$PROJECT_DIR$/vendor/zenstruck/foundry" />
       <path value="$PROJECT_DIR$/vendor/zenstruck/callback" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />
