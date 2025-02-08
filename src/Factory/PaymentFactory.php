@@ -6,7 +6,6 @@ use App\Entity\Payment;
 use App\Enum\PaymentStatusEnum;
 use App\Enum\PaymentTypeEnum;
 use App\Repository\PaymentRepository;
-use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
@@ -32,7 +31,6 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  */
 final class PaymentFactory extends PersistentProxyObjectFactory
 {
-
     public static function class(): string
     {
         return Payment::class;
@@ -40,7 +38,6 @@ final class PaymentFactory extends PersistentProxyObjectFactory
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
      */
     protected function defaults(): array|callable
     {
@@ -53,6 +50,18 @@ final class PaymentFactory extends PersistentProxyObjectFactory
             'token' => '5O190127TN'.uniqid(),
             'type' => PaymentTypeEnum::PAYPAL,
         ];
+    }
+
+    public static function createWithSameCart(array $data): Proxy
+    {
+        $cart = CartFactory::first()?->_real() ?? CartFactory::createOne()->_real();
+
+        return self::createOne(
+            [
+                'amount' => $data['amount'],
+                'cart' => $cart,
+            ]
+        );
     }
 
     /**

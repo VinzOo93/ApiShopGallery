@@ -5,3 +5,9 @@ Zenstruck\Foundry\Proxy:
         __factory: {'App\Factory\PaymentFactory::createOne': [amount: 99] }
     payment_3:
         __factory: { 'App\Factory\PaymentFactory::createOne': [status: !php/enum App\Enum\PaymentStatusEnum::REFUSED] }
+    payment_4:
+        __factory: { 'App\Factory\PaymentFactory::createWithSameCart': [amount: '90.00'] }
+    payment_5:
+        __factory: { 'App\Factory\PaymentFactory::createWithSameCart': [amount: '85.00'] }
+    payment_6:
+        __factory: { 'App\Factory\PaymentFactory::createWithSameCart': [amount: '80.00'] }

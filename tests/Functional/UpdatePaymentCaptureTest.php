@@ -3,6 +3,7 @@
 namespace App\Tests\Functional;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
+use App\Entity\Payment;
 use App\Enum\PaymentStatusEnum;
 use App\Repository\PaymentRepository;
 use App\State\UpdatePaymentCaptureProcessor;
@@ -59,7 +60,7 @@ class UpdatePaymentCaptureTest extends ShopTestBase
         $mockResponse = $this->createMock(ResponseInterface::class);
         $mockResponse->method('getContent')->willReturn(json_encode([
             'id' => $payment->getToken(),
-            'status' => 'COMPLETED',
+            'status' => !empty($data['paypalResponse']) ? $data['paypalResponse'] : 'COMPLETED',
             'amount' => [
                 'currency_code' => 'EUR',
                 'value' => '105.00',
@@ -85,6 +86,15 @@ class UpdatePaymentCaptureTest extends ShopTestBase
 
         if ($responseData) {
             $this->assertEquals($data['expected'], $responseData['status']);
+            if (PaymentStatusEnum::PAID->name === $responseData['status']) {
+                /** @var array<int, Payment> $paymentsExpired */
+                $paymentsExpired = $this->paymentRepository->findBy(['cart' => $payment->getCart()]);
+                unset($paymentsExpired[array_search($payment, $paymentsExpired)]);
+                foreach ($paymentsExpired as $item) {
+                    $this->assertEquals(PaymentStatusEnum::EXPIRED, $item->getStatus());
+                    $this->assertStringContainsString($item->getComment(), 'Paiement payé : 1');
+                }
+            }
         } else {
             $this->assertFalse($data['expected']);
         }
@@ -109,6 +119,13 @@ class UpdatePaymentCaptureTest extends ShopTestBase
                 [
                     'expected' => false,
                     'paymentId' => 3,
+                ],
+            ],
+            [
+                [
+                    'expected' => PaymentStatusEnum::REFUSED->value,
+                    'paymentId' => 2,
+                    'paypalResponse' => 'ERROR',
                 ],
             ],
         ];

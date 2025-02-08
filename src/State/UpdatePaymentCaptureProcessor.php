@@ -68,22 +68,22 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
         ], [
             'createdAt' => 'DESC',
         ]);
-        if (count($payments) > 1) {
-            unset($payments[array_search($currentPayment, $payments)]);
-            foreach ($payments as $payment) {
-                if (PaymentStatusEnum::REFUSED != $payment->getStatus() || PaymentStatusEnum::ERROR != $payment->getStatus) {
-                    $payment->setStatus(PaymentStatusEnum::EXPIRED);
-                    $payment->setComment('Paiement payé :'.$currentPayment->getId());
-                }
-                $this->entityManager->persist($payment);
-            }
-        }
-        $responseAuth = json_decode($this->getPaypalAuthResponse()->getContent(), true);
         try {
+            $responseAuth = json_decode($this->getPaypalAuthResponse()->getContent(), true);
             $responseCapture = $this->capturePayment($currentPayment, $responseAuth);
             $dataResponse = json_decode($responseCapture->getContent(), true);
             if (Response::HTTP_CREATED === $responseCapture->getStatusCode() && 'COMPLETED' === $dataResponse['status']) {
                 $currentPayment->setStatus(PaymentStatusEnum::PAID);
+                if (count($payments) > 1) {
+                    unset($payments[array_search($currentPayment, $payments)]);
+                    foreach ($payments as $payment) {
+                        if (PaymentStatusEnum::REFUSED != $payment->getStatus() || PaymentStatusEnum::ERROR != $payment->getStatus) {
+                            $payment->setStatus(PaymentStatusEnum::EXPIRED);
+                            $payment->setComment('Paiement payé : '.$currentPayment->getId());
+                        }
+                        $this->entityManager->persist($payment);
+                    }
+                }
             } else {
                 $currentPayment->setStatus(PaymentStatusEnum::ERROR);
                 $currentPayment->setComment('PayPal error : '.$dataResponse['message']);
