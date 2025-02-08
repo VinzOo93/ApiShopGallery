@@ -28,6 +28,11 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
 
         /** @var Cart $cart */
         $cart = $data->cart;
+        $email = $data->email;
+        $address = $data->address;
+        $postalCode = $data->postalCode;
+        $city = $data->city;
+        $country = $data->country;
 
         $responseCheckout = json_decode($this->client->request(
             Request::METHOD_POST,
@@ -66,7 +71,12 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
             ->setToken($href->query->get('token'))
             ->setAmount($cart->getTotal())
             ->setStatus(PaymentStatusEnum::PENDING)
-            ->setType(PaymentTypeEnum::PAYPAL);
+            ->setType(PaymentTypeEnum::PAYPAL)
+            ->setEmail($email)
+            ->setAddress($address)
+            ->setPostalCode($postalCode)
+            ->setCity($city)
+            ->setCountry($country);
 
         return $this->persistProcessor->process($payment, $operation);
     }

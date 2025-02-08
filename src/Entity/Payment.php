@@ -16,6 +16,7 @@ use App\State\CreatePaymentProcessor;
 use App\State\UpdatePaymentCaptureProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource]
@@ -68,6 +69,26 @@ class Payment
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\Email]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 5)]
+    #[Assert\NotBlank]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(length: 55)]
+    #[Assert\NotBlank]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 50)]
+    #[Assert\Country]
+    private ?string $country = null;
 
     public function getId(): ?int
     {
@@ -164,6 +185,66 @@ class Payment
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): static
+    {
+        $this->country = $country;
 
         return $this;
     }
