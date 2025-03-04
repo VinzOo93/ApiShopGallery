@@ -49,6 +49,11 @@ final class PaymentFactory extends PersistentProxyObjectFactory
             'status' => PaymentStatusEnum::PENDING,
             'token' => '5O190127TN'.uniqid(),
             'type' => PaymentTypeEnum::PAYPAL,
+            'email' => 'test@live.fr',
+            'address' => 'rue de la street',
+            'postalCode' => '90500',
+            'city' => ' Beaucourt',
+            'country' => 'France',
         ];
     }
 

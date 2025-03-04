@@ -79,7 +79,7 @@ class UpdatePaymentCaptureTest extends ShopTestBase
                     'Content-Type' => 'application/merge-patch+json',
                     'Authorization' => 'Bearer '.$tokenResponse->toArray()['token'],
                 ],
-                'json' => ['payment' => '/payments/'.$payment->getToken()],
+                'json' => ['cart' => '/carts/'.$payment->getCart()->getToken()],
             ]
         );
         $responseData = json_decode($response->getContent(), true);

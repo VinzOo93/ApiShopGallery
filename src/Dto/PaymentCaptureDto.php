@@ -2,9 +2,9 @@
 
 namespace App\Dto;
 
-use App\Entity\Payment;
+use App\Entity\Cart;
 
 final class PaymentCaptureDto
 {
-    public Payment $payment;
+    public Cart $cart;
 }

@@ -4,6 +4,7 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Entity\Cart;
 use App\Entity\Payment;
 use App\Enum\PaymentStatusEnum;
 use App\Enum\PaymentTypeEnum;
@@ -41,16 +42,20 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Payment|false
     {
-        /** @var Payment $currentPayment */
-        $currentPayment = $data->payment;
-        $cart = $currentPayment->getCart();
+        $paymentRepository = $this->entityManager->getRepository(Payment::class);
+        /** @var Cart $cart */
+        $cart = $data->cart;
+
+        $currentPayment = $paymentRepository->findOneBy([
+            'cart' => $cart,
+            'status' => PaymentStatusEnum::PENDING,
+        ], [
+            'createdAt' => 'DESC',
+        ]);
 
         $this->entityManager->beginTransaction();
 
-        if (
-            !$currentPayment instanceof Payment
-            || PaymentStatusEnum::PENDING != $currentPayment->getStatus()
-        ) {
+        if (!$currentPayment) {
             return false;
         }
         if ($cart->getTotal() != $currentPayment->getAmount()) {
@@ -60,7 +65,6 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
             return $this->persistProcessor->process($currentPayment, $operation);
         }
 
-        $paymentRepository = $this->entityManager->getRepository(Payment::class);
         $payments = $paymentRepository->findBy([
             'cart' => $cart,
             'status' => PaymentStatusEnum::PENDING,
