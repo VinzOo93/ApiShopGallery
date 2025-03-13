@@ -11,6 +11,10 @@ final class PaymentCheckoutDto
     #[Assert\Email]
     public string $email;
     #[Assert\NotBlank]
+    public string $secondName;
+    #[Assert\NotBlank]
+    public string $firstname;
+    #[Assert\NotBlank]
     public string $address;
     #[Assert\NotBlank]
     public string $postalCode;

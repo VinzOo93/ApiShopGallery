@@ -29,6 +29,8 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
         /** @var Cart $cart */
         $cart = $data->cart;
         $email = $data->email;
+        $name = $data->secondName;
+        $firstname = $data->firstname;
         $address = $data->address;
         $postalCode = $data->postalCode;
         $city = $data->city;
@@ -73,6 +75,8 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
             ->setStatus(PaymentStatusEnum::PENDING)
             ->setType(PaymentTypeEnum::PAYPAL)
             ->setEmail($email)
+            ->setName($name)
+            ->setFirstname($firstname)
             ->setAddress($address)
             ->setPostalCode($postalCode)
             ->setCity($city)

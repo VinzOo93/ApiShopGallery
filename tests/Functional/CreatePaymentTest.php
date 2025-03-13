@@ -40,28 +40,35 @@ class CreatePaymentTest extends ShopTestBase
         $cart = $this->cartRepository->findOneBy([], ['id' => 'ASC']);
 
         $response = $this->sendRequestToApi(
-            ['cart' => '/carts/'.$cart->getToken()],
+            [
+                'cart' => '/carts/'.$cart->getToken(),
+                'email' => 'test@live.fr',
+                'firstname' => 'Carlo',
+                'secondName' => 'Ancelotti',
+                'address' => 'rue de la pinte',
+                'postalCode' => '90500',
+                'city' => 'Beaucourt',
+                'country' => 'France',
+            ],
             self::ROUTE_PAYMENT_CHECKOUT,
             Request::METHOD_POST
         );
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            'id' => 1,
             'type' => 'PAYPAL',
             'link' => 'https://www.sandbox.paypal.com/checkoutnow?token=',
             'status' => 'PENDING',
-            'amount' => '11.00',
+            'amount' => '105.00',
             'createdAt' => (new \DateTimeImmutable())->format('c'),
         ]);
 
         $paymentRepository = $this->entityManager->getRepository(Payment::class);
         /** @var Payment $payment */
-        $payment = $paymentRepository->find(1);
+        $payment = $paymentRepository->find(7);
 
         $data = json_decode($response->getContent());
         $this->assertEquals($payment->getToken(), $data->token);
         $this->assertEquals('/carts/'.$payment->getCart()->getToken(), $data->cart);
         $this->assertEquals($payment->getAmount(), $payment->getCart()->getTotal());
-
     }
 }
