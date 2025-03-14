@@ -38,11 +38,11 @@ class BasePayementProcessor
         return
             $this->client->request(
                 Request::METHOD_POST,
-                $this->parameterBag->get('app.api.baseurl_paypal_sandbox').self::ROUTE_AUTH,
+                $this->parameterBag->get('app.api.baseurl_paypal').self::ROUTE_AUTH,
                 [
                     'auth_basic' => [
-                        $this->parameterBag->get('app.api.username_paypal_sandbox'),
-                        $this->parameterBag->get('app.api.password_paypal_sandbox'),
+                        $this->parameterBag->get('app.api.username_paypal'),
+                        $this->parameterBag->get('app.api.password_paypal'),
                     ],
                     'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
                     'body' => [

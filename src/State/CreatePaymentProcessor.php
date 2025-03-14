@@ -38,7 +38,7 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
 
         $responseCheckout = json_decode($this->client->request(
             Request::METHOD_POST,
-            $this->parameterBag->get('app.api.baseurl_paypal_sandbox').parent::ROUTE_CHECKOUT_ORDER,
+            $this->parameterBag->get('app.api.baseurl_paypal').parent::ROUTE_CHECKOUT_ORDER,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -60,7 +60,7 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
                                 'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
                                 'landing_page' => 'LOGIN',
                                 'user_action' => 'PAY_NOW',
-                                'return_url' => 'https://www.vincent-orru.com/payment/confirmation',
+                                'return_url' => $this->parameterBag->get('app.api.baseurl_front').'/payment/confirmation',
                             ],
                         ],
                     ],

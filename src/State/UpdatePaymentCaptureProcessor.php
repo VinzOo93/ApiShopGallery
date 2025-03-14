@@ -107,7 +107,7 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
     {
         return $this->client->request(
             Request::METHOD_POST,
-            $this->parameterBag->get('app.api.baseurl_paypal_sandbox').parent::ROUTE_CHECKOUT_ORDER.'/'.$currentPayment->getToken().self::ROUTE_CAPTURE_ORDER,
+            $this->parameterBag->get('app.api.baseurl_paypal').parent::ROUTE_CHECKOUT_ORDER.'/'.$currentPayment->getToken().self::ROUTE_CAPTURE_ORDER,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',

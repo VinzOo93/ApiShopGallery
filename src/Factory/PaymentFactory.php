@@ -6,6 +6,7 @@ use App\Entity\Payment;
 use App\Enum\PaymentStatusEnum;
 use App\Enum\PaymentTypeEnum;
 use App\Repository\PaymentRepository;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
@@ -31,6 +32,11 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  */
 final class PaymentFactory extends PersistentProxyObjectFactory
 {
+    public function __construct(private readonly ParameterBagInterface $parameterBag)
+    {
+        parent::__construct();
+    }
+
     public static function class(): string
     {
         return Payment::class;
@@ -45,7 +51,7 @@ final class PaymentFactory extends PersistentProxyObjectFactory
             'amount' => '105.00',
             'cart' => CartFactory::createOne(),
             'createdAt' => new \DateTimeImmutable(),
-            'link' => 'https://api-m.sandbox.paypal.com/checkoutnow?token=',
+            'link' => $this->parameterBag->get('app.api.baseurl_paypal').'/checkoutnow?token=',
             'status' => PaymentStatusEnum::PENDING,
             'token' => '5O190127TN'.uniqid(),
             'type' => PaymentTypeEnum::PAYPAL,
