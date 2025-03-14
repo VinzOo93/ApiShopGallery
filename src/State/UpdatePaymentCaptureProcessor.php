@@ -92,6 +92,8 @@ class UpdatePaymentCaptureProcessor extends BasePayementProcessor implements Pro
                 $currentPayment->setStatus(PaymentStatusEnum::ERROR);
                 $currentPayment->setComment('PayPal error : '.$dataResponse['message']);
             }
+            $this->entityManager->persist($currentPayment);
+            $this->entityManager->commit();
         } catch (\Exception $exception) {
             $this->entityManager->rollback();
             throw new \Exception('Erreur connexion paiement webservice : '.$exception);
