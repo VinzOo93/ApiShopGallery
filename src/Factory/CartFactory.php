@@ -41,7 +41,7 @@ final class CartFactory extends PersistentProxyObjectFactory
             'shipping' => '5.00',
             'subtotal' => '100.00',
             'taxes' => '20.00',
-            'token' => 'pGwFZj3E7F5ZcuXkv3fOTVqcozA3Qoj-'.uniqid(),
+            'token' => 'pGwFZj3E7F5ZcuXkv3fOTVqcozA3Qoj'.uniqid(),
             'total' => '105.00',
             'updatedAt' => new \DateTimeImmutable(),
         ];

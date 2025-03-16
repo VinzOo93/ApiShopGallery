@@ -11,6 +11,16 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+  ###> symfony/mailer ###
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+ ###< symfony/mailer ###
 
 volumes:
   mysql_data:

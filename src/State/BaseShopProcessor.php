@@ -37,14 +37,6 @@ class BaseShopProcessor
         }
     }
 
-    /**
-     * @throws \Exception
-     */
-    protected function getCurrentDateTimeEurope(): \DateTimeInterface
-    {
-        return new \DateTime('NOW', new \DateTimeZone('Europe/Paris'));
-    }
-
     protected function createItemAction(string $image, PrintFormat $printFormat): Item|false
     {
         $item = new Item();
@@ -77,9 +69,7 @@ class BaseShopProcessor
     protected function createCartAction(): Cart
     {
         $cart = new Cart();
-        $date = $this->getCurrentDateTimeEurope();
-        $cart->setCreatedAt($date)
-            ->setUpdatedAt($date)
+        $cart
             ->setSubtotal(0)
             ->setTaxes(0)
             ->setTotal(0)
@@ -97,8 +87,6 @@ class BaseShopProcessor
         $subtotal = 0;
         $taxes = 0;
         $total = 0;
-
-        $cart->setUpdatedAt($this->getCurrentDateTimeEurope());
 
         foreach ($cart->getItems() as $item) {
             $pretaxPrice = $item->getPreTaxPrice();

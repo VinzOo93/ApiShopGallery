@@ -72,7 +72,6 @@ class CreatePaymentProcessor extends BasePayementProcessor implements ProcessorI
             ->setLink('https://'.$href->headers->get('host').$href->getPathInfo().'?token=')
             ->setToken($href->query->get('token'))
             ->setAmount($cart->getTotal())
-            ->setStatus(PaymentStatusEnum::PENDING)
             ->setType(PaymentTypeEnum::PAYPAL)
             ->setEmail($email)
             ->setName($name)

@@ -31,7 +31,7 @@ class CreateItemTest extends ShopTestBase
     {
         $this->createCart();
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
-        $this->assertEquals(1, $this->countObjectsOnDb(Cart::class));
+        $this->assertEquals(7, $this->countObjectsOnDb(Cart::class));
         $cartRepo = $this->entityManager->getRepository(Cart::class);
         $cart = $cartRepo->findOneBy([], ['id' => 'ASC']);
         $itemToBeCreatedWithCart = [

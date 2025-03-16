@@ -51,7 +51,7 @@ class Payment
     private ?string $link;
 
     #[ORM\Column(length: 255)]
-    private PaymentStatusEnum $status;
+    private PaymentStatusEnum $status = PaymentStatusEnum::PENDING;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]

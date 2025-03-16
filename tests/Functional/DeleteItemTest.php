@@ -26,7 +26,7 @@ class DeleteItemTest extends ShopTestBase
     public function testDeleteItem()
     {
         /** @var Cart $cart */
-        $cart = $this->cartRepository->findOneBy([], ['id' => 'ASC']);
+        $cart = $this->cartRepository->findOneBy([], ['id' => 'DESC']);
         /** @var Item $item */
         $items = $cart->getItems();
         $this->sendRequestToApi([], self::ROUTE_ITEM.'/'.$items[0]->getId(), Request::METHOD_DELETE);
