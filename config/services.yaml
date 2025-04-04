@@ -14,6 +14,7 @@ parameters:
     app.api.password_paypal: '%env(PAYPAL_PASSWORD)%'
     app.api.baseurl_paypal:  '%env(PAYPAL_SANDBOX_BASE_URL_SERVICE)%'
     app.api.baseurl_front: '%env(FRONT_DOMAIN)%'
+    app.api.email_from: '%env(MAIL_FROM)%'
     timezone: '%env(APP_TIMEZONE)%'
 services:
     # default configuration for services in *this* file

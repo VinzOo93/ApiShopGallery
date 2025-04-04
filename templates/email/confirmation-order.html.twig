@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            color: #999;
+            text-align: center;
+            border-bottom: 1px solid #cdcdcd;
+            padding: 8px;
+        }
+        td {
+            text-align: center;
+            border-bottom: 1px solid #cdcdcd;
+            padding: 8px;
+        }
+        .CartItem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .CartItem img {
+            width: 100px;
+        }
+        .CartCell--subtotal {
+            color: #cb0000;
+        }
+        .Total-value {
+            color: #cb0000;
+            font-size: 18px;
+        }
+        .shipping-value {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<h2 style="text-align:center;">Bonjour {{ firstname }}, bonne nouvelle, votre commande est confirmée ! 🥳</h2>
+
+<p>Nous allons prochainement lancer son expédition, nous vous en tenons informé.</p>
+
+<p>En résumé voici le récapitulatif de votre commande, ci dessous.</p>
+
+<p>Nous sommes à votre disposition au besoin</p>
+
+<h3>Adresse d'expédition</h3>
+
+<p>{{ firstname }} {{ name | upper}}</p>
+<p>{{ address }}</p>
+<p>{{ postalCode | upper }}, {{ country }}</p>
+<table>
+    <thead>
+    <tr>
+        <th>Impressions</th>
+        <th>Quantité</th>
+        <th>Prix Uni</th>
+        <th>Prix HT</th>
+        <th>Prix TTC</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td>
+                <div class="CartItem">
+                    <img src="https://ucarecdn.com/{{ item.image }}/-/preview/250x250/-/quality/smart/-/format/auto/"">
+                    <span>{{ item.printFormat.name }}</span>
+                </div>
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unitPrice }} €</td>
+            <td>{{ item.preTaxPrice }} €</td>
+            <td class="CartCell--subtotal">{{ item.taxPrice }} €</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3" class="shipping">Expédition: <span class="shipping-value">{{ shipping }} €</span></td>
+        <td colspan="2" class="Total">Total: <span class="Total-value">{{ total }} €</span></td>
+    </tr>
+    </tbody>
+</table>
+
+<p>A Bientôt ! </p>
+</body>
+</html>
