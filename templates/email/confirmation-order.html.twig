@@ -45,9 +45,9 @@
 
 <p>En résumé voici le récapitulatif de votre commande, ci dessous.</p>
 
-<p>Nous sommes à votre disposition au besoin</p>
+<p>Nous sommes à votre disposition au besoin.</p>
 
-<h3>Adresse d'expédition</h3>
+<h3>Adresse d'expédition :</h3>
 
 <p>{{ firstname }} {{ name | upper}}</p>
 <p>{{ address }}</p>
@@ -79,7 +79,8 @@
     {% endfor %}
     <tr>
         <td colspan="3" class="shipping">Expédition: <span class="shipping-value">{{ shipping }} €</span></td>
-        <td colspan="2" class="Total">Total: <span class="Total-value">{{ total }} €</span></td>
+        <td colspan="2" class="shipping">TVA: <span class="shipping-value">{{ taxes }} €</span></td>
+        <td colspan="1" class="Total">Total: <span class="Total-value">{{ total }} €</span></td>
     </tr>
     </tbody>
 </table>

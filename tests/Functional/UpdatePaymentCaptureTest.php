@@ -94,6 +94,12 @@ class UpdatePaymentCaptureTest extends ShopTestBase
                     $this->assertEquals(PaymentStatusEnum::EXPIRED, $item->getStatus());
                     $this->assertStringContainsString($item->getComment(), 'Paiement payé : 1');
                 }
+                $this->assertEmailCount(1);
+                $mail = $this->getMailerEvent();
+                $this->assertEmailSubjectContains($mail->getMessage(), 'Votre commande est bien enregistrée !');
+                $this->assertEquals($mail->getEnvelope()->getSender()->getAddress(), 'orru.vincent@orange.fr');
+                $this->assertEquals($mail->getEnvelope()->getRecipients()[0]->getAddress(), 'test@live.fr');
+                $this->assertEmailTextBodyContains($mail->getMessage(), 'Nous allons prochainement lancer son expédition, nous vous en tenons informé');
             }
         } else {
             $this->assertFalse($data['expected']);

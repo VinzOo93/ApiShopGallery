@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -19,8 +18,7 @@ readonly class OrderNotifierListener
     public function __construct(
         private MailerInterface $mailer,
         private ParameterBagInterface $parameterBag
-    )
-    {
+    ) {
     }
 
     /**
@@ -31,7 +29,7 @@ readonly class OrderNotifierListener
         $email = (new TemplatedEmail())
             ->from(new Address($this->parameterBag->get('app.api.email_from'), 'Vincent ORRU'))
             ->to($order->getPayment()->getEmail())
-            ->subject('Votre commande est enregistrée')
+            ->subject('Votre commande est bien enregistrée !')
             ->htmlTemplate('email/confirmation-order.html.twig')
             ->context([
                 'firstname' => $order->getPayment()->getFirstname(),
@@ -43,7 +41,7 @@ readonly class OrderNotifierListener
                 'country' => $order->getPayment()->getCountry(),
                 'shipping' => $order->getCart()->getShipping(),
                 'taxes' => $order->getCart()->getTaxes(),
-                'total' => $order->getCart()->getTotal()
+                'total' => $order->getCart()->getTotal(),
             ]);
         $this->mailer->send($email);
     }
